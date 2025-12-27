@@ -997,101 +997,416 @@ function exportShareHTML(){
   setSaveStatus("出力中…");
 
   const fileName = `hb_report_${derivePeriodLabel(state.meta.periodStart).replace(".","-")}_shared.html`;
+  const embedded = escapeHTML(JSON.stringify(state));
 
-  // shared viewer: shows both pages (tabs) + print
-  const html = `<!DOCTYPE html>
-<html lang="ja"><head>
-<meta charset="UTF-8" />
+  const html = `<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>HB Monthly Report (Shared)</title>
+<title>HB Monthly Report（共有）</title>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <style>
-  body{ margin:0; font-family:'Noto Sans JP',system-ui,sans-serif; background:#0b1220; padding:16px; display:flex; justify-content:center; }
-  .app{ width:min(1360px,100%); background:#fff; border-radius:14px; overflow:hidden; box-shadow:0 30px 60px -25px rgba(0,0,0,.35); }
-  .top{ background:linear-gradient(90deg,#0f172a,#101c38); color:#fff; padding:14px 16px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; }
-  .title{ display:flex; flex-direction:column; gap:3px; }
-  .title h1{ margin:0; font-family:Montserrat,sans-serif; font-size:16px; letter-spacing:1px; }
-  .title .sub{ font-size:12px; opacity:.85; }
-  .tabs{ display:flex; gap:8px; flex-wrap:wrap; }
-  .tab{ cursor:pointer; padding:9px 10px; border-radius:999px; border:1px solid rgba(255,255,255,.16); background:rgba(255,255,255,.08); font-weight:900; font-size:12px; }
+  :root{
+    --bg:#0b1220; --paper:#fff; --ink:#0f172a; --muted:#64748b; --line:#e2e8f0; --soft:#f1f5f9;
+    --blue:#2563eb; --teal:#0ea5e9; --violet:#7c3aed; --amber:#f59e0b;
+    --radius:14px;
+  }
+  *{box-sizing:border-box}
+  body{ margin:0; font-family:'Noto Sans JP',system-ui,sans-serif; background:radial-gradient(1200px 700px at 10% 10%, #18223d, var(--bg)); padding:16px; display:flex; justify-content:center; }
+  .app{ width:min(1360px,100%); background:var(--paper); border-radius:var(--radius); overflow:hidden; box-shadow:0 30px 60px -25px rgba(0,0,0,.35); border:1px solid rgba(255,255,255,.10); }
+  .topbar{ display:flex; gap:12px; align-items:center; justify-content:space-between; padding:14px 16px; background:linear-gradient(90deg,#0f172a,#101c38); color:#fff; flex-wrap:wrap; }
+  .brand{ display:flex; flex-direction:column; gap:3px; min-width:260px;}
+  .brand h1{ margin:0; font-family:Montserrat,sans-serif; font-size:16px; letter-spacing:1px; }
+  .brand .sub{ font-size:12px; opacity:.85; }
+  .tabs{ display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+  .tab{ padding:9px 10px; border-radius:999px; border:1px solid rgba(255,255,255,.16); background:rgba(255,255,255,.08); font-weight:900; font-size:12px; cursor:pointer; color:#fff; }
   .tab.active{ background:rgba(37,99,235,.92); border-color:rgba(37,99,235,1); }
   .btn{ cursor:pointer; border:none; padding:10px 12px; border-radius:12px; font-weight:900; font-size:12px; color:#fff; background:rgba(255,255,255,.10); border:1px solid rgba(255,255,255,.16); }
   .btn.primary{ background:rgba(37,99,235,.92); border-color:rgba(37,99,235,1); }
+  .chip{ padding:10px 12px; border-radius:999px; border:1px solid rgba(255,255,255,.16); background:rgba(255,255,255,.08); display:flex; gap:10px; align-items:center;}
+  .chip .p{ font-family:Montserrat,sans-serif; font-weight:900; color:#93c5fd; font-size:13px; }
+  .chip .s{ font-size:12px; opacity:.9; }
+
   .wrap{ padding:14px; background:linear-gradient(180deg,#fff,#f8fafc); }
-  iframe{ width:100%; border:none; height: calc(100vh - 140px); min-height: 720px; background:#fff; border-radius:12px; }
+  .grid{ display:grid; grid-template-columns:minmax(0,1fr) clamp(360px,34vw,520px); gap:14px; }
+  @media (max-width: 1180px){ .grid{ grid-template-columns:1fr; } }
+
+  .card{ background:#fff; border:1px solid var(--line); border-radius:var(--radius); padding:14px; box-shadow:0 14px 30px -24px rgba(15,23,42,.35); }
+  .hrow{ display:flex; align-items:center; gap:10px; margin-bottom:10px; }
+  .h2{ margin:0; font-size:14px; font-weight:900; display:flex; align-items:center; gap:10px; }
+  .dot{ width:10px; height:10px; border-radius:4px; display:inline-block; }
+  .dot.blue{ background:var(--blue);} .dot.teal{ background:var(--teal);} .dot.violet{ background:var(--violet);} .dot.amber{ background:var(--amber);}
+
+  .kpis{ display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:10px; }
+  @media (max-width: 720px){ .kpis{ grid-template-columns:repeat(2,minmax(0,1fr)); } }
+  .kpi{ border:1px solid var(--line); border-radius:14px; padding:12px; background:linear-gradient(180deg,#fff,#f8fafc); }
+  .kpi .label{ font-size:11px; font-weight:900; color:var(--muted); }
+  .kpi .val{ display:flex; align-items:baseline; gap:6px; margin-top:6px; }
+  .kpi .num{ font-family:Montserrat,sans-serif; font-weight:900; font-size:28px; }
+  .kpi .unit{ font-size:12px; font-weight:900; color:#94a3b8; }
+
+  .highlights{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:12px;}
+  @media (max-width: 720px){ .highlights{ grid-template-columns:1fr; } }
+  .highlight{ border-radius:14px; border:1px solid var(--line); background:linear-gradient(180deg,#fff,#f8fafc); padding:12px; display:flex; justify-content:space-between; align-items:center; gap:10px; }
+  .highlight .t{ font-size:11px; font-weight:900; color:var(--muted); }
+  .highlight .v{ font-family:Montserrat,sans-serif; font-weight:900; font-size:22px; }
+  .badge{ font-size:11px; font-weight:900; padding:6px 10px; border-radius:999px; border:1px solid var(--line); background:var(--soft); color:var(--muted); white-space:nowrap; }
+
+  .metricGrid{ display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; }
+  @media (max-width: 900px){ .metricGrid{ grid-template-columns:repeat(2,minmax(0,1fr)); } }
+  .mini{ border:1px solid var(--line); border-radius:12px; padding:10px; background:linear-gradient(180deg,#fff,#f8fafc); }
+  .mini .t{ font-size:11px; font-weight:900; color:var(--muted); }
+  .mini .v{ margin-top:4px; font-family:Montserrat,sans-serif; font-weight:900; font-size:18px; }
+
+  .chart-wrap{ border:1px solid var(--line); border-radius:14px; padding:12px; background:#fff; overflow:hidden;}
+  canvas{ max-width:100%; }
+
+  .tbl-wrap{ overflow:auto; border:1px solid var(--line); border-radius:14px; }
+  table{ width:100%; border-collapse:collapse; table-layout:fixed; }
+  th{ background:var(--ink); color:#fff; font-size:11px; padding:10px; border:1px solid var(--ink); text-align:left; white-space:nowrap; }
+  td{ border:1px solid var(--line); padding:8px; font-size:11px; vertical-align:top; word-break:break-word; }
+
+  #topicsBox{ border:1px solid var(--line); border-radius:14px; padding:12px; background:linear-gradient(180deg,#fff,#fffef2); white-space:pre-wrap; line-height:1.7; font-size:13px; }
+
+  /* view toggle */
+  [data-view]{ display:none; }
+  [data-view].active{ display:block; }
+
+  /* PRINT */
   @media print{
+    @page{ size:A4 landscape; margin:8mm; }
     body{ background:#fff; padding:0; }
-    .app{ width:100%; border-radius:0; box-shadow:none; }
-    .top{ display:none; }
+    .app{ width:100%; border-radius:0; box-shadow:none; border:none; }
+    .topbar{ display:none; }
     .wrap{ padding:0; background:#fff; }
-    iframe{ display:none; }
-    #printRoot{ display:block !important; }
+    .pageBreak{ break-before:page; page-break-before:always; }
   }
 </style>
 </head>
 <body>
 <div class="app">
-  <div class="top">
-    <div class="title">
+  <div class="topbar">
+    <div class="brand">
       <h1>HB Monthly Report（共有ファイル）</h1>
       <div class="sub">このファイル1つで閲覧・印刷できます（入力値は埋め込み済み）</div>
     </div>
     <div class="tabs">
-      <button class="tab active" id="t1">月報</button>
-      <button class="tab" id="t2">法人活動</button>
-      <button class="btn primary" id="pbtn">印刷（PDF）</button>
+      <button class="tab active" id="tab1">月報</button>
+      <button class="tab" id="tab2">法人活動</button>
+      <div class="chip">
+        <div class="p" id="periodLabel">—</div>
+        <div class="s" id="asofLabel">—</div>
+      </div>
+      <button class="btn primary" id="btnPrint">印刷（PDF）</button>
     </div>
   </div>
 
   <div class="wrap">
-    <iframe id="frame" title="viewer"></iframe>
+    <!-- VIEW 1 -->
+    <div data-view="1" class="active">
+      <div class="grid">
+        <div style="display:flex; flex-direction:column; gap:14px; min-width:0;">
+          <div class="card">
+            <div class="hrow"><h2 class="h2"><span class="dot blue"></span>主要KPI</h2></div>
+            <div class="kpis">
+              <div class="kpi"><div class="label">総歩留り</div><div class="val"><span class="num" id="k_ty">0.0</span><span class="unit">%</span></div></div>
+              <div class="kpi"><div class="label">法人来場比</div><div class="val"><span class="num" id="k_cvr">0.0</span><span class="unit">%</span></div></div>
+              <div class="kpi"><div class="label">法人契約比</div><div class="val"><span class="num" id="k_ccr">0.0</span><span class="unit">%</span></div></div>
+              <div class="kpi"><div class="label">法人歩留り</div><div class="val"><span class="num" id="k_cy">0.0</span><span class="unit">%</span></div></div>
+            </div>
 
-    <!-- print view (2 pages) -->
-    <div id="printRoot" style="display:none;">
-      <!-- injected by print.html logic in iframe -->
+            <div class="highlights">
+              <div class="highlight" style="border-left:6px solid var(--amber);">
+                <div>
+                  <div class="t">提携会社数</div>
+                  <div class="v" id="partnerCompanies">0</div>
+                </div>
+                <div class="badge" id="asOfText">—</div>
+              </div>
+              <div class="highlight" style="border-left:6px solid var(--violet);">
+                <div>
+                  <div class="t">対象企業総数</div>
+                  <div class="v" id="targetCompanies">0</div>
+                </div>
+                <div class="badge">TARGETS</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="hrow"><h2 class="h2"><span class="dot teal"></span>当月実績</h2></div>
+            <div class="metricGrid">
+              <div class="mini"><div class="t">総来場</div><div class="v" id="tv">0</div></div>
+              <div class="mini"><div class="t">総契約</div><div class="v" id="tc">0</div></div>
+              <div class="mini"><div class="t">法人来場</div><div class="v" id="cv">0</div></div>
+              <div class="mini"><div class="t">法人契約</div><div class="v" id="cc">0</div></div>
+              <div class="mini"><div class="t">紹介カード</div><div class="v" id="rc">0</div></div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="hrow"><h2 class="h2"><span class="dot violet"></span>Topics</h2></div>
+            <div id="topicsBox">—</div>
+          </div>
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap:14px; min-width:0;">
+          <div class="card">
+            <div class="hrow"><h2 class="h2"><span class="dot blue"></span>KPI（%）当月 vs 前年同月</h2></div>
+            <div class="chart-wrap"><canvas id="chartKPI" height="210"></canvas></div>
+          </div>
+          <div class="card">
+            <div class="hrow"><h2 class="h2"><span class="dot teal"></span>ファネル（上限30%）</h2></div>
+            <div class="chart-wrap"><canvas id="chartFunnel" height="210"></canvas></div>
+          </div>
+          <div class="card">
+            <div class="hrow"><h2 class="h2"><span class="dot teal"></span>法人比率（来場）</h2></div>
+            <div class="chart-wrap"><canvas id="chartShare" height="230"></canvas></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW 2 -->
+    <div data-view="2">
+      <div class="card" style="margin-bottom:14px;">
+        <div class="hrow"><h2 class="h2"><span class="dot teal"></span>当月 法人活動サマリー</h2></div>
+        <div class="metricGrid">
+          <div class="mini"><div class="t">法人来場</div><div class="v" id="s_cv">0</div></div>
+          <div class="mini"><div class="t">法人契約</div><div class="v" id="s_cc">0</div></div>
+          <div class="mini"><div class="t">PR費用（合計）</div><div class="v" id="s_cost">0</div></div>
+          <div class="mini"><div class="t">来場CPA（合計）</div><div class="v" id="s_cpa">0.0</div></div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-bottom:14px;">
+        <div class="hrow"><h2 class="h2"><span class="dot amber"></span>現提携（活動・PR・単価）</h2></div>
+        <div class="tbl-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th style="width:150px;">企業名</th>
+                <th style="width:160px;">対象物件</th>
+                <th style="width:60px;">来場</th>
+                <th style="width:60px;">初回</th>
+                <th style="width:60px;">申込</th>
+                <th style="width:60px;">契約</th>
+                <th style="width:220px;">PR内容</th>
+                <th style="width:100px;">費用</th>
+                <th style="width:110px;">来場CPA</th>
+                <th style="width:120px;">成約獲得単価</th>
+                <th style="width:160px;">特典</th>
+                <th style="width:90px;">手数料</th>
+                <th>備考</th>
+              </tr>
+            </thead>
+            <tbody id="tblPartners"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="hrow"><h2 class="h2"><span class="dot violet"></span>法人業務提携（予定・交渉中）</h2></div>
+        <div class="tbl-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th style="width:170px;">企業名</th>
+                <th style="width:140px;">企業規模</th>
+                <th>提案内容</th>
+                <th style="width:150px;">ステータス</th>
+                <th style="width:180px;">次アクション</th>
+                <th style="width:120px;">予定時期</th>
+              </tr>
+            </thead>
+            <tbody id="tblPlanned"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="pageBreak"></div>
     </div>
   </div>
 </div>
 
-<script id="__EMBEDDED_STATE__" type="application/json">${escapeHTML(JSON.stringify(state))}</script>
+<script id="__STATE__" type="application/json">${embedded}</script>
 <script>
   function unescapeHTML(s){ return s.replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&amp;/g,"&"); }
-  const st = JSON.parse(unescapeHTML(document.getElementById("__EMBEDDED_STATE__").textContent));
-  function loadPage(which){
-    const url = which===1 ? "./index.html" : "./partners.html";
-    document.getElementById("frame").src = url + (url.includes("?") ? "&" : "?") + "embed=1";
-  }
-  function setTab(which){
-    document.getElementById("t1").classList.toggle("active", which===1);
-    document.getElementById("t2").classList.toggle("active", which===2);
-  }
-  document.getElementById("t1").onclick = ()=>{ setTab(1); loadPage(1); };
-  document.getElementById("t2").onclick = ()=>{ setTab(2); loadPage(2); };
+  const state = JSON.parse(unescapeHTML(document.getElementById("__STATE__").textContent));
+  const clamp0 = (v)=>{ const n=Number(v); return Number.isFinite(n)&&n>0?n:0; };
+  const pct = (a,b)=> (b>0) ? (a/b)*100 : 0;
+  const fmt1 = (n)=> (Number.isFinite(n)?n:0).toFixed(1);
+  const nf = new Intl.NumberFormat("ja-JP");
+  const pad2 = (n)=>String(n).padStart(2,"0");
 
-  // provide embedded state to iframe via postMessage
-  window.addEventListener("message",(ev)=>{
-    if(ev.data && ev.data.type==="HB_REQUEST_STATE"){
-      ev.source.postMessage({ type:"HB_STATE", payload: st }, "*");
-    }
+  function fmtJPDate(iso){
+    if(!iso) return "—";
+    const [y,m,d] = iso.split("-").map(Number);
+    if(!y||!m||!d) return "—";
+    return \`\${y}年\${pad2(m)}月\${pad2(d)}日現在\`;
+  }
+  function periodLabel(isoStart){
+    if(!isoStart) return "—";
+    const [y,m] = isoStart.split("-").map(Number);
+    return \`\${y}.\${pad2(m)}\`;
+  }
+  function computeCPA(cost, denom){
+    cost = clamp0(cost); denom = clamp0(denom);
+    return denom>0 ? (cost/denom) : 0;
+  }
+
+  // tabs
+  const tab1 = document.getElementById("tab1");
+  const tab2 = document.getElementById("tab2");
+  const v1 = document.querySelector('[data-view="1"]');
+  const v2 = document.querySelector('[data-view="2"]');
+  tab1.onclick = ()=>{ tab1.classList.add("active"); tab2.classList.remove("active"); v1.classList.add("active"); v2.classList.remove("active"); };
+  tab2.onclick = ()=>{ tab2.classList.add("active"); tab1.classList.remove("active"); v2.classList.add("active"); v1.classList.remove("active"); };
+
+  document.getElementById("btnPrint").onclick = ()=> window.print();
+
+  // header
+  document.getElementById("periodLabel").textContent = periodLabel(state.meta?.periodStart);
+  document.getElementById("asofLabel").textContent = "入力値埋め込み済み";
+  document.getElementById("asOfText").textContent = fmtJPDate(state.meta?.periodEnd);
+
+  // numbers
+  document.getElementById("partnerCompanies").textContent = nf.format(clamp0(state.counts?.partnerCompanies));
+  document.getElementById("targetCompanies").textContent = nf.format(clamp0(state.counts?.targetCompanies));
+
+  const c = state.perf || {};
+  const ly = state.lastYear || {};
+
+  document.getElementById("tv").textContent = nf.format(clamp0(c.totalVisit));
+  document.getElementById("tc").textContent = nf.format(clamp0(c.totalContract));
+  document.getElementById("cv").textContent = nf.format(clamp0(c.corpVisit));
+  document.getElementById("cc").textContent = nf.format(clamp0(c.corpContract));
+  document.getElementById("rc").textContent = nf.format(clamp0(c.referralCards));
+  document.getElementById("topicsBox").textContent = (state.topics||"").trim() || "—";
+
+  const k_ty  = pct(clamp0(c.totalContract), clamp0(c.totalVisit));
+  const k_cvr = pct(clamp0(c.corpVisit), clamp0(c.totalVisit));
+  const k_ccr = pct(clamp0(c.corpContract), clamp0(c.totalContract));
+  const k_cy  = pct(clamp0(c.corpContract), clamp0(c.corpVisit));
+  document.getElementById("k_ty").textContent = fmt1(k_ty);
+  document.getElementById("k_cvr").textContent = fmt1(k_cvr);
+  document.getElementById("k_ccr").textContent = fmt1(k_ccr);
+  document.getElementById("k_cy").textContent = fmt1(k_cy);
+
+  // page2 summary
+  document.getElementById("s_cv").textContent = nf.format(clamp0(c.corpVisit));
+  document.getElementById("s_cc").textContent = nf.format(clamp0(c.corpContract));
+  const totalCost = (state.partners||[]).reduce((s,p)=> s + clamp0(p.cost), 0);
+  const totalVisit = (state.partners||[]).reduce((s,p)=> s + clamp0(p.visit), 0);
+  document.getElementById("s_cost").textContent = nf.format(totalCost);
+  document.getElementById("s_cpa").textContent = (computeCPA(totalCost, totalVisit)).toFixed(1);
+
+  // tables
+  const tb = document.getElementById("tblPartners");
+  tb.innerHTML = "";
+  (state.partners||[]).forEach(p=>{
+    const hasAny = ["name","property","pr","benefit","note"].some(k=> (p[k]||"").toString().trim())
+      || [p.visit,p.first,p.apply,p.contract,p.cost,p.fee].some(v=> clamp0(v)>0);
+    if(!hasAny) return;
+
+    const tr = document.createElement("tr");
+    const td = (t)=>{ const x=document.createElement("td"); x.textContent = t; return x; };
+    tr.appendChild(td((p.name||"").trim()));
+    tr.appendChild(td((p.property||"").trim()));
+    tr.appendChild(td(String(clamp0(p.visit))));
+    tr.appendChild(td(String(clamp0(p.first))));
+    tr.appendChild(td(String(clamp0(p.apply))));
+    tr.appendChild(td(String(clamp0(p.contract))));
+    tr.appendChild(td((p.pr||"").trim()));
+    tr.appendChild(td(String(clamp0(p.cost))));
+    tr.appendChild(td(computeCPA(p.cost, p.visit).toFixed(1)));
+    tr.appendChild(td(computeCPA(p.cost, p.contract).toFixed(1)));
+    tr.appendChild(td((p.benefit||"").trim()));
+    tr.appendChild(td(String(clamp0(p.fee))));
+    tr.appendChild(td((p.note||"").trim()));
+    tb.appendChild(tr);
   });
 
-  // Print: open print.html in new window using embedded state as localStorage substitute
-  document.getElementById("pbtn").onclick = ()=>{
-    const w = window.open("./print.html?embed=1", "_blank", "noopener");
-    const timer = setInterval(()=>{
-      if(!w || w.closed){ clearInterval(timer); return; }
-      try{
-        w.postMessage({ type:"HB_STATE", payload: st }, "*");
-        clearInterval(timer);
-      }catch{}
-    }, 200);
-  };
+  const tp = document.getElementById("tblPlanned");
+  tp.innerHTML = "";
+  (state.planned||[]).forEach(p=>{
+    const hasAny = ["name","companySize","proposal","status","nextAction","schedule"].some(k=> (p[k]||"").toString().trim());
+    if(!hasAny) return;
+    const tr = document.createElement("tr");
+    const td = (t)=>{ const x=document.createElement("td"); x.textContent=t; return x; };
+    tr.appendChild(td((p.name||"").trim()));
+    tr.appendChild(td((p.companySize||"").trim()));
+    tr.appendChild(td((p.proposal||"").trim()));
+    tr.appendChild(td((p.status||"").trim()));
+    tr.appendChild(td((p.nextAction||"").trim()));
+    tr.appendChild(td((p.schedule||"").trim()));
+    tp.appendChild(tr);
+  });
 
-  // init
-  loadPage(1);
+  // charts (if CDN blocked, skip)
+  if(typeof Chart === "undefined"){
+    console.warn("Chart.js が読み込めません（ネットワーク制限の可能性）。グラフは非表示になります。");
+  }else{
+    const centerLabelPlugin = {
+      id: "centerLabel",
+      afterDraw(chart){
+        if(chart.config.type !== "doughnut") return;
+        const {ctx, chartArea} = chart;
+        if(!chartArea) return;
+        const data = chart.data.datasets?.[0]?.data || [];
+        const corp = Number(data[0] || 0);
+        const total = data.reduce((a,b)=>a+Number(b||0), 0);
+        const p = total ? (corp/total*100) : 0;
+        const cx = (chartArea.left + chartArea.right)/2;
+        const cy = (chartArea.top + chartArea.bottom)/2;
+        ctx.save();
+        ctx.textAlign="center"; ctx.textBaseline="middle";
+        ctx.fillStyle="#0f172a"; ctx.font="800 28px Montserrat, sans-serif";
+        ctx.fillText(p.toFixed(1)+"%", cx, cy-6);
+        ctx.fillStyle="#64748b"; ctx.font="700 12px Noto Sans JP, sans-serif";
+        ctx.fillText("法人比率（来場）", cx, cy+18);
+        ctx.restore();
+      }
+    };
+    Chart.register(centerLabelPlugin);
+
+    const ly_ty  = pct(clamp0(ly.totalContract), clamp0(ly.totalVisit));
+    const ly_cvr = pct(clamp0(ly.corpVisit), clamp0(ly.totalVisit));
+    const ly_ccr = pct(clamp0(ly.corpContract), clamp0(ly.totalContract));
+    const ly_cy  = pct(clamp0(ly.corpContract), clamp0(ly.corpVisit));
+
+    new Chart(document.getElementById("chartKPI"),{
+      type:"bar",
+      data:{
+        labels:["総歩留り","法人来場比","法人契約比","法人歩留り"],
+        datasets:[
+          { label:"当月", data:[Number(fmt1(k_ty)),Number(fmt1(k_cvr)),Number(fmt1(k_ccr)),Number(fmt1(k_cy))],
+            backgroundColor:"rgba(37,99,235,0.35)", borderColor:"rgba(37,99,235,1)", borderWidth:1 },
+          { label:"前年同月", data:[Number(fmt1(ly_ty)),Number(fmt1(ly_cvr)),Number(fmt1(ly_ccr)),Number(fmt1(ly_cy))],
+            backgroundColor:"rgba(244,63,94,0.25)", borderColor:"rgba(244,63,94,1)", borderWidth:1 }
+        ]
+      },
+      options:{ responsive:true, plugins:{legend:{position:"top"}}, scales:{ y:{ beginAtZero:true, suggestedMax:30, ticks:{ callback:(v)=>v+"%" } } } }
+    });
+
+    new Chart(document.getElementById("chartFunnel"),{
+      type:"bar",
+      data:{ labels:["来場 → 契約","法人来場 → 法人契約"], datasets:[{ data:[Number(fmt1(k_ty)),Number(fmt1(k_cy))], backgroundColor:"rgba(14,165,233,0.35)", borderColor:"rgba(14,165,233,1)", borderWidth:1 }] },
+      options:{ indexAxis:"y", responsive:true, plugins:{legend:{display:false}}, scales:{ x:{ beginAtZero:true, suggestedMax:30, ticks:{ callback:(v)=>v+"%" } } } }
+    });
+
+    const nonCorp = Math.max(0, clamp0(c.totalVisit) - clamp0(c.corpVisit));
+    new Chart(document.getElementById("chartShare"),{
+      type:"doughnut",
+      data:{ labels:["法人","非法人"], datasets:[{ data:[clamp0(c.corpVisit), nonCorp], backgroundColor:["rgba(37,99,235,0.55)","rgba(244,63,94,0.35)"], borderColor:["rgba(37,99,235,1)","rgba(244,63,94,1)"], borderWidth:1, cutout:"62%" }] },
+      options:{ responsive:true, plugins:{ legend:{ position:"bottom" } } }
+    });
+  }
 </script>
-</body></html>`;
+</body>
+</html>`;
 
   const blob = new Blob([html], {type:"text/html;charset=utf-8"});
   const url = URL.createObjectURL(blob);
@@ -1103,21 +1418,3 @@ function exportShareHTML(){
 
   setSaveStatus("保存済み");
 }
-
-function escapeHTML(str){
-  return String(str)
-    .replace(/&/g,"&amp;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;");
-}
-
-/** ======================
- * Init
- * ====================== */
-initCharts();
-bind();
-recalc();
-saveState();
-</script>
-</body>
-</html>
