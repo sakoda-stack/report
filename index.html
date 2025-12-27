@@ -62,6 +62,27 @@
       border-bottom:1px solid rgba(255,255,255,0.08);
       flex-wrap:wrap;
     }
+
+    /* Top nav */
+    .nav{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:flex-end;
+    }
+    .tab{
+      color:#fff;
+      text-decoration:none;
+      font-weight:800;
+      font-size:12px;
+      padding:8px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.18);
+      background:rgba(255,255,255,.08);
+      white-space:nowrap;
+    }
+    .tab.active{ background:rgba(37,99,235,.92); border-color:rgba(37,99,235,1); }
     .title{
       display:flex;flex-direction:column;gap:4px;
       min-width: 260px;
@@ -487,7 +508,7 @@
     /* Topics */
     textarea#topics{
       width:100%;
-      min-height:200px;
+      min-height: 160px;
       padding:12px;
       border-radius:14px;
       border:1px solid var(--line);
@@ -560,6 +581,14 @@
       <div class="title">
         <h1>BUSINESS MONTHLY REPORT</h1>
         <div class="sub">入力 → 自動集計 → KPI可視化 → 目標明示 → 自動保存</div>
+      </div>
+
+
+      <div class="nav">
+        <a class="tab active" href="./index.html">月報</a>
+        <a class="tab" href="./page2.html">法人活動</a>
+        <a class="tab" href="./view.html">閲覧</a>
+        <a class="tab" href="./print.html" target="_blank" rel="noopener">PDF印刷</a>
       </div>
 
       <div class="top-controls">
@@ -966,7 +995,7 @@
             <div class="subline">中央に%表示</div>
           </div>
           <div class="chart-wrap">
-            <canvas id="chartShare" height="220"></canvas>
+            <canvas id="chartShare" height="180"></canvas>
           </div>
         </div>
 
@@ -979,18 +1008,20 @@
             <canvas id="chartPartners" height="240"></canvas>
           </div>
         </div>
-
-        <div class="card">
-          <div class="hrow">
-            <h2 class="h2"><span class="dot violet"></span>Topics（メモ）</h2>
-            <div class="subline">重要論点／次月アクション</div>
-          </div>
-          <textarea id="topics" placeholder="・今月の特筆事項
-・新規提携企業の反応
-・次月へのアクション"></textarea>
-        </div>
-
       </div>
+
+      <div class="topics-row" style="grid-column:1 / -1; min-width:0;">
+                <div class="card">
+                  <div class="hrow">
+                    <h2 class="h2"><span class="dot violet"></span>Topics（メモ）</h2>
+                    <div class="subline">重要論点／次月アクション</div>
+                  </div>
+                  <textarea id="topics" placeholder="・今月の特筆事項
+        ・新規提携企業の反応
+        ・次月へのアクション"></textarea>
+                </div>
+      </div>
+
     </div>
   </div>
 
@@ -1142,10 +1173,10 @@
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
       ctx.fillStyle = "#0f172a";
-      ctx.font = "800 30px Montserrat, sans-serif";
+      ctx.font = "800 26px Montserrat, sans-serif";
       ctx.fillText(p.toFixed(1) + "%", cx, cy - 6);
       ctx.fillStyle = "#64748b";
-      ctx.font = "700 12px Noto Sans JP, sans-serif";
+      ctx.font = "700 11px Noto Sans JP, sans-serif";
       ctx.fillText("法人比率（来場）", cx, cy + 18);
       ctx.restore();
     }
@@ -1662,11 +1693,9 @@
     $("btnReset").addEventListener("click", resetAll);
 
     $("btnPrint").addEventListener("click", ()=>{
-      // 印刷直前にレイアウト/チャートを整える
-      requestAnimationFrame(()=>{
-        window.dispatchEvent(new Event("resize"));
-        setTimeout(()=>window.print(), 60);
-      });
+      // 印刷用ページへ（別タブ）
+      const w = window.open("./print.html", "_blank");
+      if(w) w.opener = null;
     });
   }
 
