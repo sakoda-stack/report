@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" note="width=device-width, initial-scale=1"/>
+  <title>法人活動（提携詳細）</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg:#0b1220;
+      --paper:#ffffff;
+      --ink:#0f172a;
+      --muted:#64748b;
+      --line:#e2e8f0;
+      --soft:#f1f5f9;
+
+      --blue:#2563eb;
+      --teal:#0ea5e9;
+      --violet:#7c3aed;
+      --amber:#f59e0b;
+
+      --shadow: 0 30px 60px -25px rgba(0,0,0,0.35);
+      --radius:14px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:'Noto Sans JP',system-ui,sans-serif;
+      background: radial-gradient(1200px 700px at 10% 10%, #18223d, var(--bg));
+      color:var(--ink);
+      padding:18px;
+      display:flex;
+      justify-content:center;
+      overflow-x:auto;
+    }
+    a{ color: inherit; text-decoration: none; }
+
+    .app{
+      width:min(1360px, 100%);
+      background:var(--paper);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,0.10);
+    }
+
+    .topbar{
+      display:flex;
+      gap:12px;
+      align-items:center;
+      justify-content:space-between;
+      padding:14px 16px;
+      background:linear-gradient(90deg, #0f172a, #101c38);
+      color:#fff;
+      border-bottom:1px solid rgba(255,255,255,0.08);
+      flex-wrap:wrap;
+    }
+    .brand{ display:flex; flex-direction:column; gap:3px; min-width:260px; }
+    .brand h1{ margin:0; font-family:'Montserrat',sans-serif; letter-spacing:1px; font-size:16px; font-weight:800; white-space:nowrap; }
+    .brand .sub{ font-size:12px; opacity:.85; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .nav{ display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+    .tab{
+      padding:9px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,0.16);
+      background:rgba(255,255,255,0.08);
+      font-weight:900;
+      font-size:12px;
+      white-space:nowrap;
+    }
+    .tab.active{ background:rgba(37,99,235,0.92); border-color:rgba(37,99,235,1); }
+
+    .controls{
+      display:flex; gap:10px; align-items:center; justify-content:flex-end;
+      flex:1 1 auto; flex-wrap:wrap; min-width: 300px;
+    }
+    .chip{
+      display:flex; align-items:center; gap:10px;
+      padding:10px 12px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,0.16);
+      background:rgba(255,255,255,0.08);
+      white-space:nowrap;
+    }
+    .chip .p{ font-family:'Montserrat',sans-serif; font-weight:900; color:#93c5fd; font-size:13px; }
+    .chip .s{ font-size:12px; opacity:.9; }
+    .btn{
+      appearance:none; border:none; cursor:pointer;
+      padding:10px 12px;
+      border-radius:12px;
+      font-weight:900; font-size:12px;
+      color:#fff;
+      background:rgba(255,255,255,0.10);
+      border:1px solid rgba(255,255,255,0.16);
+      transition:.15s transform, .15s background;
+      white-space:nowrap;
+    }
+    .btn:hover{ background:rgba(255,255,255,0.16); transform:translateY(-1px); }
+    .btn.primary{ background:rgba(37,99,235,0.92); border-color:rgba(37,99,235,1); }
+    .btn.primary:hover{ background:rgba(37,99,235,1); }
+
+    .grid{
+      display:flex;
+      flex-direction:column;
+      gap:14px;
+      padding:14px;
+      background:linear-gradient(180deg, #ffffff, #f8fafc);
+    }
+
+    .card{
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      padding:14px;
+      box-shadow: 0 14px 30px -24px rgba(15,23,42,0.35);
+    }
+    .hrow{ display:flex; align-items:center; gap:10px; margin-bottom:10px; }
+    .h2{ margin:0; font-size:14px; font-weight:900; display:flex; align-items:center; gap:10px; }
+    .dot{ width:10px; height:10px; border-radius:4px; display:inline-block; }
+    .dot.teal{ background:var(--teal); }
+    .dot.amber{ background:var(--amber); }
+    .dot.violet{ background:var(--violet); }
+
+    /* Summary pills */
+    .summary{
+      display:grid;
+      grid-template-columns: repeat(4, minmax(0,1fr));
+      gap:10px;
+    }
+    @media (max-width: 900px){ .summary{ grid-template-columns: repeat(2, minmax(0,1fr)); } }
+    .pill{
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:12px;
+      background:linear-gradient(180deg,#fff,#f8fafc);
+    }
+    .pill .t{ font-size:11px; font-weight:900; color:var(--muted); }
+    .pill .v{ margin-top:6px; font-family:'Montserrat',sans-serif; font-weight:900; font-size:26px; }
+    .pill .u{ font-size:12px; font-weight:900; color:#94a3b8; }
+
+    /* Tables */
+    .tbl-wrap{ overflow:auto; border:1px solid var(--line); border-radius:14px; }
+    table{ width:100%; border-collapse:collapse; table-layout:fixed; }
+    th{
+      background:var(--ink);
+      color:#fff;
+      font-size:11px;
+      padding:10px;
+      border:1px solid var(--ink);
+      text-align:left;
+      white-space:nowrap;
+    }
+    td{
+      border:1px solid var(--line);
+      padding:0;
+      background:#fff;
+      vertical-align:top;
+      min-width:0;
+    }
+    td input, td textarea, td select{
+      width:100%;
+      border:none;
+      outline:none;
+      padding:10px;
+      font-size:13px;
+      font-family:inherit;
+      min-width:0;
+    }
+    td input[type="number"]{
+      text-align:right;
+      font-family:'Montserrat',sans-serif;
+      font-weight:900;
+      font-size:13px;
+    }
+    td textarea{
+      resize:vertical;
+      min-height:40px;
+      line-height:1.5;
+    }
+    td input:focus, td textarea:focus, td select:focus{
+      box-shadow: inset 0 0 0 2px rgba(37,99,235,.55);
+      background:#f8fafc;
+    }
+
+    .actions{ margin-top:10px; display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+    .btn.sm{ padding:8px 10px; font-size:12px; border-radius:10px; }
+    .btn.icon{
+      padding:6px 6px;
+      width:34px; height:34px;
+      border-radius:10px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      font-size:16px;
+      line-height:1;
+    }
+    .delCell{ width:48px; text-align:center; }
+    .calcCell{
+      font-family:'Montserrat',sans-serif;
+      font-weight:900;
+      font-size:12px;
+      padding:10px;
+      text-align:right;
+      color:#0f172a;
+      background:linear-gradient(180deg,#fff,#f8fafc);
+    }
+    .muted{ color:var(--muted); font-weight:800; font-size:12px; }
+  </style>
+</head>
+
+<body>
+  <div class="app">
+    <div class="topbar">
+      <div class="brand">
+        <h1>法人活動（提携詳細）</h1>
+        <div class="sub">Page2：現提携の活動・費用・単価／法人業務提携（予定）の提案内容</div>
+      </div>
+
+      <div class="nav">
+        <a class="tab" href="./index.html">月報</a>
+        <a class="tab active" href="./partners.html">法人活動</a>
+        <a class="tab" href="./print.html" target="_blank" rel="noopener">PDF印刷</a>
+      </div>
+
+      <div class="controls">
+        <div class="chip">
+          <div class="p" id="periodLabel">—</div>
+          <div class="s" id="saveStatus">未保存</div>
+        </div>
+        <button class="btn" id="btnShare">共有用HTML出力</button>
+        <button class="btn primary" id="btnPrint">PDF印刷（2ページ）</button>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <div class="hrow">
+          <h2 class="h2"><span class="dot teal"></span>当月 法人活動サマリー</h2>
+        </div>
+
+        <div class="summary">
+          <div class="pill">
+            <div class="t">法人来場</div>
+            <div><span class="v" id="s_corpVisit">0</span> <span class="u">件</span></div>
+          </div>
+          <div class="pill">
+            <div class="t">法人契約</div>
+            <div><span class="v" id="s_corpContract">0</span> <span class="u">件</span></div>
+          </div>
+          <div class="pill">
+            <div class="t">PR費用（合計）</div>
+            <div><span class="v" id="s_cost">0</span> <span class="u">円</span></div>
+          </div>
+          <div class="pill">
+            <div class="t">来場CPA（合計）</div>
+            <div><span class="v" id="s_cpaVisit">0.0</span> <span class="u">円/来場</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="hrow">
+          <h2 class="h2"><span class="dot amber"></span>現提携（活動・PR・単価）</h2>
+        </div>
+
+        <div class="tbl-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th style="width:160px;">企業名</th>
+                <th style="width:170px;">対象物件名</th>
+                <th style="width:70px;">来場</th>
+                <th style="width:70px;">初回</th>
+                <th style="width:70px;">申込</th>
+                <th style="width:70px;">契約</th>
+                <th style="width:210px;">PR内容</th>
+                <th style="width:110px;">PR費用(円)</th>
+                <th style="width:110px;">来場CPA</th>
+                <th style="width:130px;">成約獲得単価</th>
+                <th style="width:150px;">特典（内容）</th>
+                <th style="width:110px;">手数料(円)</th>
+                <th style="width:220px;">備考</th>
+                <th class="delCell">削</th>
+              </tr>
+            </thead>
+            <tbody id="partnersBody"></tbody>
+          </table>
+        </div>
+
+        <div class="actions">
+          <button class="btn primary sm" id="addPartner">行追加</button>
+          <span class="muted">※ 来場CPA＝費用/来場、成約獲得単価＝費用/契約</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="hrow">
+          <h2 class="h2"><span class="dot violet"></span>法人業務提携（予定・交渉中）</h2>
+        </div>
+
+        <div class="tbl-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th style="width:180px;">企業名</th>
+                <th style="width:150px;">企業規模</th>
+                <th>提案内容（要点）</th>
+                <th style="width:170px;">ステータス</th>
+                <th style="width:200px;">次アクション</th>
+                <th style="width:140px;">予定時期</th>
+                <th class="delCell">削</th>
+              </tr>
+            </thead>
+            <tbody id="plannedBody"></tbody>
+          </table>
+        </div>
+
+        <div class="actions">
+          <button class="btn primary sm" id="addPlanned">行追加</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+/** ======================
+ * Shared State / Storage
+ * ====================== */
+const STORAGE_KEY = "hb_monthly_report_state_v2";
+
+const DEFAULT_STATE = {
+  meta: { periodStart: "2025-12-01", periodEnd: "2025-12-31" },
+  counts: { partnerCompanies: 9, targetCompanies: 1856 },
+  perf: { totalVisit: 85, totalContract: 4, corpVisit: 5, corpContract: 1, referralCards: 3 },
+  lastYear: { totalVisit: 148, totalContract: 26, corpVisit: 9, corpContract: 2, referralCards: 0 },
+  nextMonthPast: { totalVisit: 0, totalContract: 0, corpVisit: 0, corpContract: 0, referralCards: 0 },
+  nextTarget: { totalVisit: 0, totalContract: 0, corpVisit: 0, corpContract: 0, referralCards: 0 },
+  partners: [{ name:"", property:"", visit:0, first:0, apply:0, contract:0, pr:"", cost:0, benefit:"", fee:0, note:"" }],
+  planned:  [{ name:"", companySize:"", proposal:"", status:"", nextAction:"", schedule:"" }],
+  topics: ""
+};
+
+function deepMerge(base, patch){
+  const out = structuredClone(base);
+  for(const k of Object.keys(patch||{})){
+    if(patch[k] && typeof patch[k]==="object" && !Array.isArray(patch[k])){
+      out[k] = deepMerge(out[k]||{}, patch[k]);
+    }else{
+      out[k] = patch[k];
+    }
+  }
+  return out;
+}
+
+let state = loadState();
+
+function loadState(){
+  // if opened as embedded from share file, request via postMessage
+  const params = new URLSearchParams(location.search);
+  if(params.get("embed")==="1"){
+    window.parent?.postMessage({ type:"HB_REQUEST_STATE" }, "*");
+    window.addEventListener("message", (ev)=>{
+      if(ev.data && ev.data.type==="HB_STATE"){
+        state = deepMerge(DEFAULT_STATE, ev.data.payload || {});
+        state.partners = Array.isArray(ev.data.payload?.partners) && ev.data.payload.partners.length ? ev.data.payload.partners : structuredClone(DEFAULT_STATE.partners);
+        state.planned  = Array.isArray(ev.data.payload?.planned) && ev.data.payload.planned.length ? ev.data.payload.planned : structuredClone(DEFAULT_STATE.planned);
+        bind();
+        renderAll();
+        saveState();
+      }
+    }, { once:false });
+  }
+
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if(!raw) return structuredClone(DEFAULT_STATE);
+  try{
+    const obj = JSON.parse(raw);
+    const merged = deepMerge(DEFAULT_STATE, obj);
+    merged.partners = Array.isArray(obj.partners) && obj.partners.length ? obj.partners : structuredClone(DEFAULT_STATE.partners);
+    merged.planned  = Array.isArray(obj.planned) && obj.planned.length ? obj.planned : structuredClone(DEFAULT_STATE.planned);
+    return merged;
+  }catch{
+    return structuredClone(DEFAULT_STATE);
+  }
+}
+function saveState(){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  setSaveStatus("保存済み");
+}
+function setSaveStatus(s){ document.getElementById("saveStatus").textContent = s; }
+const $ = (id)=>document.getElementById(id);
+const clamp0 = (v)=>{ const n = Number(v); return Number.isFinite(n) && n>0 ? n : 0; };
+const nf = new Intl.NumberFormat("ja-JP");
+
+function derivePeriodLabel(isoStart){
+  if(!isoStart) return "—";
+  const [y,m] = isoStart.split("-").map(Number);
+  if(!y||!m) return "—";
+  return `${y}.${String(m).padStart(2,"0")}`;
+}
+
+function computeCPA(cost, denom){
+  cost = clamp0(cost); denom = clamp0(denom);
+  return denom>0 ? (cost/denom) : 0;
+}
+
+function bind(){
+  $("periodLabel").textContent = derivePeriodLabel(state.meta.periodStart);
+
+  $("btnPrint").onclick = ()=> window.open("./print.html", "_blank", "noopener");
+
+  // share export is implemented on index; here we redirect user to index share button
+  $("btnShare").onclick = ()=>{
+    // open index and let user export there (same state)
+    window.open("./index.html", "_blank", "noopener");
+  };
+}
+
+function renderSummary(){
+  $("s_corpVisit").textContent = nf.format(clamp0(state.perf.corpVisit));
+  $("s_corpContract").textContent = nf.format(clamp0(state.perf.corpContract));
+
+  const totalCost = (state.partners||[]).reduce((s,p)=> s + clamp0(p.cost), 0);
+  $("s_cost").textContent = nf.format(totalCost);
+
+  const totalVisit = (state.partners||[]).reduce((s,p)=> s + clamp0(p.visit), 0);
+  $("s_cpaVisit").textContent = (computeCPA(totalCost, totalVisit)).toFixed(1);
+}
+
+function renderPartners(){
+  const tbody = $("partnersBody");
+  tbody.innerHTML = "";
+
+  (state.partners||[]).forEach((p, idx)=>{
+    const tr = document.createElement("tr");
+
+    const td = (w)=>{ const x=document.createElement("td"); if(w) x.style.width=w; return x; };
+
+    const cellInput = (value, placeholder, onInput, type="text")=>{
+      const i = document.createElement("input");
+      i.type = type;
+      if(type==="number"){ i.min="0"; i.step="1"; i.value = clamp0(value); }
+      else { i.value = value || ""; i.placeholder = placeholder || ""; }
+      i.addEventListener("input", ()=>{ onInput(i.value); markDirty(); renderSummary(); renderPartners(); saveState(); });
+      return i;
+    };
+
+    const cellArea = (value, placeholder, onInput)=>{
+      const t = document.createElement("textarea");
+      t.value = value || "";
+      t.placeholder = placeholder || "";
+      t.addEventListener("input", ()=>{ onInput(t.value); markDirty(); saveState(); });
+      return t;
+    };
+
+    // name
+    const c1 = td(); c1.appendChild(cellInput(p.name,"例：ベルス",(v)=>p.name=v));
+    // property
+    const c2 = td(); c2.appendChild(cellInput(p.property,"例：LP浦和神明",(v)=>p.property=v));
+    // visit
+    const c3 = td(); c3.appendChild(cellInput(p.visit,"",(v)=>p.visit=clamp0(v),"number"));
+    // first
+    const c4 = td(); c4.appendChild(cellInput(p.first,"",(v)=>p.first=clamp0(v),"number"));
+    // apply
+    const c5 = td(); c5.appendChild(cellInput(p.apply,"",(v)=>p.apply=clamp0(v),"number"));
+    // contract
+    const c6 = td(); c6.appendChild(cellInput(p.contract,"",(v)=>p.contract=clamp0(v),"number"));
+    // pr
+    const c7 = td(); c7.appendChild(cellArea(p.pr,"例：WEB広告／チラシ／イベント",(v)=>p.pr=v));
+    // cost
+    const c8 = td(); c8.appendChild(cellInput(p.cost,"",(v)=>p.cost=clamp0(v),"number"));
+
+    // cpa visit (calc)
+    const cpaV = computeCPA(p.cost, p.visit);
+    const c9 = td(); c9.className="calcCell"; c9.textContent = cpaV ? cpaV.toFixed(1) : "0.0";
+
+    // cost per contract (成約獲得単価)
+    const cpaC = computeCPA(p.cost, p.contract);
+    const c10 = td(); c10.className="calcCell"; c10.textContent = cpaC ? cpaC.toFixed(1) : "0.0";
+
+    // benefit
+    const c11 = td(); c11.appendChild(cellArea(p.benefit,"例：特典内容",(v)=>p.benefit=v));
+
+    // fee
+    const c12 = td(); c12.appendChild(cellInput(p.fee,"",(v)=>p.fee=clamp0(v),"number"));
+
+    // note
+    const c13 = td(); c13.appendChild(cellArea(p.note,"備考",(v)=>p.note=v));
+
+    // delete (small)
+    const c14 = td(); c14.className="delCell";
+    const b = document.createElement("button");
+    b.className = "btn icon";
+    b.type="button";
+    b.title="削除";
+    b.textContent = "🗑";
+    b.onclick = ()=>{
+      state.partners.splice(idx,1);
+      if(state.partners.length===0){
+        state.partners.push({ name:"", property:"", visit:0, first:0, apply:0, contract:0, pr:"", cost:0, benefit:"", fee:0, note:"" });
+      }
+      markDirty();
+      renderAll();
+      saveState();
+    };
+    c14.appendChild(b);
+
+    [c1,c2,c3,c4,c5,c6,c7,c8,c9,c10,c11,c12,c13,c14].forEach(x=>tr.appendChild(x));
+    tbody.appendChild(tr);
+  });
+}
+
+function renderPlanned(){
+  const tbody = $("plannedBody");
+  tbody.innerHTML = "";
+
+  (state.planned||[]).forEach((p, idx)=>{
+    const tr = document.createElement("tr");
+
+    const td = ()=>document.createElement("td");
+    const cellInput = (value, placeholder, onInput)=>{
+      const i=document.createElement("input");
+      i.value = value || "";
+      i.placeholder = placeholder || "";
+      i.addEventListener("input", ()=>{ onInput(i.value); markDirty(); saveState(); });
+      return i;
+    };
+    const cellArea = (value, placeholder, onInput)=>{
+      const t=document.createElement("textarea");
+      t.value=value||"";
+      t.placeholder=placeholder||"";
+      t.addEventListener("input", ()=>{ onInput(t.value); markDirty(); saveState(); });
+      return t;
+    };
+
+    const c1 = td(); c1.appendChild(cellInput(p.name,"企業名",(v)=>p.name=v));
+    const c2 = td(); c2.appendChild(cellInput(p.companySize,"例：従業員数/拠点数/売上規模",(v)=>p.companySize=v));
+    const c3 = td(); c3.appendChild(cellArea(p.proposal,"提案内容（要点）",(v)=>p.proposal=v));
+    const c4 = td(); c4.appendChild(cellInput(p.status,"例：提案中/交渉中/稟議中",(v)=>p.status=v));
+    const c5 = td(); c5.appendChild(cellArea(p.nextAction,"次アクション",(v)=>p.nextAction=v));
+    const c6 = td(); c6.appendChild(cellInput(p.schedule,"例：2026/01",(v)=>p.schedule=v));
+
+    const c7 = td(); c7.className="delCell";
+    const b=document.createElement("button");
+    b.className="btn icon";
+    b.type="button";
+    b.title="削除";
+    b.textContent="🗑";
+    b.onclick=()=>{
+      state.planned.splice(idx,1);
+      if(state.planned.length===0){
+        state.planned.push({ name:"", companySize:"", proposal:"", status:"", nextAction:"", schedule:"" });
+      }
+      markDirty();
+      renderAll();
+      saveState();
+    };
+    c7.appendChild(b);
+
+    [c1,c2,c3,c4,c5,c6,c7].forEach(x=>tr.appendChild(x));
+    tbody.appendChild(tr);
+  });
+}
+
+function markDirty(){ setSaveStatus("編集中…"); }
+
+function renderAll(){
+  renderSummary();
+  renderPartners();
+  renderPlanned();
+}
+
+function attachButtons(){
+  $("addPartner").onclick = ()=>{
+    state.partners.push({ name:"", property:"", visit:0, first:0, apply:0, contract:0, pr:"", cost:0, benefit:"", fee:0, note:"" });
+    markDirty();
+    renderPartners();
+    saveState();
+  };
+  $("addPlanned").onclick = ()=>{
+    state.planned.push({ name:"", companySize:"", proposal:"", status:"", nextAction:"", schedule:"" });
+    markDirty();
+    renderPlanned();
+    saveState();
+  };
+}
+
+bind();
+attachButtons();
+renderAll();
+saveState();
+</script>
+</body>
+</html>

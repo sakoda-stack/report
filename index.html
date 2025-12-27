@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="viewport" note="width=device-width, initial-scale=1"/>
   <title>Business Monthly Report</title>
 
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
@@ -34,117 +34,102 @@
       font-family:'Noto Sans JP',system-ui,sans-serif;
       background: radial-gradient(1200px 700px at 10% 10%, #18223d, var(--bg));
       color:var(--ink);
-      padding:20px;
+      padding:18px;
       display:flex;
       justify-content:center;
       overflow-x:auto;
     }
+    a{ color: inherit; text-decoration: none; }
 
     .app{
-      width:min(1320px, 100%);
+      width:min(1360px, 100%);
       background:var(--paper);
       border-radius:var(--radius);
       box-shadow:var(--shadow);
-      border:1px solid rgba(255,255,255,0.08);
-      overflow-x:auto;
-      overflow-y:visible;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,0.10);
     }
 
-    /* Top bar */
+    /* Topbar */
     .topbar{
       display:flex;
-      gap:14px;
+      gap:12px;
       align-items:center;
       justify-content:space-between;
-      padding:16px 18px;
+      padding:14px 16px;
       background:linear-gradient(90deg, #0f172a, #101c38);
       color:#fff;
       border-bottom:1px solid rgba(255,255,255,0.08);
       flex-wrap:wrap;
     }
-    .title{
-      display:flex;flex-direction:column;gap:4px;
+    .brand{
+      display:flex; flex-direction:column; gap:3px;
       min-width: 260px;
     }
-    .title h1{
+    .brand h1{
       margin:0;
       font-family:'Montserrat',sans-serif;
       letter-spacing:1px;
-      font-size:18px;
+      font-size:16px;
       font-weight:800;
       white-space:nowrap;
     }
-    .title .sub{
-      font-size:12px;
-      opacity:.85;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
+    .brand .sub{ font-size:12px; opacity:.85; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .nav{
+      display:flex; gap:8px; align-items:center; flex-wrap:wrap;
     }
-
-    .top-controls{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      align-items:center;
-      justify-content:flex-end;
-      flex:1 1 auto;
-      min-width: 280px;
-    }
-
-    .chip{
-      display:flex;align-items:center;gap:10px;
+    .tab{
+      padding:9px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,0.16);
       background:rgba(255,255,255,0.08);
+      font-weight:900;
+      font-size:12px;
+      white-space:nowrap;
+    }
+    .tab.active{ background:rgba(37,99,235,0.92); border-color:rgba(37,99,235,1); }
+    .controls{
+      display:flex; gap:10px; align-items:center; justify-content:flex-end;
+      flex:1 1 auto;
+      flex-wrap:wrap;
+      min-width: 300px;
+    }
+    .chip{
+      display:flex; align-items:center; gap:10px;
       padding:10px 12px;
       border-radius:999px;
-      border:1px solid rgba(255,255,255,0.14);
-      flex:0 0 auto;
-    }
-    .chip .p{
-      font-family:'Montserrat',sans-serif;
-      font-weight:800;
-      color:#93c5fd;
-      font-size:14px;
+      border:1px solid rgba(255,255,255,0.16);
+      background:rgba(255,255,255,0.08);
       white-space:nowrap;
     }
-    .chip .status{
-      font-size:12px;
-      opacity:.9;
-      white-space:nowrap;
-    }
-
-    .date-range{
+    .chip .p{ font-family:'Montserrat',sans-serif; font-weight:900; color:#93c5fd; font-size:13px; }
+    .chip .s{ font-size:12px; opacity:.9; }
+    .range{
       display:flex; gap:8px; align-items:center;
       padding:10px 12px;
       border-radius:999px;
+      border:1px solid rgba(255,255,255,0.16);
       background:rgba(255,255,255,0.08);
-      border:1px solid rgba(255,255,255,0.14);
     }
-    .date-range label{
-      font-size:12px; opacity:.9; font-weight:700; white-space:nowrap;
-    }
-    .date-range input{
+    .range label{ font-size:12px; font-weight:900; opacity:.9; white-space:nowrap; }
+    .range input{
       border:none; outline:none;
       padding:6px 8px;
       border-radius:10px;
       background:rgba(255,255,255,0.12);
       color:#fff;
-      font-weight:700;
+      font-weight:900;
       font-size:12px;
     }
-    .date-range input::-webkit-calendar-picker-indicator{
-      filter: invert(1);
-      opacity:.9;
-    }
+    .range input::-webkit-calendar-picker-indicator{ filter: invert(1); opacity:.9; }
 
-    .actions{
-      display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end;
-    }
     .btn{
-      appearance:none;border:none;cursor:pointer;
-      padding:10px 12px;border-radius:10px;
-      font-weight:800;font-size:12px;
-      color:#fff;background:rgba(255,255,255,0.10);
+      appearance:none; border:none; cursor:pointer;
+      padding:10px 12px;
+      border-radius:12px;
+      font-weight:900; font-size:12px;
+      color:#fff;
+      background:rgba(255,255,255,0.10);
       border:1px solid rgba(255,255,255,0.16);
       transition:.15s transform, .15s background;
       white-space:nowrap;
@@ -156,18 +141,12 @@
     /* Layout */
     .grid{
       display:grid;
-      grid-template-columns: minmax(0, 1fr) clamp(340px, 34vw, 520px);
-      gap:16px;
-      padding:16px;
+      grid-template-columns: minmax(0, 1fr) clamp(360px, 34vw, 520px);
+      gap:14px;
+      padding:14px;
       background:linear-gradient(180deg, #ffffff, #f8fafc);
-      min-width: 0;
     }
-    .grid > *{ min-width:0; }
-
-    @media (max-width: 1180px){
-      .grid{ grid-template-columns: 1fr; }
-      .top-controls{ justify-content:flex-start; }
-    }
+    @media (max-width: 1180px){ .grid{ grid-template-columns:1fr; } }
 
     .card{
       background:#fff;
@@ -178,50 +157,27 @@
       min-width:0;
     }
 
-    .hrow{
-      display:flex; align-items:center; justify-content:space-between; gap:10px;
-      margin-bottom:10px;
-    }
-
+    .hrow{ display:flex; align-items:center; gap:10px; margin-bottom:10px; }
     .h2{
       margin:0;
       font-size:14px;
       font-weight:900;
-      display:flex;
-      align-items:center;
-      gap:10px;
-      min-width:0;
+      display:flex; align-items:center; gap:10px;
     }
-    .dot{
-      height:10px;width:10px;border-radius:4px;
-      display:inline-block; flex:0 0 auto;
-    }
+    .dot{ width:10px; height:10px; border-radius:4px; display:inline-block; }
     .dot.blue{ background:var(--blue); }
     .dot.teal{ background:var(--teal); }
     .dot.violet{ background:var(--violet); }
     .dot.amber{ background:var(--amber); }
-
-    .subline{
-      font-size:12px;
-      color:var(--muted);
-      font-weight:700;
-      white-space:nowrap;
-    }
-    .subline strong{
-      color:var(--ink);
-      font-weight:900;
-    }
 
     /* KPI cards */
     .kpis{
       display:grid;
       grid-template-columns: repeat(4, minmax(0,1fr));
       gap:10px;
-      min-width:0;
     }
-    @media (max-width: 700px){
-      .kpis{ grid-template-columns: repeat(2, minmax(0,1fr)); }
-    }
+    @media (max-width: 720px){ .kpis{ grid-template-columns: repeat(2, minmax(0,1fr)); } }
+
     .kpi{
       border:1px solid var(--line);
       border-radius:14px;
@@ -229,22 +185,10 @@
       background:linear-gradient(180deg, #ffffff, #f8fafc);
       min-width:0;
     }
-    .kpi .label{
-      font-size:11px; font-weight:900; color:var(--muted);
-    }
-    .kpi .val{
-      display:flex; align-items:baseline; gap:6px;
-      margin-top:6px;
-    }
-    .kpi .num{
-      font-family:'Montserrat',sans-serif;
-      font-weight:900;
-      font-size:28px;
-      color:var(--ink);
-    }
-    .kpi .unit{
-      font-size:12px; font-weight:900; color:#94a3b8;
-    }
+    .kpi .label{ font-size:11px; font-weight:900; color:var(--muted); }
+    .kpi .val{ display:flex; align-items:baseline; gap:6px; margin-top:6px; }
+    .kpi .num{ font-family:'Montserrat',sans-serif; font-weight:900; font-size:28px; }
+    .kpi .unit{ font-size:12px; font-weight:900; color:#94a3b8; }
     .delta{
       margin-top:8px;
       font-size:11px;
@@ -265,16 +209,14 @@
     .delta.bad{ color:var(--bad); }
     .delta.neutral{ color:var(--muted); }
 
-    /* Highlight stats (company/targets) */
+    /* Highlights (editable) */
     .highlights{
       display:grid;
       grid-template-columns: 1fr 1fr;
       gap:10px;
       margin-top:12px;
     }
-    @media (max-width: 700px){
-      .highlights{ grid-template-columns:1fr; }
-    }
+    @media (max-width: 720px){ .highlights{ grid-template-columns:1fr; } }
     .highlight{
       border-radius:14px;
       border:1px solid var(--line);
@@ -284,22 +226,22 @@
       justify-content:space-between;
       align-items:center;
       gap:10px;
-      min-width:0;
     }
-    .highlight .left{
-      display:flex; flex-direction:column; gap:4px; min-width:0;
-    }
-    .highlight .t{
-      font-size:11px; font-weight:900; color:var(--muted);
-    }
-    .highlight .big{
+    .highlight .left{ display:flex; flex-direction:column; gap:4px; min-width:0; }
+    .highlight .t{ font-size:11px; font-weight:900; color:var(--muted); }
+    .highlight input{
+      width:140px;
+      border:none; outline:none;
+      padding:10px 12px;
+      border-radius:12px;
+      background:var(--soft);
       font-family:'Montserrat',sans-serif;
       font-weight:900;
-      font-size:26px;
-      color:var(--ink);
-      line-height:1;
+      font-size:22px;
+      text-align:right;
     }
-    .highlight .badge{
+    .highlight input:focus{ box-shadow: inset 0 0 0 2px rgba(37,99,235,.55); }
+    .badge{
       font-size:11px;
       font-weight:900;
       padding:6px 10px;
@@ -307,6 +249,7 @@
       border:1px solid var(--line);
       background:var(--soft);
       white-space:nowrap;
+      color:var(--muted);
     }
 
     /* Metric inputs */
@@ -316,9 +259,7 @@
       gap:12px;
       margin-top:10px;
     }
-    @media (max-width: 820px){
-      .metric-wrap{ grid-template-columns:1fr; }
-    }
+    @media (max-width: 900px){ .metric-wrap{ grid-template-columns:1fr; } }
     .metric-box{
       border:1px solid var(--line);
       border-radius:14px;
@@ -326,31 +267,15 @@
       background:#fff;
       min-width:0;
     }
-    .metric-head{
-      display:flex;
-      justify-content:space-between;
-      align-items:baseline;
-      gap:8px;
-      margin-bottom:10px;
-      min-width:0;
-    }
     .metric-title{
+      margin:0 0 10px 0;
       font-size:13px;
       font-weight:900;
-      margin:0;
-      min-width:0;
-    }
-    .metric-period{
-      font-size:12px;
-      color:var(--muted);
-      font-weight:800;
-      white-space:nowrap;
     }
     .metric-grid{
       display:grid;
       grid-template-columns: repeat(2, minmax(0,1fr));
       gap:10px;
-      min-width:0;
     }
     .metric{
       border:1px solid var(--line);
@@ -365,15 +290,10 @@
       color:var(--muted);
       margin-bottom:6px;
     }
-    .metric .mrow{
-      display:flex;
-      gap:8px;
-      align-items:baseline;
-    }
+    .metric .mrow{ display:flex; gap:8px; align-items:baseline; }
     .metric input{
       width:100%;
-      border:none;
-      outline:none;
+      border:none; outline:none;
       padding:10px 12px;
       border-radius:12px;
       background:var(--soft);
@@ -383,15 +303,9 @@
       text-align:right;
       min-width:0;
     }
-    .metric input:focus{
-      box-shadow: inset 0 0 0 2px rgba(37,99,235,.55);
-    }
-    .metric .unit{
-      font-size:11px;
-      font-weight:900;
-      color:#94a3b8;
-      white-space:nowrap;
-    }
+    .metric input:focus{ box-shadow: inset 0 0 0 2px rgba(37,99,235,.55); }
+    .metric .unit{ font-size:11px; font-weight:900; color:#94a3b8; white-space:nowrap; }
+    .metric.full{ grid-column:1 / -1; }
 
     /* Charts */
     .chart-wrap{
@@ -399,62 +313,14 @@
       border-radius:14px;
       padding:12px;
       background:#fff;
-      min-width:0;
       overflow:hidden;
     }
     canvas{ max-width:100%; }
 
-    /* Partners table */
-    table{ width:100%; border-collapse:collapse; table-layout:fixed; }
-    th{
-      text-align:left;
-      font-size:11px;
-      color:#fff;
-      background:var(--ink);
-      padding:10px;
-      border:1px solid var(--ink);
-      white-space:nowrap;
-    }
-    td{
-      border:1px solid var(--line);
-      padding:0;
-      background:#fff;
-      min-width:0;
-      vertical-align:top;
-    }
-    td input, td textarea{
-      width:100%;
-      border:none;
-      outline:none;
-      padding:10px;
-      font-size:13px;
-      font-family:inherit;
-      min-width:0;
-    }
-    td input{ text-align:left; }
-    td input[type="number"]{ text-align:center; font-family:'Montserrat',sans-serif; font-weight:900; }
-    td textarea{
-      resize:vertical;
-      min-height:42px;
-      line-height:1.5;
-    }
-    td input:focus, td textarea:focus{
-      box-shadow: inset 0 0 0 2px rgba(37,99,235,.55);
-      background:#f8fafc;
-    }
-    .tbl-actions{
-      display:flex;
-      gap:10px;
-      align-items:center;
-      justify-content:space-between;
-      margin-top:10px;
-      flex-wrap:wrap;
-    }
-
     /* Topics */
-    textarea#topics{
+    #topics{
       width:100%;
-      min-height:200px;
+      min-height:220px;
       padding:12px;
       border-radius:14px;
       border:1px solid var(--line);
@@ -463,81 +329,49 @@
       font-size:13px;
       line-height:1.8;
       background:linear-gradient(180deg, #fff, #fffef2);
-      min-width:0;
     }
-    textarea#topics:focus{
-      box-shadow: inset 0 0 0 2px rgba(37,99,235,.55);
-    }
-
-    /* Print / PDF : 1 page landscape */
-    @media print{
-      @page { size: A4 landscape; margin: 8mm; }
-
-      body{
-        background:#fff;
-        padding:0;
-        overflow:visible;
-      }
-      .app{
-        width:100%;
-        border:none;
-        box-shadow:none;
-        border-radius:0;
-        overflow:visible;
-        zoom: 0.88; /* 1枚に収めるための実務的調整 */
-      }
-      .actions, .btn, .no-print{ display:none !important; }
-      .grid{
-        padding:0;
-        gap:10px;
-        background:#fff;
-        grid-template-columns: 1fr 470px; /* 印刷は固定で整える */
-      }
-      .card{ box-shadow:none; padding:10px; }
-      textarea#topics{ min-height:110px; }
-      .print-hide{ display:none !important; } /* テーブルなど重い部分を隠す */
-    }
+    #topics:focus{ box-shadow: inset 0 0 0 2px rgba(37,99,235,.55); }
   </style>
 </head>
 
 <body>
   <div class="app">
     <div class="topbar">
-      <div class="title">
+      <div class="brand">
         <h1>BUSINESS MONTHLY REPORT</h1>
-        <div class="sub">入力 → 自動集計 → KPI可視化 → 目標明示 → 自動保存</div>
+        <div class="sub">月報（Page1）／法人活動（Page2）／PDF印刷（2ページ）／共有HTML出力</div>
       </div>
 
-      <div class="top-controls">
+      <div class="nav">
+        <a class="tab active" href="./index.html">月報</a>
+        <a class="tab" href="./partners.html">法人活動</a>
+        <a class="tab" href="./print.html" target="_blank" rel="noopener">PDF印刷</a>
+      </div>
+
+      <div class="controls">
         <div class="chip">
-          <div class="p" id="periodLabel">2025.12</div>
-          <div class="status" id="saveStatus">未保存</div>
+          <div class="p" id="periodLabel">—</div>
+          <div class="s" id="saveStatus">未保存</div>
         </div>
 
-        <div class="date-range" title="当月実績の対象期間">
+        <div class="range" title="当月集計期間">
           <label>当月期間</label>
           <input type="date" id="periodStart">
           <span style="opacity:.8;">–</span>
           <input type="date" id="periodEnd">
         </div>
 
-        <div class="actions">
-          <button class="btn" id="btnImport">JSON取込</button>
-          <button class="btn" id="btnExport">JSON出力</button>
-          <button class="btn" id="btnReset">初期値に戻す</button>
-          <button class="btn primary" onclick="window.print()">印刷（PDF）</button>
-        </div>
+        <button class="btn" id="btnShare">共有用HTML出力</button>
+        <button class="btn primary" id="btnPrint">PDF印刷（2ページ）</button>
       </div>
     </div>
 
     <div class="grid">
       <!-- LEFT -->
-      <div style="display:flex;flex-direction:column;gap:16px;min-width:0;">
-        <!-- KPI + Highlights -->
+      <div style="display:flex;flex-direction:column;gap:14px;min-width:0;">
         <div class="card">
           <div class="hrow">
-            <h2 class="h2"><span class="dot blue"></span>ダッシュボード（主要KPI）</h2>
-            <div class="subline">当月 <strong id="lblCurMonth">2025.12</strong> / 前年同月</div>
+            <h2 class="h2"><span class="dot blue"></span>主要KPI</h2>
           </div>
 
           <div class="kpis">
@@ -567,225 +401,127 @@
             <div class="highlight" style="border-left:6px solid var(--amber);">
               <div class="left">
                 <div class="t">提携会社数</div>
-                <div class="big" id="v_companyCount_big">0</div>
+                <input type="number" id="companyCount" min="0" step="1">
               </div>
-              <div class="badge" id="badgeCoverage">提携率 0.0%</div>
+              <div class="badge" id="asOfLabel">—</div>
             </div>
 
             <div class="highlight" style="border-left:6px solid var(--violet);">
               <div class="left">
                 <div class="t">対象企業総数</div>
-                <div class="big" id="v_targetCount_big">0</div>
+                <input type="number" id="targetCount" min="0" step="1">
               </div>
               <div class="badge">TARGETS</div>
             </div>
           </div>
         </div>
 
-        <!-- Performance + Comparison + Next Month Plan -->
         <div class="card">
           <div class="hrow">
             <h2 class="h2"><span class="dot teal"></span>実績・比較・次月計画</h2>
-            <div class="subline">当月期間：<strong id="lblRangeCur">-</strong></div>
           </div>
 
           <div class="metric-wrap">
-            <!-- Current -->
             <div class="metric-box">
-              <div class="metric-head">
-                <p class="metric-title">当月実績</p>
-                <div class="metric-period" id="lblPeriodCur">-</div>
-              </div>
+              <p class="metric-title">当月実績</p>
               <div class="metric-grid">
                 <div class="metric">
                   <div class="mlabel">総来場</div>
-                  <div class="mrow">
-                    <input type="number" id="v_totalVisit" min="0" step="1">
-                    <span class="unit">件</span>
-                  </div>
+                  <div class="mrow"><input type="number" id="v_totalVisit" min="0" step="1"><span class="unit">件</span></div>
                 </div>
                 <div class="metric">
                   <div class="mlabel">総契約</div>
-                  <div class="mrow">
-                    <input type="number" id="v_totalContract" min="0" step="1">
-                    <span class="unit">件</span>
-                  </div>
+                  <div class="mrow"><input type="number" id="v_totalContract" min="0" step="1"><span class="unit">件</span></div>
                 </div>
                 <div class="metric">
                   <div class="mlabel">法人来場</div>
-                  <div class="mrow">
-                    <input type="number" id="v_corpVisit" min="0" step="1">
-                    <span class="unit">件</span>
-                  </div>
+                  <div class="mrow"><input type="number" id="v_corpVisit" min="0" step="1"><span class="unit">件</span></div>
                 </div>
                 <div class="metric">
                   <div class="mlabel">法人契約</div>
-                  <div class="mrow">
-                    <input type="number" id="v_corpContract" min="0" step="1">
-                    <span class="unit">件</span>
-                  </div>
+                  <div class="mrow"><input type="number" id="v_corpContract" min="0" step="1"><span class="unit">件</span></div>
                 </div>
-                <div class="metric" style="grid-column:1 / -1;">
+                <div class="metric full">
                   <div class="mlabel">紹介カード</div>
-                  <div class="mrow">
-                    <input type="number" id="v_referralCards" min="0" step="1">
-                    <span class="unit">枚</span>
-                  </div>
+                  <div class="mrow"><input type="number" id="v_referralCards" min="0" step="1"><span class="unit">枚</span></div>
                 </div>
               </div>
             </div>
 
-            <!-- Last year same month -->
             <div class="metric-box">
-              <div class="metric-head">
-                <p class="metric-title">当月過去実績（比較用：前年同月）</p>
-                <div class="metric-period" id="lblPeriodLY">-</div>
-              </div>
+              <p class="metric-title">当月過去実績（前年同月）</p>
               <div class="metric-grid">
                 <div class="metric">
                   <div class="mlabel">総来場</div>
-                  <div class="mrow">
-                    <input type="number" id="ly_totalVisit" min="0" step="1">
-                    <span class="unit">件</span>
-                  </div>
+                  <div class="mrow"><input type="number" id="ly_totalVisit" min="0" step="1"><span class="unit">件</span></div>
                 </div>
                 <div class="metric">
                   <div class="mlabel">総契約</div>
-                  <div class="mrow">
-                    <input type="number" id="ly_totalContract" min="0" step="1">
-                    <span class="unit">件</span>
-                  </div>
+                  <div class="mrow"><input type="number" id="ly_totalContract" min="0" step="1"><span class="unit">件</span></div>
                 </div>
                 <div class="metric">
                   <div class="mlabel">法人来場</div>
-                  <div class="mrow">
-                    <input type="number" id="ly_corpVisit" min="0" step="1">
-                    <span class="unit">件</span>
-                  </div>
+                  <div class="mrow"><input type="number" id="ly_corpVisit" min="0" step="1"><span class="unit">件</span></div>
                 </div>
                 <div class="metric">
                   <div class="mlabel">法人契約</div>
-                  <div class="mrow">
-                    <input type="number" id="ly_corpContract" min="0" step="1">
-                    <span class="unit">件</span>
-                  </div>
+                  <div class="mrow"><input type="number" id="ly_corpContract" min="0" step="1"><span class="unit">件</span></div>
                 </div>
-                <div class="metric" style="grid-column:1 / -1;">
+                <div class="metric full">
                   <div class="mlabel">紹介カード</div>
-                  <div class="mrow">
-                    <input type="number" id="ly_referralCards" min="0" step="1">
-                    <span class="unit">枚</span>
-                  </div>
+                  <div class="mrow"><input type="number" id="ly_referralCards" min="0" step="1"><span class="unit">枚</span></div>
                 </div>
               </div>
             </div>
 
-            <!-- Next month past -->
             <div class="metric-box">
-              <div class="metric-head">
-                <p class="metric-title">次月過去実績（前年次月：参考）</p>
-                <div class="metric-period" id="lblPeriodNextPast">-</div>
-              </div>
+              <p class="metric-title">次月過去実績（前年次月）</p>
               <div class="metric-grid">
                 <div class="metric">
                   <div class="mlabel">総来場</div>
-                  <div class="mrow">
-                    <input type="number" id="nm_totalVisit" min="0" step="1">
-                    <span class="unit">件</span>
-                  </div>
+                  <div class="mrow"><input type="number" id="nm_totalVisit" min="0" step="1"><span class="unit">件</span></div>
                 </div>
                 <div class="metric">
                   <div class="mlabel">総契約</div>
-                  <div class="mrow">
-                    <input type="number" id="nm_totalContract" min="0" step="1">
-                    <span class="unit">件</span>
-                  </div>
+                  <div class="mrow"><input type="number" id="nm_totalContract" min="0" step="1"><span class="unit">件</span></div>
                 </div>
                 <div class="metric">
                   <div class="mlabel">法人来場</div>
-                  <div class="mrow">
-                    <input type="number" id="nm_corpVisit" min="0" step="1">
-                    <span class="unit">件</span>
-                  </div>
+                  <div class="mrow"><input type="number" id="nm_corpVisit" min="0" step="1"><span class="unit">件</span></div>
                 </div>
                 <div class="metric">
                   <div class="mlabel">法人契約</div>
-                  <div class="mrow">
-                    <input type="number" id="nm_corpContract" min="0" step="1">
-                    <span class="unit">件</span>
-                  </div>
+                  <div class="mrow"><input type="number" id="nm_corpContract" min="0" step="1"><span class="unit">件</span></div>
                 </div>
-                <div class="metric" style="grid-column:1 / -1;">
+                <div class="metric full">
                   <div class="mlabel">紹介カード</div>
-                  <div class="mrow">
-                    <input type="number" id="nm_referralCards" min="0" step="1">
-                    <span class="unit">枚</span>
-                  </div>
+                  <div class="mrow"><input type="number" id="nm_referralCards" min="0" step="1"><span class="unit">枚</span></div>
                 </div>
               </div>
             </div>
 
-            <!-- Next month target -->
             <div class="metric-box">
-              <div class="metric-head">
-                <p class="metric-title">次月目標（明示）</p>
-                <div class="metric-period" id="lblPeriodNextTarget">-</div>
-              </div>
+              <p class="metric-title">次月目標</p>
               <div class="metric-grid">
                 <div class="metric">
                   <div class="mlabel">総来場（目標）</div>
-                  <div class="mrow">
-                    <input type="number" id="tg_totalVisit" min="0" step="1">
-                    <span class="unit">件</span>
-                  </div>
+                  <div class="mrow"><input type="number" id="tg_totalVisit" min="0" step="1"><span class="unit">件</span></div>
                 </div>
                 <div class="metric">
                   <div class="mlabel">総契約（目標）</div>
-                  <div class="mrow">
-                    <input type="number" id="tg_totalContract" min="0" step="1">
-                    <span class="unit">件</span>
-                  </div>
+                  <div class="mrow"><input type="number" id="tg_totalContract" min="0" step="1"><span class="unit">件</span></div>
                 </div>
                 <div class="metric">
                   <div class="mlabel">法人来場（目標）</div>
-                  <div class="mrow">
-                    <input type="number" id="tg_corpVisit" min="0" step="1">
-                    <span class="unit">件</span>
-                  </div>
+                  <div class="mrow"><input type="number" id="tg_corpVisit" min="0" step="1"><span class="unit">件</span></div>
                 </div>
                 <div class="metric">
                   <div class="mlabel">法人契約（目標）</div>
-                  <div class="mrow">
-                    <input type="number" id="tg_corpContract" min="0" step="1">
-                    <span class="unit">件</span>
-                  </div>
+                  <div class="mrow"><input type="number" id="tg_corpContract" min="0" step="1"><span class="unit">件</span></div>
                 </div>
-                <div class="metric" style="grid-column:1 / -1;">
+                <div class="metric full">
                   <div class="mlabel">紹介カード（目標）</div>
-                  <div class="mrow">
-                    <input type="number" id="tg_referralCards" min="0" step="1">
-                    <span class="unit">枚</span>
-                  </div>
-                </div>
-
-                <div class="metric" style="grid-column:1 / -1;">
-                  <div class="mlabel">目標KPI（自動算出）</div>
-                  <div style="display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap:8px;">
-                    <div class="highlight" style="padding:10px; border-left:6px solid var(--blue);">
-                      <div class="left">
-                        <div class="t">総歩留り</div>
-                        <div class="big" style="font-size:22px;" id="tg_k_ty">0.0%</div>
-                      </div>
-                      <div class="badge" id="tg_hint_ty">—</div>
-                    </div>
-                    <div class="highlight" style="padding:10px; border-left:6px solid var(--teal);">
-                      <div class="left">
-                        <div class="t">法人歩留り</div>
-                        <div class="big" style="font-size:22px;" id="tg_k_cy">0.0%</div>
-                      </div>
-                      <div class="badge" id="tg_hint_cy">—</div>
-                    </div>
-                  </div>
+                  <div class="mrow"><input type="number" id="tg_referralCards" min="0" step="1"><span class="unit">枚</span></div>
                 </div>
               </div>
             </div>
@@ -793,41 +529,9 @@
           </div>
         </div>
 
-        <!-- Partners -->
         <div class="card">
           <div class="hrow">
-            <h2 class="h2"><span class="dot amber"></span>提携先（入力・集計）</h2>
-            <div class="subline">合計：来場 <strong id="sumPartnerVisit">0</strong> / 初回 <strong id="sumPartnerFirst">0</strong> / 申込 <strong id="sumPartnerApply">0</strong></div>
-          </div>
-
-          <div class="print-hide" style="overflow:auto;">
-            <table>
-              <thead>
-                <tr>
-                  <th style="width:170px;">パートナー企業名</th>
-                  <th style="width:190px;">対象物件名</th>
-                  <th style="width:70px; text-align:center;">来場</th>
-                  <th style="width:70px; text-align:center;">初回</th>
-                  <th style="width:70px; text-align:center;">申込</th>
-                  <th>ステータス/備考</th>
-                  <th style="width:70px; text-align:center;">削除</th>
-                </tr>
-              </thead>
-              <tbody id="partnersBody"></tbody>
-            </table>
-          </div>
-
-          <div class="tbl-actions print-hide">
-            <button class="btn primary" id="btnAddRow">行追加</button>
-            <span class="subline">※「初回」「申込」はそれぞれ件数で管理（両方入力可）</span>
-          </div>
-        </div>
-
-        <!-- Topics -->
-        <div class="card">
-          <div class="hrow">
-            <h2 class="h2"><span class="dot violet"></span>Topics（メモ）</h2>
-            <div class="subline">重要論点／次月アクション</div>
+            <h2 class="h2"><span class="dot violet"></span>Topics</h2>
           </div>
           <textarea id="topics" placeholder="・今月の特筆事項
 ・新規提携企業の反応
@@ -836,697 +540,584 @@
       </div>
 
       <!-- RIGHT -->
-      <div style="display:flex;flex-direction:column;gap:16px;min-width:0;">
-        <!-- KPI bar (percent) -->
+      <div style="display:flex;flex-direction:column;gap:14px;min-width:0;">
         <div class="card">
           <div class="hrow">
-            <h2 class="h2"><span class="dot blue"></span>KPI（%） 当月 vs 前年同月</h2>
-            <div class="subline">パーセンテージ表示</div>
+            <h2 class="h2"><span class="dot blue"></span>KPI（%）当月 vs 前年同月</h2>
           </div>
-          <div class="chart-wrap">
-            <canvas id="chartKPI" height="200"></canvas>
-          </div>
+          <div class="chart-wrap"><canvas id="chartKPI" height="210"></canvas></div>
         </div>
 
-        <!-- Funnel -->
         <div class="card">
           <div class="hrow">
             <h2 class="h2"><span class="dot teal"></span>ファネル（歩留り）</h2>
-            <div class="subline">上限目安 30%</div>
           </div>
-          <div class="chart-wrap">
-            <canvas id="chartFunnel" height="210"></canvas>
-          </div>
+          <div class="chart-wrap"><canvas id="chartFunnel" height="220"></canvas></div>
         </div>
 
-        <!-- Share -->
         <div class="card">
           <div class="hrow">
             <h2 class="h2"><span class="dot teal"></span>法人比率（来場）</h2>
-            <div class="subline">中央に%表示</div>
           </div>
-          <div class="chart-wrap">
-            <canvas id="chartShare" height="220"></canvas>
-          </div>
+          <div class="chart-wrap"><canvas id="chartShare" height="240"></canvas></div>
         </div>
 
-        <!-- Partners top -->
         <div class="card">
           <div class="hrow">
-            <h2 class="h2"><span class="dot amber"></span>提携先 上位（来場 / 初回 / 申込）</h2>
-            <div class="subline">上位8社</div>
+            <h2 class="h2"><span class="dot amber"></span>提携先 上位（来場 / 初回 / 申込 / 契約）</h2>
           </div>
-          <div class="chart-wrap">
-            <canvas id="chartPartners" height="240"></canvas>
-          </div>
+          <div class="chart-wrap"><canvas id="chartPartners" height="260"></canvas></div>
         </div>
-
       </div>
     </div>
   </div>
 
 <script>
-  // ===================== Helpers (dates) =====================
-  const pad2 = (n) => String(n).padStart(2,"0");
-  const toISO = (d) => `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}`;
-  const fmtJP = (iso) => {
-    if(!iso) return "-";
-    const [y,m,d] = iso.split("-").map(Number);
-    return `${y}/${pad2(m)}/${pad2(d)}`;
+/** ======================
+ *  Shared State / Storage
+ *  ====================== */
+const STORAGE_KEY = "hb_monthly_report_state_v2";
+
+const DEFAULT_STATE = (() => {
+  const pad2 = (n)=>String(n).padStart(2,"0");
+  const monthStartEnd = (y,m)=>{
+    const s = new Date(y, m-1, 1);
+    const e = new Date(y, m, 0);
+    const iso = (d)=>`${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}`;
+    return { start: iso(s), end: iso(e) };
   };
-  function monthStartEnd(year, month1to12){
-    const start = new Date(year, month1to12-1, 1);
-    const end = new Date(year, month1to12, 0);
-    return { start: toISO(start), end: toISO(end) };
-  }
-  function addMonths(year, month1to12, delta){
-    let m = (month1to12 - 1) + delta;
-    let y = year + Math.floor(m / 12);
-    m = m % 12;
-    if(m < 0){ m += 12; y -= 1; }
-    return { year: y, month: m+1 };
-  }
-  function derivePeriodLabelFromStart(isoStart){
-    if(!isoStart) return "—";
-    const [y,m] = isoStart.split("-").map(Number);
-    return `${y}.${pad2(m)}`;
-  }
+  const cur = monthStartEnd(2025,12);
 
-  // ===================== State =====================
-  const DEFAULT_STATE = (() => {
-    const cur = monthStartEnd(2025, 12);
-    const period = "2025.12";
-    const ly = { start: `${2024}-12-01`, end: `${2024}-12-31` };
-    const next = addMonths(2025, 12, 1); // 2026.01
-    const nextPast = monthStartEnd(next.year - 1, next.month); // 2025.01
-    return {
-      period,
-      range: { start: cur.start, end: cur.end },
-      companyCount: 9,
-      targetCount: 1856,
-      current: { totalVisit: 85, totalContract: 4, corpVisit: 5, corpContract: 1, referralCards: 3 },
-      lastYear: { totalVisit: 148, totalContract: 26, corpVisit: 9, corpContract: 2, referralCards: 0 },
-      nextMonthPast: { totalVisit: 0, totalContract: 0, corpVisit: 0, corpContract: 0, referralCards: 0 },
-      nextTarget: { totalVisit: 0, totalContract: 0, corpVisit: 0, corpContract: 0, referralCards: 0 },
-      partners: [{ name: "", property: "", visit: 0, first: 0, apply: 0, note: "" }],
-      topics: ""
-    };
-  })();
+  return {
+    meta: { periodStart: cur.start, periodEnd: cur.end },
+    counts: { partnerCompanies: 9, targetCompanies: 1856 },
+    perf: { totalVisit: 85, totalContract: 4, corpVisit: 5, corpContract: 1, referralCards: 3 },
+    lastYear: { totalVisit: 148, totalContract: 26, corpVisit: 9, corpContract: 2, referralCards: 0 },
+    nextMonthPast: { totalVisit: 0, totalContract: 0, corpVisit: 0, corpContract: 0, referralCards: 0 },
+    nextTarget: { totalVisit: 0, totalContract: 0, corpVisit: 0, corpContract: 0, referralCards: 0 },
+    partners: [
+      { name:"", property:"", visit:0, first:0, apply:0, contract:0, pr:"", cost:0, benefit:"", fee:0, note:"" }
+    ],
+    planned: [
+      { name:"", companySize:"", proposal:"", status:"", nextAction:"", schedule:"" }
+    ],
+    topics: ""
+  };
+})();
 
-  const STORAGE_KEY = "monthly_report_" + DEFAULT_STATE.period;
-  let state = loadState();
-
-  // ===================== Utilities =====================
-  const $ = (id) => document.getElementById(id);
-  const nfInt = new Intl.NumberFormat("ja-JP");
-
-  function clamp0(n){ n = Number(n); return Number.isFinite(n) && n>0 ? n : 0; }
-  function pct(a,b){ return (b>0) ? (a/b)*100 : 0; }
-  function fmt1(n){ return (Number.isFinite(n) ? n : 0).toFixed(1); }
-
-  function setSaveStatus(text){ $("saveStatus").textContent = text; }
-
-  function saveState(){
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-    setSaveStatus("保存済み");
-  }
-  function loadState(){
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if(!raw) return structuredClone(DEFAULT_STATE);
-    try{
-      const parsed = JSON.parse(raw);
-
-      // Backward-ish merge safety
-      const s = structuredClone(DEFAULT_STATE);
-      const out = {
-        ...s,
-        ...parsed,
-        range: { ...s.range, ...(parsed.range||{}) },
-        current: { ...s.current, ...(parsed.current||{}) },
-        lastYear: { ...s.lastYear, ...(parsed.lastYear||{}) },
-        nextMonthPast: { ...s.nextMonthPast, ...(parsed.nextMonthPast||{}) },
-        nextTarget: { ...s.nextTarget, ...(parsed.nextTarget||{}) },
-        partners: Array.isArray(parsed.partners) && parsed.partners.length ? parsed.partners : structuredClone(s.partners),
-        topics: typeof parsed.topics === "string" ? parsed.topics : "",
-        companyCount: Number.isFinite(Number(parsed.companyCount)) ? Number(parsed.companyCount) : s.companyCount,
-        targetCount: Number.isFinite(Number(parsed.targetCount)) ? Number(parsed.targetCount) : s.targetCount
-      };
-      return out;
-    }catch{
-      return structuredClone(DEFAULT_STATE);
+function deepMerge(base, patch){
+  const out = structuredClone(base);
+  for(const k of Object.keys(patch||{})){
+    if(patch[k] && typeof patch[k]==="object" && !Array.isArray(patch[k])){
+      out[k] = deepMerge(out[k]||{}, patch[k]);
+    }else{
+      out[k] = patch[k];
     }
   }
+  return out;
+}
 
-  // ===================== Chart plugins =====================
-  const centerLabelPlugin = {
-    id: "centerLabel",
-    afterDraw(chart){
-      if(chart.config.type !== "doughnut") return;
-      const {ctx, chartArea} = chart;
-      if(!chartArea) return;
-
-      const data = chart.data.datasets?.[0]?.data || [];
-      const corp = Number(data[0] || 0);
-      const total = data.reduce((a,b)=>a+Number(b||0), 0);
-      const p = total ? (corp/total*100) : 0;
-
-      const cx = (chartArea.left + chartArea.right) / 2;
-      const cy = (chartArea.top + chartArea.bottom) / 2;
-
-      ctx.save();
-      ctx.textAlign = "center";
-      ctx.textBaseline = "middle";
-      ctx.fillStyle = "#0f172a";
-      ctx.font = "800 30px Montserrat, sans-serif";
-      ctx.fillText(p.toFixed(1) + "%", cx, cy - 6);
-      ctx.fillStyle = "#64748b";
-      ctx.font = "700 12px Noto Sans JP, sans-serif";
-      ctx.fillText("法人比率（来場）", cx, cy + 18);
-      ctx.restore();
-    }
-  };
-
-  Chart.register(centerLabelPlugin);
-
-  // ===================== Charts =====================
-  let chartKPI, chartFunnel, chartShare, chartPartners;
-
-  function initCharts(){
-    // KPI bar (%)
-    chartKPI = new Chart($("chartKPI"), {
-      type: "bar",
-      data: {
-        labels: ["総歩留り","法人来場比","法人契約比","法人歩留り"],
-        datasets: [
-          { label: "当月", data: [0,0,0,0] },
-          { label: "前年同月", data: [0,0,0,0] }
-        ]
-      },
-      options: {
-        responsive:true,
-        plugins:{ legend:{ position:"top" } },
-        scales:{
-          y:{
-            beginAtZero:true,
-            suggestedMax: 30,
-            ticks:{ callback:(v)=> v + "%" }
-          }
-        }
-      }
-    });
-
-    // Funnel (suggested max ~30%)
-    chartFunnel = new Chart($("chartFunnel"), {
-      type: "bar",
-      data: {
-        labels: ["来場 → 契約", "法人来場 → 法人契約"],
-        datasets: [{ label: "歩留り(%)", data: [0,0] }]
-      },
-      options: {
-        indexAxis: "y",
-        responsive:true,
-        plugins:{ legend:{ display:false } },
-        scales:{
-          x:{
-            beginAtZero:true,
-            suggestedMax: 30,
-            ticks:{ callback:(v)=> v + "%" }
-          }
-        }
-      }
-    });
-
-    // Share (doughnut) with center %
-    chartShare = new Chart($("chartShare"), {
-      type: "doughnut",
-      data: {
-        labels: ["法人","非法人"],
-        datasets: [{ label: "来場構成", data: [0,0], cutout: "62%" }]
-      },
-      options: {
-        responsive:true,
-        plugins:{
-          legend:{ position:"bottom" }
-        }
-      }
-    });
-
-    // Partners top
-    chartPartners = new Chart($("chartPartners"), {
-      type: "bar",
-      data: {
-        labels: [],
-        datasets: [
-          { label:"来場", data: [] },
-          { label:"初回", data: [] },
-          { label:"申込", data: [] }
-        ]
-      },
-      options: {
-        indexAxis: "y",
-        responsive:true,
-        plugins:{ legend:{ position:"top" } },
-        scales:{ x:{ beginAtZero:true, ticks:{ precision:0 } } }
-      }
-    });
+function loadState(){
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if(!raw) return structuredClone(DEFAULT_STATE);
+  try{
+    const obj = JSON.parse(raw);
+    const merged = deepMerge(DEFAULT_STATE, obj);
+    // arrays
+    merged.partners = Array.isArray(obj.partners) && obj.partners.length ? obj.partners : structuredClone(DEFAULT_STATE.partners);
+    merged.planned  = Array.isArray(obj.planned) && obj.planned.length ? obj.planned : structuredClone(DEFAULT_STATE.planned);
+    return merged;
+  }catch{
+    return structuredClone(DEFAULT_STATE);
   }
-
-  function updateCharts(){
-    const c = state.current;
-    const ly = state.lastYear;
-
-    // KPIs
-    const k_ty  = pct(c.totalContract, c.totalVisit);
-    const k_cvr = pct(c.corpVisit, c.totalVisit);
-    const k_ccr = pct(c.corpContract, c.totalContract);
-    const k_cy  = pct(c.corpContract, c.corpVisit);
-
-    const ly_ty  = pct(ly.totalContract, ly.totalVisit);
-    const ly_cvr = pct(ly.corpVisit, ly.totalVisit);
-    const ly_ccr = pct(ly.corpContract, ly.totalContract);
-    const ly_cy  = pct(ly.corpContract, ly.corpVisit);
-
-    chartKPI.data.datasets[0].data = [Number(fmt1(k_ty)), Number(fmt1(k_cvr)), Number(fmt1(k_ccr)), Number(fmt1(k_cy))];
-    chartKPI.data.datasets[1].data = [Number(fmt1(ly_ty)), Number(fmt1(ly_cvr)), Number(fmt1(ly_ccr)), Number(fmt1(ly_cy))];
-    chartKPI.update();
-
-    // Funnel
-    chartFunnel.data.datasets[0].data = [Number(fmt1(k_ty)), Number(fmt1(k_cy))];
-    chartFunnel.update();
-
-    // Share
-    const nonCorp = Math.max(0, c.totalVisit - c.corpVisit);
-    chartShare.data.datasets[0].data = [c.corpVisit, nonCorp];
-    chartShare.update();
-
-    // Partners top
-    const rows = state.partners
-      .map(p=>({
-        name: (p.name || "（未入力）").trim(),
-        visit: clamp0(p.visit),
-        first: clamp0(p.first),
-        apply: clamp0(p.apply)
-      }))
-      .filter(p => p.visit>0 || p.first>0 || p.apply>0);
-
-    rows.sort((a,b)=> (b.visit + b.first + b.apply) - (a.visit + a.first + a.apply));
-    const top = rows.slice(0, 8);
-
-    chartPartners.data.labels = top.map(x=>x.name);
-    chartPartners.data.datasets[0].data = top.map(x=>x.visit);
-    chartPartners.data.datasets[1].data = top.map(x=>x.first);
-    chartPartners.data.datasets[2].data = top.map(x=>x.apply);
-    chartPartners.update();
-  }
-
-  // ===================== KPI / Deltas =====================
-  function setDelta(elId, now, base){
-    const el = $(elId);
-    const diff = now - base;
-    const sign = diff > 0 ? "+" : "";
-    const cls = (Math.abs(diff) < 0.05) ? "neutral" : (diff > 0 ? "good" : "bad");
-    el.className = "delta " + cls;
-
-    const tag = document.createElement("span");
-    tag.className = "tag";
-    tag.textContent = `前年差 ${sign}${fmt1(diff)}pt`;
-
-    const small = document.createElement("span");
-    small.textContent = `（前年 ${fmt1(base)}%）`;
-
-    el.innerHTML = "";
-    el.appendChild(tag);
-    el.appendChild(small);
-  }
-
-  // ===================== Partners table =====================
-  function renderPartners(){
-    const tbody = $("partnersBody");
-    tbody.innerHTML = "";
-
-    state.partners.forEach((p, idx)=>{
-      const tr = document.createElement("tr");
-
-      const tdName = document.createElement("td");
-      const iName = document.createElement("input");
-      iName.value = p.name || "";
-      iName.placeholder = "例：ベルス";
-      iName.addEventListener("input", ()=>{
-        p.name = iName.value;
-        setSaveStatus("編集中…");
-        recalcAll(); saveState();
-      });
-      tdName.appendChild(iName);
-
-      const tdProp = document.createElement("td");
-      const iProp = document.createElement("input");
-      iProp.value = p.property || "";
-      iProp.placeholder = "例：LP浦和神明";
-      iProp.addEventListener("input", ()=>{
-        p.property = iProp.value;
-        setSaveStatus("編集中…");
-        recalcAll(); saveState();
-      });
-      tdProp.appendChild(iProp);
-
-      const tdVisit = document.createElement("td");
-      const iVisit = document.createElement("input");
-      iVisit.type = "number"; iVisit.min="0"; iVisit.step="1";
-      iVisit.value = clamp0(p.visit);
-      iVisit.addEventListener("input", ()=>{
-        p.visit = clamp0(iVisit.value);
-        setSaveStatus("編集中…");
-        recalcAll(); saveState();
-      });
-      tdVisit.appendChild(iVisit);
-
-      const tdFirst = document.createElement("td");
-      const iFirst = document.createElement("input");
-      iFirst.type="number"; iFirst.min="0"; iFirst.step="1";
-      iFirst.value = clamp0(p.first);
-      iFirst.addEventListener("input", ()=>{
-        p.first = clamp0(iFirst.value);
-        setSaveStatus("編集中…");
-        recalcAll(); saveState();
-      });
-      tdFirst.appendChild(iFirst);
-
-      const tdApply = document.createElement("td");
-      const iApply = document.createElement("input");
-      iApply.type="number"; iApply.min="0"; iApply.step="1";
-      iApply.value = clamp0(p.apply);
-      iApply.addEventListener("input", ()=>{
-        p.apply = clamp0(iApply.value);
-        setSaveStatus("編集中…");
-        recalcAll(); saveState();
-      });
-      tdApply.appendChild(iApply);
-
-      // Note (moved between apply and delete, and not cut: textarea)
-      const tdNote = document.createElement("td");
-      const tNote = document.createElement("textarea");
-      tNote.value = p.note || "";
-      tNote.placeholder = "ステータス/備考（例：交渉中、次回MTG 12/20）";
-      tNote.addEventListener("input", ()=>{
-        p.note = tNote.value;
-        setSaveStatus("編集中…");
-        recalcAll(); saveState();
-      });
-      tdNote.appendChild(tNote);
-
-      const tdDel = document.createElement("td");
-      tdDel.style.padding="8px";
-      const b = document.createElement("button");
-      b.className = "btn";
-      b.textContent = "削除";
-      b.style.width="100%";
-      b.addEventListener("click", ()=>{
-        state.partners.splice(idx, 1);
-        if(state.partners.length === 0){
-          state.partners.push({ name:"", property:"", visit:0, first:0, apply:0, note:"" });
-        }
-        renderPartners();
-        recalcAll();
-        saveState();
-      });
-      tdDel.appendChild(b);
-
-      [tdName, tdProp, tdVisit, tdFirst, tdApply, tdNote, tdDel].forEach(td=>tr.appendChild(td));
-      tbody.appendChild(tr);
-    });
-  }
-
-  // ===================== Bind inputs =====================
-  function bindInputs(){
-    $("periodLabel").textContent = state.period;
-    $("lblCurMonth").textContent = state.period;
-
-    $("periodStart").value = state.range.start;
-    $("periodEnd").value = state.range.end;
-
-    // Big highlight
-    $("v_companyCount_big").textContent = nfInt.format(clamp0(state.companyCount));
-    $("v_targetCount_big").textContent = nfInt.format(clamp0(state.targetCount));
-
-    // current
-    $("v_totalVisit").value = state.current.totalVisit;
-    $("v_totalContract").value = state.current.totalContract;
-    $("v_corpVisit").value = state.current.corpVisit;
-    $("v_corpContract").value = state.current.corpContract;
-    $("v_referralCards").value = state.current.referralCards;
-
-    // last year
-    $("ly_totalVisit").value = state.lastYear.totalVisit;
-    $("ly_totalContract").value = state.lastYear.totalContract;
-    $("ly_corpVisit").value = state.lastYear.corpVisit;
-    $("ly_corpContract").value = state.lastYear.corpContract;
-    $("ly_referralCards").value = state.lastYear.referralCards;
-
-    // next month past
-    $("nm_totalVisit").value = state.nextMonthPast.totalVisit;
-    $("nm_totalContract").value = state.nextMonthPast.totalContract;
-    $("nm_corpVisit").value = state.nextMonthPast.corpVisit;
-    $("nm_corpContract").value = state.nextMonthPast.corpContract;
-    $("nm_referralCards").value = state.nextMonthPast.referralCards;
-
-    // targets
-    $("tg_totalVisit").value = state.nextTarget.totalVisit;
-    $("tg_totalContract").value = state.nextTarget.totalContract;
-    $("tg_corpVisit").value = state.nextTarget.corpVisit;
-    $("tg_corpContract").value = state.nextTarget.corpContract;
-    $("tg_referralCards").value = state.nextTarget.referralCards;
-
-    $("topics").value = state.topics;
-
-    // Events
-    $("periodStart").addEventListener("input", ()=>{
-      setSaveStatus("編集中…");
-      state.range.start = $("periodStart").value;
-      state.period = derivePeriodLabelFromStart(state.range.start);
-      $("periodLabel").textContent = state.period;
-      $("lblCurMonth").textContent = state.period;
-      recalcPeriodsUI();
-      recalcAll();
-      saveState();
-    });
-    $("periodEnd").addEventListener("input", ()=>{
-      setSaveStatus("編集中…");
-      state.range.end = $("periodEnd").value;
-      recalcPeriodsUI();
-      recalcAll();
-      saveState();
-    });
-
-    const inputs = [
-      "v_totalVisit","v_totalContract","v_corpVisit","v_corpContract","v_referralCards",
-      "ly_totalVisit","ly_totalContract","ly_corpVisit","ly_corpContract","ly_referralCards",
-      "nm_totalVisit","nm_totalContract","nm_corpVisit","nm_corpContract","nm_referralCards",
-      "tg_totalVisit","tg_totalContract","tg_corpVisit","tg_corpContract","tg_referralCards"
-    ];
-
-    inputs.forEach(id=>{
-      $(id).addEventListener("input", ()=>{
-        setSaveStatus("編集中…");
-        syncFromInputs();
-        recalcAll();
-        saveState();
-      });
-    });
-
-    $("topics").addEventListener("input", ()=>{
-      setSaveStatus("編集中…");
-      state.topics = $("topics").value;
-      saveState();
-    });
-
-    $("btnAddRow").addEventListener("click", ()=>{
-      state.partners.push({ name:"", property:"", visit:0, first:0, apply:0, note:"" });
-      renderPartners();
-      recalcAll();
-      saveState();
-    });
-
-    $("btnReset").addEventListener("click", ()=>{
-      state = structuredClone(DEFAULT_STATE);
-      localStorage.removeItem(STORAGE_KEY);
-      bindInputs();
-      renderPartners();
-      recalcAll();
-      saveState();
-    });
-
-    $("btnExport").addEventListener("click", ()=>{
-      const blob = new Blob([JSON.stringify(state, null, 2)], {type:"application/json"});
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `monthly_report_${state.period}.json`;
-      a.click();
-      URL.revokeObjectURL(url);
-    });
-
-    $("btnImport").addEventListener("click", async ()=>{
-      const inp = document.createElement("input");
-      inp.type = "file";
-      inp.accept = "application/json";
-      inp.onchange = async () => {
-        const file = inp.files?.[0];
-        if(!file) return;
-        try{
-          const text = await file.text();
-          const obj = JSON.parse(text);
-          const s = structuredClone(DEFAULT_STATE);
-          state = {
-            ...s,
-            ...obj,
-            range: { ...s.range, ...(obj.range||{}) },
-            current: { ...s.current, ...(obj.current||{}) },
-            lastYear: { ...s.lastYear, ...(obj.lastYear||{}) },
-            nextMonthPast: { ...s.nextMonthPast, ...(obj.nextMonthPast||{}) },
-            nextTarget: { ...s.nextTarget, ...(obj.nextTarget||{}) },
-            partners: Array.isArray(obj.partners) && obj.partners.length ? obj.partners : structuredClone(s.partners),
-            topics: typeof obj.topics === "string" ? obj.topics : "",
-            companyCount: Number.isFinite(Number(obj.companyCount)) ? Number(obj.companyCount) : s.companyCount,
-            targetCount: Number.isFinite(Number(obj.targetCount)) ? Number(obj.targetCount) : s.targetCount
-          };
-          bindInputs();
-          renderPartners();
-          recalcAll();
-          saveState();
-        }catch(e){
-          alert("JSONの読み込みに失敗しました。形式を確認してください。");
-        }
-      };
-      inp.click();
-    });
-  }
-
-  function syncFromInputs(){
-    state.current.totalVisit = clamp0($("v_totalVisit").value);
-    state.current.totalContract = clamp0($("v_totalContract").value);
-    state.current.corpVisit = clamp0($("v_corpVisit").value);
-    state.current.corpContract = clamp0($("v_corpContract").value);
-    state.current.referralCards = clamp0($("v_referralCards").value);
-
-    state.lastYear.totalVisit = clamp0($("ly_totalVisit").value);
-    state.lastYear.totalContract = clamp0($("ly_totalContract").value);
-    state.lastYear.corpVisit = clamp0($("ly_corpVisit").value);
-    state.lastYear.corpContract = clamp0($("ly_corpContract").value);
-    state.lastYear.referralCards = clamp0($("ly_referralCards").value);
-
-    state.nextMonthPast.totalVisit = clamp0($("nm_totalVisit").value);
-    state.nextMonthPast.totalContract = clamp0($("nm_totalContract").value);
-    state.nextMonthPast.corpVisit = clamp0($("nm_corpVisit").value);
-    state.nextMonthPast.corpContract = clamp0($("nm_corpContract").value);
-    state.nextMonthPast.referralCards = clamp0($("nm_referralCards").value);
-
-    state.nextTarget.totalVisit = clamp0($("tg_totalVisit").value);
-    state.nextTarget.totalContract = clamp0($("tg_totalContract").value);
-    state.nextTarget.corpVisit = clamp0($("tg_corpVisit").value);
-    state.nextTarget.corpContract = clamp0($("tg_corpContract").value);
-    state.nextTarget.referralCards = clamp0($("tg_referralCards").value);
-
-    // highlights (kept in state, could also be edited later if desired)
-    $("v_companyCount_big").textContent = nfInt.format(clamp0(state.companyCount));
-    $("v_targetCount_big").textContent = nfInt.format(clamp0(state.targetCount));
-  }
-
-  // ===================== Period labels =====================
-  function recalcPeriodsUI(){
-    const curStart = state.range.start;
-    const curEnd = state.range.end;
-
-    $("lblRangeCur").textContent = `${fmtJP(curStart)} – ${fmtJP(curEnd)}`;
-    $("lblPeriodCur").textContent = `${fmtJP(curStart)} – ${fmtJP(curEnd)}`;
-
-    // derive year/month from start (monthly assumption)
-    const [yStr, mStr] = (curStart || "2025-12-01").split("-");
-    const year = Number(yStr);
-    const month = Number(mStr);
-
-    // last year same month range label (derived for display)
-    const lyRange = monthStartEnd(year - 1, month);
-    $("lblPeriodLY").textContent = `${fmtJP(lyRange.start)} – ${fmtJP(lyRange.end)}`;
-
-    // next month label
-    const next = addMonths(year, month, 1);
-    const nextRange = monthStartEnd(next.year, next.month);
-    $("lblPeriodNextTarget").textContent = `${next.year}.${pad2(next.month)}（${fmtJP(nextRange.start)} – ${fmtJP(nextRange.end)}）`;
-
-    // next month past (previous year of next month)
-    const nextPast = monthStartEnd(next.year - 1, next.month);
-    $("lblPeriodNextPast").textContent = `${(next.year-1)}.${pad2(next.month)}（${fmtJP(nextPast.start)} – ${fmtJP(nextPast.end)}）`;
-  }
-
-  // ===================== Recalc all =====================
-  function recalcAll(){
-    const c = state.current;
-    const ly = state.lastYear;
-
-    // KPIs
-    const k_ty  = pct(c.totalContract, c.totalVisit);
-    const k_cvr = pct(c.corpVisit, c.totalVisit);
-    const k_ccr = pct(c.corpContract, c.totalContract);
-    const k_cy  = pct(c.corpContract, c.corpVisit);
-
-    $("k_ty").textContent  = fmt1(k_ty);
-    $("k_cvr").textContent = fmt1(k_cvr);
-    $("k_ccr").textContent = fmt1(k_ccr);
-    $("k_cy").textContent  = fmt1(k_cy);
-
-    const ly_ty  = pct(ly.totalContract, ly.totalVisit);
-    const ly_cvr = pct(ly.corpVisit, ly.totalVisit);
-    const ly_ccr = pct(ly.corpContract, ly.totalContract);
-    const ly_cy  = pct(ly.corpContract, ly.corpVisit);
-
-    setDelta("d_ty",  k_ty,  ly_ty);
-    setDelta("d_cvr", k_cvr, ly_cvr);
-    setDelta("d_ccr", k_ccr, ly_ccr);
-    setDelta("d_cy",  k_cy,  ly_cy);
-
-    // Highlight: coverage
-    const comp = clamp0(state.companyCount);
-    const targ = clamp0(state.targetCount);
-    const coverage = pct(comp, targ);
-    $("badgeCoverage").textContent = `提携率 ${fmt1(coverage)}%`;
-    $("v_companyCount_big").textContent = nfInt.format(comp);
-    $("v_targetCount_big").textContent = nfInt.format(targ);
-
-    // Partners sums
-    const sumV = state.partners.reduce((s,p)=> s + clamp0(p.visit), 0);
-    const sumF = state.partners.reduce((s,p)=> s + clamp0(p.first), 0);
-    const sumA = state.partners.reduce((s,p)=> s + clamp0(p.apply), 0);
-    $("sumPartnerVisit").textContent = nfInt.format(sumV);
-    $("sumPartnerFirst").textContent = nfInt.format(sumF);
-    $("sumPartnerApply").textContent = nfInt.format(sumA);
-
-    // Targets KPI block
-    const tg = state.nextTarget;
-    const tg_ty = pct(tg.totalContract, tg.totalVisit);
-    const tg_cy = pct(tg.corpContract, tg.corpVisit);
-    $("tg_k_ty").textContent = `${fmt1(tg_ty)}%`;
-    $("tg_k_cy").textContent = `${fmt1(tg_cy)}%`;
-
-    // Hints vs next month past
-    const nm = state.nextMonthPast;
-    const nm_ty = pct(nm.totalContract, nm.totalVisit);
-    const nm_cy = pct(nm.corpContract, nm.corpVisit);
-
-    const hint1 = (tg_ty - nm_ty);
-    const hint2 = (tg_cy - nm_cy);
-    $("tg_hint_ty").textContent = `前年差 ${hint1>0?"+":""}${fmt1(hint1)}pt`;
-    $("tg_hint_cy").textContent = `前年差 ${hint2>0?"+":""}${fmt1(hint2)}pt`;
-
-    updateCharts();
-  }
-
-  // ===================== Boot =====================
-  initCharts();
-  bindInputs();
-  recalcPeriodsUI();
-  renderPartners();
-  recalcAll();
+}
+function saveState(){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
   setSaveStatus("保存済み");
+}
+function setSaveStatus(s){ document.getElementById("saveStatus").textContent = s; }
+
+let state = loadState();
+
+/** ======================
+ * Helpers
+ * ====================== */
+const $ = (id)=>document.getElementById(id);
+const clamp0 = (v)=> {
+  const n = Number(v);
+  return Number.isFinite(n) && n > 0 ? n : 0;
+};
+const pct = (a,b)=> (b>0) ? (a/b)*100 : 0;
+const fmt1 = (n)=> (Number.isFinite(n)?n:0).toFixed(1);
+const pad2 = (n)=>String(n).padStart(2,"0");
+
+function fmtJPDate(iso){
+  if(!iso) return "—";
+  const [y,m,d] = iso.split("-").map(Number);
+  if(!y||!m||!d) return "—";
+  return `${y}年${pad2(m)}月${pad2(d)}日現在`;
+}
+function derivePeriodLabel(isoStart){
+  if(!isoStart) return "—";
+  const [y,m] = isoStart.split("-").map(Number);
+  if(!y||!m) return "—";
+  return `${y}.${pad2(m)}`;
+}
+
+function setDelta(elId, now, base){
+  const el = $(elId);
+  const diff = now - base;
+  const sign = diff > 0 ? "+" : "";
+  const cls = (Math.abs(diff) < 0.05) ? "neutral" : (diff > 0 ? "good" : "bad");
+  el.className = "delta " + cls;
+  el.innerHTML = "";
+  const tag = document.createElement("span");
+  tag.className = "tag";
+  tag.textContent = `前年差 ${sign}${fmt1(diff)}pt`;
+  const small = document.createElement("span");
+  small.textContent = `（前年 ${fmt1(base)}%）`;
+  el.appendChild(tag);
+  el.appendChild(small);
+}
+
+/** ======================
+ * Charts
+ * ====================== */
+const centerLabelPlugin = {
+  id: "centerLabel",
+  afterDraw(chart){
+    if(chart.config.type !== "doughnut") return;
+    const {ctx, chartArea} = chart;
+    if(!chartArea) return;
+
+    const data = chart.data.datasets?.[0]?.data || [];
+    const corp = Number(data[0] || 0);
+    const total = data.reduce((a,b)=>a+Number(b||0), 0);
+    const p = total ? (corp/total*100) : 0;
+
+    const cx = (chartArea.left + chartArea.right) / 2;
+    const cy = (chartArea.top + chartArea.bottom) / 2;
+
+    ctx.save();
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillStyle = "#0f172a";
+    ctx.font = "800 30px Montserrat, sans-serif";
+    ctx.fillText(p.toFixed(1) + "%", cx, cy - 6);
+    ctx.fillStyle = "#64748b";
+    ctx.font = "700 12px Noto Sans JP, sans-serif";
+    ctx.fillText("法人比率（来場）", cx, cy + 18);
+    ctx.restore();
+  }
+};
+Chart.register(centerLabelPlugin);
+
+let chartKPI, chartFunnel, chartShare, chartPartners;
+
+function initCharts(){
+  chartKPI = new Chart($("chartKPI"), {
+    type:"bar",
+    data:{
+      labels:["総歩留り","法人来場比","法人契約比","法人歩留り"],
+      datasets:[
+        { label:"当月", data:[0,0,0,0], backgroundColor:"rgba(37,99,235,0.35)", borderColor:"rgba(37,99,235,1)", borderWidth:1 },
+        { label:"前年同月", data:[0,0,0,0], backgroundColor:"rgba(244,63,94,0.25)", borderColor:"rgba(244,63,94,1)", borderWidth:1 }
+      ]
+    },
+    options:{
+      responsive:true,
+      plugins:{ legend:{ position:"top" } },
+      scales:{
+        y:{ beginAtZero:true, suggestedMax:30, ticks:{ callback:(v)=>v+"%" } }
+      }
+    }
+  });
+
+  chartFunnel = new Chart($("chartFunnel"), {
+    type:"bar",
+    data:{
+      labels:["来場 → 契約","法人来場 → 法人契約"],
+      datasets:[{ label:"歩留り(%)", data:[0,0], backgroundColor:"rgba(14,165,233,0.35)", borderColor:"rgba(14,165,233,1)", borderWidth:1 }]
+    },
+    options:{
+      indexAxis:"y",
+      responsive:true,
+      plugins:{ legend:{ display:false } },
+      scales:{
+        x:{ beginAtZero:true, suggestedMax:30, ticks:{ callback:(v)=>v+"%" } }
+      }
+    }
+  });
+
+  chartShare = new Chart($("chartShare"), {
+    type:"doughnut",
+    data:{
+      labels:["法人","非法人"],
+      datasets:[{
+        data:[0,0],
+        backgroundColor:["rgba(37,99,235,0.55)","rgba(244,63,94,0.35)"],
+        borderColor:["rgba(37,99,235,1)","rgba(244,63,94,1)"],
+        borderWidth:1,
+        cutout:"62%"
+      }]
+    },
+    options:{
+      responsive:true,
+      plugins:{ legend:{ position:"bottom" } }
+    }
+  });
+
+  chartPartners = new Chart($("chartPartners"), {
+    type:"bar",
+    data:{
+      labels:[],
+      datasets:[
+        { label:"来場", data:[], backgroundColor:"rgba(37,99,235,0.35)", borderColor:"rgba(37,99,235,1)", borderWidth:1 },
+        { label:"初回", data:[], backgroundColor:"rgba(14,165,233,0.35)", borderColor:"rgba(14,165,233,1)", borderWidth:1 },
+        { label:"申込", data:[], backgroundColor:"rgba(245,158,11,0.35)", borderColor:"rgba(245,158,11,1)", borderWidth:1 },
+        { label:"契約", data:[], backgroundColor:"rgba(124,58,237,0.35)", borderColor:"rgba(124,58,237,1)", borderWidth:1 },
+      ]
+    },
+    options:{
+      indexAxis:"y",
+      responsive:true,
+      plugins:{ legend:{ position:"top" } },
+      scales:{ x:{ beginAtZero:true, ticks:{ precision:0 } } }
+    }
+  });
+}
+
+function updateCharts(){
+  const c = state.perf;
+  const ly = state.lastYear;
+
+  const k_ty  = pct(c.totalContract, c.totalVisit);
+  const k_cvr = pct(c.corpVisit, c.totalVisit);
+  const k_ccr = pct(c.corpContract, c.totalContract);
+  const k_cy  = pct(c.corpContract, c.corpVisit);
+
+  const ly_ty  = pct(ly.totalContract, ly.totalVisit);
+  const ly_cvr = pct(ly.corpVisit, ly.totalVisit);
+  const ly_ccr = pct(ly.corpContract, ly.totalContract);
+  const ly_cy  = pct(ly.corpContract, ly.corpVisit);
+
+  chartKPI.data.datasets[0].data = [Number(fmt1(k_ty)), Number(fmt1(k_cvr)), Number(fmt1(k_ccr)), Number(fmt1(k_cy))];
+  chartKPI.data.datasets[1].data = [Number(fmt1(ly_ty)), Number(fmt1(ly_cvr)), Number(fmt1(ly_ccr)), Number(fmt1(ly_cy))];
+  chartKPI.update();
+
+  chartFunnel.data.datasets[0].data = [Number(fmt1(k_ty)), Number(fmt1(k_cy))];
+  chartFunnel.update();
+
+  const nonCorp = Math.max(0, c.totalVisit - c.corpVisit);
+  chartShare.data.datasets[0].data = [c.corpVisit, nonCorp];
+  chartShare.update();
+
+  const rows = (state.partners||[])
+    .map(p=>({
+      name: (p.name || "（未入力）").trim(),
+      visit: clamp0(p.visit),
+      first: clamp0(p.first),
+      apply: clamp0(p.apply),
+      contract: clamp0(p.contract)
+    }))
+    .filter(x => x.visit>0 || x.first>0 || x.apply>0 || x.contract>0);
+
+  rows.sort((a,b)=> (b.visit+b.first+b.apply+b.contract) - (a.visit+a.first+a.apply+a.contract));
+  const top = rows.slice(0, 8);
+
+  chartPartners.data.labels = top.map(x=>x.name);
+  chartPartners.data.datasets[0].data = top.map(x=>x.visit);
+  chartPartners.data.datasets[1].data = top.map(x=>x.first);
+  chartPartners.data.datasets[2].data = top.map(x=>x.apply);
+  chartPartners.data.datasets[3].data = top.map(x=>x.contract);
+  chartPartners.update();
+}
+
+/** ======================
+ * Bind UI
+ * ====================== */
+function bind(){
+  // dates
+  $("periodStart").value = state.meta.periodStart;
+  $("periodEnd").value = state.meta.periodEnd;
+
+  $("periodLabel").textContent = derivePeriodLabel(state.meta.periodStart);
+  $("asOfLabel").textContent = fmtJPDate(state.meta.periodEnd);
+
+  // counts
+  $("companyCount").value = clamp0(state.counts.partnerCompanies);
+  $("targetCount").value = clamp0(state.counts.targetCompanies);
+
+  // perf
+  const c = state.perf;
+  $("v_totalVisit").value = clamp0(c.totalVisit);
+  $("v_totalContract").value = clamp0(c.totalContract);
+  $("v_corpVisit").value = clamp0(c.corpVisit);
+  $("v_corpContract").value = clamp0(c.corpContract);
+  $("v_referralCards").value = clamp0(c.referralCards);
+
+  // last year
+  const ly = state.lastYear;
+  $("ly_totalVisit").value = clamp0(ly.totalVisit);
+  $("ly_totalContract").value = clamp0(ly.totalContract);
+  $("ly_corpVisit").value = clamp0(ly.corpVisit);
+  $("ly_corpContract").value = clamp0(ly.corpContract);
+  $("ly_referralCards").value = clamp0(ly.referralCards);
+
+  // next month past
+  const nm = state.nextMonthPast;
+  $("nm_totalVisit").value = clamp0(nm.totalVisit);
+  $("nm_totalContract").value = clamp0(nm.totalContract);
+  $("nm_corpVisit").value = clamp0(nm.corpVisit);
+  $("nm_corpContract").value = clamp0(nm.corpContract);
+  $("nm_referralCards").value = clamp0(nm.referralCards);
+
+  // target
+  const tg = state.nextTarget;
+  $("tg_totalVisit").value = clamp0(tg.totalVisit);
+  $("tg_totalContract").value = clamp0(tg.totalContract);
+  $("tg_corpVisit").value = clamp0(tg.corpVisit);
+  $("tg_corpContract").value = clamp0(tg.corpContract);
+  $("tg_referralCards").value = clamp0(tg.referralCards);
+
+  $("topics").value = state.topics || "";
+
+  // listeners
+  const markDirty = ()=>setSaveStatus("編集中…");
+
+  $("periodStart").addEventListener("input", ()=>{
+    markDirty();
+    state.meta.periodStart = $("periodStart").value;
+    $("periodLabel").textContent = derivePeriodLabel(state.meta.periodStart);
+    saveState();
+  });
+  $("periodEnd").addEventListener("input", ()=>{
+    markDirty();
+    state.meta.periodEnd = $("periodEnd").value;
+    $("asOfLabel").textContent = fmtJPDate(state.meta.periodEnd);
+    saveState();
+  });
+
+  $("companyCount").addEventListener("input", ()=>{
+    markDirty();
+    state.counts.partnerCompanies = clamp0($("companyCount").value);
+    saveState();
+  });
+  $("targetCount").addEventListener("input", ()=>{
+    markDirty();
+    state.counts.targetCompanies = clamp0($("targetCount").value);
+    saveState();
+  });
+
+  const ids = [
+    "v_totalVisit","v_totalContract","v_corpVisit","v_corpContract","v_referralCards",
+    "ly_totalVisit","ly_totalContract","ly_corpVisit","ly_corpContract","ly_referralCards",
+    "nm_totalVisit","nm_totalContract","nm_corpVisit","nm_corpContract","nm_referralCards",
+    "tg_totalVisit","tg_totalContract","tg_corpVisit","tg_corpContract","tg_referralCards",
+  ];
+  ids.forEach(id=>{
+    $(id).addEventListener("input", ()=>{
+      markDirty();
+      syncPerfFromUI();
+      recalc();
+      saveState();
+    });
+  });
+
+  $("topics").addEventListener("input", ()=>{
+    markDirty();
+    state.topics = $("topics").value;
+    saveState();
+  });
+
+  $("btnPrint").addEventListener("click", ()=>{
+    window.open("./print.html", "_blank", "noopener");
+  });
+
+  $("btnShare").addEventListener("click", exportShareHTML);
+}
+
+function syncPerfFromUI(){
+  state.perf.totalVisit = clamp0($("v_totalVisit").value);
+  state.perf.totalContract = clamp0($("v_totalContract").value);
+  state.perf.corpVisit = clamp0($("v_corpVisit").value);
+  state.perf.corpContract = clamp0($("v_corpContract").value);
+  state.perf.referralCards = clamp0($("v_referralCards").value);
+
+  state.lastYear.totalVisit = clamp0($("ly_totalVisit").value);
+  state.lastYear.totalContract = clamp0($("ly_totalContract").value);
+  state.lastYear.corpVisit = clamp0($("ly_corpVisit").value);
+  state.lastYear.corpContract = clamp0($("ly_corpContract").value);
+  state.lastYear.referralCards = clamp0($("ly_referralCards").value);
+
+  state.nextMonthPast.totalVisit = clamp0($("nm_totalVisit").value);
+  state.nextMonthPast.totalContract = clamp0($("nm_totalContract").value);
+  state.nextMonthPast.corpVisit = clamp0($("nm_corpVisit").value);
+  state.nextMonthPast.corpContract = clamp0($("nm_corpContract").value);
+  state.nextMonthPast.referralCards = clamp0($("nm_referralCards").value);
+
+  state.nextTarget.totalVisit = clamp0($("tg_totalVisit").value);
+  state.nextTarget.totalContract = clamp0($("tg_totalContract").value);
+  state.nextTarget.corpVisit = clamp0($("tg_corpVisit").value);
+  state.nextTarget.corpContract = clamp0($("tg_corpContract").value);
+  state.nextTarget.referralCards = clamp0($("tg_referralCards").value);
+}
+
+function recalc(){
+  const c = state.perf;
+  const ly = state.lastYear;
+
+  const k_ty  = pct(c.totalContract, c.totalVisit);
+  const k_cvr = pct(c.corpVisit, c.totalVisit);
+  const k_ccr = pct(c.corpContract, c.totalContract);
+  const k_cy  = pct(c.corpContract, c.corpVisit);
+
+  $("k_ty").textContent  = fmt1(k_ty);
+  $("k_cvr").textContent = fmt1(k_cvr);
+  $("k_ccr").textContent = fmt1(k_ccr);
+  $("k_cy").textContent  = fmt1(k_cy);
+
+  const ly_ty  = pct(ly.totalContract, ly.totalVisit);
+  const ly_cvr = pct(ly.corpVisit, ly.totalVisit);
+  const ly_ccr = pct(ly.corpContract, ly.totalContract);
+  const ly_cy  = pct(ly.corpContract, ly.corpVisit);
+
+  setDelta("d_ty",  k_ty,  ly_ty);
+  setDelta("d_cvr", k_cvr, ly_cvr);
+  setDelta("d_ccr", k_ccr, ly_ccr);
+  setDelta("d_cy",  k_cy,  ly_cy);
+
+  updateCharts();
+}
+
+/** ======================
+ * Share HTML export (single file, embedded state)
+ * ====================== */
+function exportShareHTML(){
+  setSaveStatus("出力中…");
+
+  const fileName = `hb_report_${derivePeriodLabel(state.meta.periodStart).replace(".","-")}_shared.html`;
+
+  // shared viewer: shows both pages (tabs) + print
+  const html = `<!DOCTYPE html>
+<html lang="ja"><head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>HB Monthly Report (Shared)</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+  body{ margin:0; font-family:'Noto Sans JP',system-ui,sans-serif; background:#0b1220; padding:16px; display:flex; justify-content:center; }
+  .app{ width:min(1360px,100%); background:#fff; border-radius:14px; overflow:hidden; box-shadow:0 30px 60px -25px rgba(0,0,0,.35); }
+  .top{ background:linear-gradient(90deg,#0f172a,#101c38); color:#fff; padding:14px 16px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; }
+  .title{ display:flex; flex-direction:column; gap:3px; }
+  .title h1{ margin:0; font-family:Montserrat,sans-serif; font-size:16px; letter-spacing:1px; }
+  .title .sub{ font-size:12px; opacity:.85; }
+  .tabs{ display:flex; gap:8px; flex-wrap:wrap; }
+  .tab{ cursor:pointer; padding:9px 10px; border-radius:999px; border:1px solid rgba(255,255,255,.16); background:rgba(255,255,255,.08); font-weight:900; font-size:12px; }
+  .tab.active{ background:rgba(37,99,235,.92); border-color:rgba(37,99,235,1); }
+  .btn{ cursor:pointer; border:none; padding:10px 12px; border-radius:12px; font-weight:900; font-size:12px; color:#fff; background:rgba(255,255,255,.10); border:1px solid rgba(255,255,255,.16); }
+  .btn.primary{ background:rgba(37,99,235,.92); border-color:rgba(37,99,235,1); }
+  .wrap{ padding:14px; background:linear-gradient(180deg,#fff,#f8fafc); }
+  iframe{ width:100%; border:none; height: calc(100vh - 140px); min-height: 720px; background:#fff; border-radius:12px; }
+  @media print{
+    body{ background:#fff; padding:0; }
+    .app{ width:100%; border-radius:0; box-shadow:none; }
+    .top{ display:none; }
+    .wrap{ padding:0; background:#fff; }
+    iframe{ display:none; }
+    #printRoot{ display:block !important; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="top">
+    <div class="title">
+      <h1>HB Monthly Report（共有ファイル）</h1>
+      <div class="sub">このファイル1つで閲覧・印刷できます（入力値は埋め込み済み）</div>
+    </div>
+    <div class="tabs">
+      <button class="tab active" id="t1">月報</button>
+      <button class="tab" id="t2">法人活動</button>
+      <button class="btn primary" id="pbtn">印刷（PDF）</button>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <iframe id="frame" title="viewer"></iframe>
+
+    <!-- print view (2 pages) -->
+    <div id="printRoot" style="display:none;">
+      <!-- injected by print.html logic in iframe -->
+    </div>
+  </div>
+</div>
+
+<script id="__EMBEDDED_STATE__" type="application/json">${escapeHTML(JSON.stringify(state))}</script>
+<script>
+  function unescapeHTML(s){ return s.replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&amp;/g,"&"); }
+  const st = JSON.parse(unescapeHTML(document.getElementById("__EMBEDDED_STATE__").textContent));
+  function loadPage(which){
+    const url = which===1 ? "./index.html" : "./partners.html";
+    document.getElementById("frame").src = url + (url.includes("?") ? "&" : "?") + "embed=1";
+  }
+  function setTab(which){
+    document.getElementById("t1").classList.toggle("active", which===1);
+    document.getElementById("t2").classList.toggle("active", which===2);
+  }
+  document.getElementById("t1").onclick = ()=>{ setTab(1); loadPage(1); };
+  document.getElementById("t2").onclick = ()=>{ setTab(2); loadPage(2); };
+
+  // provide embedded state to iframe via postMessage
+  window.addEventListener("message",(ev)=>{
+    if(ev.data && ev.data.type==="HB_REQUEST_STATE"){
+      ev.source.postMessage({ type:"HB_STATE", payload: st }, "*");
+    }
+  });
+
+  // Print: open print.html in new window using embedded state as localStorage substitute
+  document.getElementById("pbtn").onclick = ()=>{
+    const w = window.open("./print.html?embed=1", "_blank", "noopener");
+    const timer = setInterval(()=>{
+      if(!w || w.closed){ clearInterval(timer); return; }
+      try{
+        w.postMessage({ type:"HB_STATE", payload: st }, "*");
+        clearInterval(timer);
+      }catch{}
+    }, 200);
+  };
+
+  // init
+  loadPage(1);
+</script>
+</body></html>`;
+
+  const blob = new Blob([html], {type:"text/html;charset=utf-8"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = fileName;
+  a.click();
+  URL.revokeObjectURL(url);
+
+  setSaveStatus("保存済み");
+}
+
+function escapeHTML(str){
+  return String(str)
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;");
+}
+
+/** ======================
+ * Init
+ * ====================== */
+initCharts();
+bind();
+recalc();
+saveState();
 </script>
 </body>
 </html>

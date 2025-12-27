@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" note="width=device-width, initial-scale=1"/>
+  <title>PDF印刷（2ページ）</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+  <style>
+    :root{
+      --ink:#0f172a;
+      --muted:#64748b;
+      --line:#e2e8f0;
+      --soft:#f1f5f9;
+      --blue:#2563eb;
+      --teal:#0ea5e9;
+      --violet:#7c3aed;
+      --amber:#f59e0b;
+      --radius:14px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:'Noto Sans JP',system-ui,sans-serif;
+      color:var(--ink);
+      background:#0b1220;
+      padding:16px;
+      display:flex;
+      justify-content:center;
+    }
+    .paper{
+      width:min(1280px,100%);
+      background:#fff;
+      border-radius:14px;
+      padding:14px;
+      border:1px solid rgba(255,255,255,0.10);
+      box-shadow: 0 30px 60px -25px rgba(0,0,0,0.35);
+    }
+
+    .top{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      align-items:flex-end;
+      padding:10px 10px 14px;
+      border-bottom:3px solid var(--ink);
+      margin-bottom:12px;
+    }
+    .top h1{
+      margin:0;
+      font-family:'Montserrat',sans-serif;
+      letter-spacing:1px;
+      font-size:18px;
+    }
+    .meta{
+      text-align:right;
+      font-size:12px;
+      font-weight:900;
+      color:var(--muted);
+      line-height:1.4;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns: 1fr 420px;
+      gap:12px;
+    }
+    @media (max-width: 1100px){ .grid{ grid-template-columns:1fr; } }
+
+    .card{
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      padding:12px;
+      background:#fff;
+      break-inside: avoid;
+    }
+    .hrow{ display:flex; align-items:center; gap:10px; margin-bottom:8px; }
+    .h2{ margin:0; font-size:13px; font-weight:900; display:flex; gap:10px; align-items:center; }
+    .dot{ width:10px; height:10px; border-radius:4px; display:inline-block; }
+    .dot.blue{ background:var(--blue); }
+    .dot.teal{ background:var(--teal); }
+    .dot.violet{ background:var(--violet); }
+    .dot.amber{ background:var(--amber); }
+
+    .kpis{
+      display:grid;
+      grid-template-columns: repeat(4, minmax(0,1fr));
+      gap:8px;
+    }
+    .kpi{
+      border:1px solid var(--line);
+      border-radius:12px;
+      padding:10px;
+      background:linear-gradient(180deg,#fff,#f8fafc);
+    }
+    .kpi .label{ font-size:10px; font-weight:900; color:var(--muted); }
+    .kpi .val{ margin-top:4px; display:flex; gap:6px; align-items:baseline; }
+    .kpi .num{ font-family:'Montserrat',sans-serif; font-size:22px; font-weight:900; }
+    .kpi .unit{ font-size:11px; font-weight:900; color:#94a3b8; }
+
+    .miniGrid{
+      display:grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap:8px;
+    }
+    .mini{
+      border:1px solid var(--line);
+      border-radius:12px;
+      padding:10px;
+      background:linear-gradient(180deg,#fff,#f8fafc);
+    }
+    .mini .t{ font-size:10px; font-weight:900; color:var(--muted); }
+    .mini .v{ margin-top:4px; font-family:'Montserrat',sans-serif; font-weight:900; font-size:18px; }
+
+    .chartWrap{
+      border:1px solid var(--line);
+      border-radius:12px;
+      padding:10px;
+      background:#fff;
+      overflow:hidden;
+      break-inside: avoid;
+    }
+    canvas{ max-width:100%; }
+
+    /* Tables */
+    .tblWrap{ border:1px solid var(--line); border-radius:12px; overflow:hidden; }
+    table{ width:100%; border-collapse:collapse; table-layout:fixed; }
+    th{
+      background:var(--ink);
+      color:#fff;
+      font-size:10px;
+      padding:8px;
+      border:1px solid var(--ink);
+      text-align:left;
+      white-space:nowrap;
+    }
+    td{
+      border:1px solid var(--line);
+      font-size:10px;
+      padding:8px;
+      vertical-align:top;
+      word-break:break-word;
+    }
+
+    /* Force page break before Page2 */
+    .pageBreak{
+      break-before: page;
+      page-break-before: always;
+      margin-top:14px;
+    }
+
+    @media print{
+      @page { size: A4 landscape; margin: 8mm; }
+      body{ background:#fff; padding:0; }
+      .paper{ box-shadow:none; border:none; border-radius:0; width:100%; padding:0; }
+      .printBtns{ display:none !important; }
+      .grid{ grid-template-columns: 1fr 420px; }
+    }
+    .printBtns{
+      display:flex;
+      justify-content:flex-end;
+      gap:10px;
+      margin-bottom:10px;
+    }
+    .btn{
+      cursor:pointer;
+      border:none;
+      padding:10px 12px;
+      border-radius:12px;
+      font-weight:900;
+      font-size:12px;
+      background:#2563eb;
+      color:#fff;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="paper">
+    <div class="printBtns">
+      <button class="btn" onclick="window.print()">印刷（PDF）</button>
+    </div>
+
+    <div class="top">
+      <div>
+        <h1>BUSINESS MONTHLY REPORT</h1>
+      </div>
+      <div class="meta">
+        <div id="m_period">—</div>
+        <div id="m_range">—</div>
+        <div id="m_asof">—</div>
+      </div>
+    </div>
+
+    <!-- Page 1 -->
+    <div class="grid" id="page1">
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <div class="card">
+          <div class="hrow">
+            <h2 class="h2"><span class="dot blue"></span>主要KPI</h2>
+          </div>
+          <div class="kpis">
+            <div class="kpi"><div class="label">総歩留り</div><div class="val"><span class="num" id="k_ty">0.0</span><span class="unit">%</span></div></div>
+            <div class="kpi"><div class="label">法人来場比</div><div class="val"><span class="num" id="k_cvr">0.0</span><span class="unit">%</span></div></div>
+            <div class="kpi"><div class="label">法人契約比</div><div class="val"><span class="num" id="k_ccr">0.0</span><span class="unit">%</span></div></div>
+            <div class="kpi"><div class="label">法人歩留り</div><div class="val"><span class="num" id="k_cy">0.0</span><span class="unit">%</span></div></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="hrow">
+            <h2 class="h2"><span class="dot teal"></span>当月実績</h2>
+          </div>
+          <div class="miniGrid">
+            <div class="mini"><div class="t">総来場</div><div class="v" id="p_tv">0</div></div>
+            <div class="mini"><div class="t">総契約</div><div class="v" id="p_tc">0</div></div>
+            <div class="mini"><div class="t">法人来場</div><div class="v" id="p_cv">0</div></div>
+            <div class="mini"><div class="t">法人契約</div><div class="v" id="p_cc">0</div></div>
+            <div class="mini"><div class="t">紹介カード</div><div class="v" id="p_rc">0</div></div>
+            <div class="mini"><div class="t">提携会社数</div><div class="v" id="p_pc">0</div></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="hrow">
+            <h2 class="h2"><span class="dot violet"></span>Topics</h2>
+          </div>
+          <div style="border:1px solid var(--line); border-radius:12px; padding:10px; background:linear-gradient(180deg,#fff,#fffef2); font-size:11px; line-height:1.6; white-space:pre-wrap;" id="p_topics"></div>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <div class="chartWrap">
+          <div class="hrow"><h2 class="h2"><span class="dot blue"></span>KPI（%）</h2></div>
+          <canvas id="chartKPI" height="180"></canvas>
+        </div>
+        <div class="chartWrap">
+          <div class="hrow"><h2 class="h2"><span class="dot teal"></span>ファネル</h2></div>
+          <canvas id="chartFunnel" height="170"></canvas>
+        </div>
+        <div class="chartWrap">
+          <div class="hrow"><h2 class="h2"><span class="dot teal"></span>法人比率（来場）</h2></div>
+          <canvas id="chartShare" height="190"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Page 2 -->
+    <div class="pageBreak" id="page2">
+      <div class="hrow" style="margin:0 0 10px 0;">
+        <h2 class="h2"><span class="dot amber"></span>法人活動（提携詳細）</h2>
+      </div>
+
+      <div class="card" style="margin-bottom:12px;">
+        <div class="hrow"><h2 class="h2"><span class="dot teal"></span>当月 法人活動サマリー</h2></div>
+        <div class="miniGrid">
+          <div class="mini"><div class="t">法人来場</div><div class="v" id="s_cv">0</div></div>
+          <div class="mini"><div class="t">法人契約</div><div class="v" id="s_cc">0</div></div>
+          <div class="mini"><div class="t">PR費用（合計）</div><div class="v" id="s_cost">0</div></div>
+          <div class="mini"><div class="t">来場CPA（合計）</div><div class="v" id="s_cpa">0.0</div></div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-bottom:12px;">
+        <div class="hrow"><h2 class="h2"><span class="dot amber"></span>現提携（活動・PR・単価）</h2></div>
+        <div class="tblWrap">
+          <table>
+            <thead>
+              <tr>
+                <th style="width:140px;">企業名</th>
+                <th style="width:150px;">物件名</th>
+                <th style="width:55px;">来</th>
+                <th style="width:55px;">初</th>
+                <th style="width:55px;">申</th>
+                <th style="width:55px;">契</th>
+                <th style="width:180px;">PR内容</th>
+                <th style="width:90px;">費用</th>
+                <th style="width:90px;">来場CPA</th>
+                <th style="width:100px;">成約単価</th>
+                <th style="width:150px;">特典</th>
+                <th style="width:80px;">手数料</th>
+                <th>備考</th>
+              </tr>
+            </thead>
+            <tbody id="printPartners"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="hrow"><h2 class="h2"><span class="dot violet"></span>法人業務提携（予定・交渉中）</h2></div>
+        <div class="tblWrap">
+          <table>
+            <thead>
+              <tr>
+                <th style="width:170px;">企業名</th>
+                <th style="width:140px;">企業規模</th>
+                <th>提案内容</th>
+                <th style="width:150px;">ステータス</th>
+                <th style="width:180px;">次アクション</th>
+                <th style="width:120px;">予定時期</th>
+              </tr>
+            </thead>
+            <tbody id="printPlanned"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+/** ======================
+ * State load
+ * ====================== */
+const STORAGE_KEY = "hb_monthly_report_state_v2";
+const DEFAULT_STATE = {
+  meta: { periodStart: "2025-12-01", periodEnd: "2025-12-31" },
+  counts: { partnerCompanies: 9, targetCompanies: 1856 },
+  perf: { totalVisit: 0, totalContract: 0, corpVisit: 0, corpContract: 0, referralCards: 0 },
+  lastYear: { totalVisit: 0, totalContract: 0, corpVisit: 0, corpContract: 0, referralCards: 0 },
+  partners: [],
+  planned: [],
+  topics: ""
+};
+function deepMerge(base, patch){
+  const out = structuredClone(base);
+  for(const k of Object.keys(patch||{})){
+    if(patch[k] && typeof patch[k]==="object" && !Array.isArray(patch[k])){
+      out[k] = deepMerge(out[k]||{}, patch[k]);
+    }else{
+      out[k] = patch[k];
+    }
+  }
+  return out;
+}
+let state = (() => {
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if(!raw) return structuredClone(DEFAULT_STATE);
+  try{
+    const obj = JSON.parse(raw);
+    const merged = deepMerge(DEFAULT_STATE, obj);
+    merged.partners = Array.isArray(obj.partners) ? obj.partners : [];
+    merged.planned  = Array.isArray(obj.planned) ? obj.planned : [];
+    return merged;
+  }catch{
+    return structuredClone(DEFAULT_STATE);
+  }
+})();
+
+// if embedded (from share file), accept postMessage state
+window.addEventListener("message",(ev)=>{
+  if(ev.data && ev.data.type==="HB_STATE"){
+    state = deepMerge(DEFAULT_STATE, ev.data.payload || {});
+    state.partners = Array.isArray(ev.data.payload?.partners) ? ev.data.payload.partners : [];
+    state.planned  = Array.isArray(ev.data.payload?.planned) ? ev.data.payload.planned : [];
+    renderAll();
+  }
+},{ once:false });
+
+/** ======================
+ * Helpers
+ * ====================== */
+const $ = (id)=>document.getElementById(id);
+const clamp0 = (v)=>{ const n=Number(v); return Number.isFinite(n)&&n>0?n:0; };
+const pct = (a,b)=> (b>0) ? (a/b)*100 : 0;
+const fmt1 = (n)=> (Number.isFinite(n)?n:0).toFixed(1);
+const nf = new Intl.NumberFormat("ja-JP");
+const pad2 = (n)=>String(n).padStart(2,"0");
+
+function fmtJPRange(s,e){
+  const f = (iso)=>{
+    if(!iso) return "—";
+    const [y,m,d] = iso.split("-").map(Number);
+    return `${y}/${pad2(m)}/${pad2(d)}`;
+  };
+  return `${f(s)} – ${f(e)}`;
+}
+function fmtJPAsOf(iso){
+  if(!iso) return "—";
+  const [y,m,d] = iso.split("-").map(Number);
+  return `${y}年${pad2(m)}月${pad2(d)}日現在`;
+}
+function derivePeriodLabel(isoStart){
+  if(!isoStart) return "—";
+  const [y,m] = isoStart.split("-").map(Number);
+  return `${y}.${pad2(m)}`;
+}
+function computeCPA(cost, denom){
+  cost = clamp0(cost); denom = clamp0(denom);
+  return denom>0 ? (cost/denom) : 0;
+}
+
+/** ======================
+ * Charts
+ * ====================== */
+const centerLabelPlugin = {
+  id: "centerLabel",
+  afterDraw(chart){
+    if(chart.config.type !== "doughnut") return;
+    const {ctx, chartArea} = chart;
+    if(!chartArea) return;
+    const data = chart.data.datasets?.[0]?.data || [];
+    const corp = Number(data[0] || 0);
+    const total = data.reduce((a,b)=>a+Number(b||0), 0);
+    const p = total ? (corp/total*100) : 0;
+
+    const cx = (chartArea.left + chartArea.right) / 2;
+    const cy = (chartArea.top + chartArea.bottom) / 2;
+
+    ctx.save();
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillStyle = "#0f172a";
+    ctx.font = "800 26px Montserrat, sans-serif";
+    ctx.fillText(p.toFixed(1) + "%", cx, cy - 4);
+    ctx.fillStyle = "#64748b";
+    ctx.font = "700 11px Noto Sans JP, sans-serif";
+    ctx.fillText("法人比率（来場）", cx, cy + 16);
+    ctx.restore();
+  }
+};
+Chart.register(centerLabelPlugin);
+
+let chartKPI, chartFunnel, chartShare;
+
+function initCharts(){
+  chartKPI = new Chart($("chartKPI"), {
+    type:"bar",
+    data:{
+      labels:["総歩留り","法人来場比","法人契約比","法人歩留り"],
+      datasets:[
+        { label:"当月", data:[0,0,0,0], backgroundColor:"rgba(37,99,235,0.35)", borderColor:"rgba(37,99,235,1)", borderWidth:1 },
+        { label:"前年同月", data:[0,0,0,0], backgroundColor:"rgba(244,63,94,0.25)", borderColor:"rgba(244,63,94,1)", borderWidth:1 }
+      ]
+    },
+    options:{
+      responsive:true,
+      plugins:{ legend:{ position:"top" } },
+      scales:{ y:{ beginAtZero:true, suggestedMax:30, ticks:{ callback:(v)=>v+"%" } } }
+    }
+  });
+
+  chartFunnel = new Chart($("chartFunnel"), {
+    type:"bar",
+    data:{
+      labels:["来場 → 契約","法人来場 → 法人契約"],
+      datasets:[{ data:[0,0], backgroundColor:"rgba(14,165,233,0.35)", borderColor:"rgba(14,165,233,1)", borderWidth:1 }]
+    },
+    options:{
+      indexAxis:"y",
+      responsive:true,
+      plugins:{ legend:{ display:false } },
+      scales:{ x:{ beginAtZero:true, suggestedMax:30, ticks:{ callback:(v)=>v+"%" } } }
+    }
+  });
+
+  chartShare = new Chart($("chartShare"), {
+    type:"doughnut",
+    data:{
+      labels:["法人","非法人"],
+      datasets:[{
+        data:[0,0],
+        backgroundColor:["rgba(37,99,235,0.55)","rgba(244,63,94,0.35)"],
+        borderColor:["rgba(37,99,235,1)","rgba(244,63,94,1)"],
+        borderWidth:1,
+        cutout:"62%"
+      }]
+    },
+    options:{ responsive:true, plugins:{ legend:{ position:"bottom" } } }
+  });
+}
+
+function updateCharts(){
+  const c = state.perf || {};
+  const ly = state.lastYear || {};
+
+  const k_ty  = pct(clamp0(c.totalContract), clamp0(c.totalVisit));
+  const k_cvr = pct(clamp0(c.corpVisit), clamp0(c.totalVisit));
+  const k_ccr = pct(clamp0(c.corpContract), clamp0(c.totalContract));
+  const k_cy  = pct(clamp0(c.corpContract), clamp0(c.corpVisit));
+
+  const ly_ty  = pct(clamp0(ly.totalContract), clamp0(ly.totalVisit));
+  const ly_cvr = pct(clamp0(ly.corpVisit), clamp0(ly.totalVisit));
+  const ly_ccr = pct(clamp0(ly.corpContract), clamp0(ly.totalContract));
+  const ly_cy  = pct(clamp0(ly.corpContract), clamp0(ly.corpVisit));
+
+  chartKPI.data.datasets[0].data = [Number(fmt1(k_ty)), Number(fmt1(k_cvr)), Number(fmt1(k_ccr)), Number(fmt1(k_cy))];
+  chartKPI.data.datasets[1].data = [Number(fmt1(ly_ty)), Number(fmt1(ly_cvr)), Number(fmt1(ly_ccr)), Number(fmt1(ly_cy))];
+  chartKPI.update();
+
+  chartFunnel.data.datasets[0].data = [Number(fmt1(k_ty)), Number(fmt1(k_cy))];
+  chartFunnel.update();
+
+  const nonCorp = Math.max(0, clamp0(c.totalVisit) - clamp0(c.corpVisit));
+  chartShare.data.datasets[0].data = [clamp0(c.corpVisit), nonCorp];
+  chartShare.update();
+}
+
+/** ======================
+ * Render
+ * ====================== */
+function renderAll(){
+  $("m_period").textContent = `対象月：${derivePeriodLabel(state.meta?.periodStart)}`;
+  $("m_range").textContent  = `当月期間：${fmtJPRange(state.meta?.periodStart, state.meta?.periodEnd)}`;
+  $("m_asof").textContent   = fmtJPAsOf(state.meta?.periodEnd);
+
+  // KPIs
+  const c = state.perf || {};
+  const k_ty  = pct(clamp0(c.totalContract), clamp0(c.totalVisit));
+  const k_cvr = pct(clamp0(c.corpVisit), clamp0(c.totalVisit));
+  const k_ccr = pct(clamp0(c.corpContract), clamp0(c.totalContract));
+  const k_cy  = pct(clamp0(c.corpContract), clamp0(c.corpVisit));
+  $("k_ty").textContent = fmt1(k_ty);
+  $("k_cvr").textContent = fmt1(k_cvr);
+  $("k_ccr").textContent = fmt1(k_ccr);
+  $("k_cy").textContent = fmt1(k_cy);
+
+  // Perf numbers
+  $("p_tv").textContent = nf.format(clamp0(c.totalVisit));
+  $("p_tc").textContent = nf.format(clamp0(c.totalContract));
+  $("p_cv").textContent = nf.format(clamp0(c.corpVisit));
+  $("p_cc").textContent = nf.format(clamp0(c.corpContract));
+  $("p_rc").textContent = nf.format(clamp0(c.referralCards));
+  $("p_pc").textContent = nf.format(clamp0(state.counts?.partnerCompanies));
+
+  $("p_topics").textContent = (state.topics || "").trim() || "—";
+
+  // Page2 summary
+  $("s_cv").textContent = nf.format(clamp0(c.corpVisit));
+  $("s_cc").textContent = nf.format(clamp0(c.corpContract));
+
+  const totalCost = (state.partners||[]).reduce((s,p)=> s + clamp0(p.cost), 0);
+  $("s_cost").textContent = nf.format(totalCost);
+
+  const totalVisit = (state.partners||[]).reduce((s,p)=> s + clamp0(p.visit), 0);
+  $("s_cpa").textContent = (computeCPA(totalCost, totalVisit)).toFixed(1);
+
+  // Print partners table
+  const pb = $("printPartners");
+  pb.innerHTML = "";
+  (state.partners||[]).forEach(p=>{
+    // 空行は印刷しない（はみ出し抑制）
+    const hasAny = ["name","property","pr","benefit","note"].some(k=> (p[k]||"").toString().trim().length>0)
+      || [p.visit,p.first,p.apply,p.contract,p.cost,p.fee].some(v=> clamp0(v)>0);
+    if(!hasAny) return;
+
+    const tr = document.createElement("tr");
+    const td = (txt)=>{ const x=document.createElement("td"); x.textContent = txt; return x; };
+
+    const cpaV = computeCPA(p.cost, p.visit);
+    const cpaC = computeCPA(p.cost, p.contract);
+
+    tr.appendChild(td((p.name||"").trim()));
+    tr.appendChild(td((p.property||"").trim()));
+    tr.appendChild(td(String(clamp0(p.visit))));
+    tr.appendChild(td(String(clamp0(p.first))));
+    tr.appendChild(td(String(clamp0(p.apply))));
+    tr.appendChild(td(String(clamp0(p.contract))));
+    tr.appendChild(td((p.pr||"").trim()));
+    tr.appendChild(td(String(clamp0(p.cost))));
+    tr.appendChild(td(cpaV.toFixed(1)));
+    tr.appendChild(td(cpaC.toFixed(1)));
+    tr.appendChild(td((p.benefit||"").trim()));
+    tr.appendChild(td(String(clamp0(p.fee))));
+    tr.appendChild(td((p.note||"").trim()));
+    pb.appendChild(tr);
+  });
+
+  // Print planned table
+  const pl = $("printPlanned");
+  pl.innerHTML = "";
+  (state.planned||[]).forEach(p=>{
+    const hasAny = ["name","companySize","proposal","status","nextAction","schedule"].some(k=> (p[k]||"").toString().trim().length>0);
+    if(!hasAny) return;
+
+    const tr = document.createElement("tr");
+    const td = (txt)=>{ const x=document.createElement("td"); x.textContent = txt; return x; };
+
+    tr.appendChild(td((p.name||"").trim()));
+    tr.appendChild(td((p.companySize||"").trim()));
+    tr.appendChild(td((p.proposal||"").trim()));
+    tr.appendChild(td((p.status||"").trim()));
+    tr.appendChild(td((p.nextAction||"").trim()));
+    tr.appendChild(td((p.schedule||"").trim()));
+    pl.appendChild(tr);
+  });
+
+  updateCharts();
+}
+
+initCharts();
+renderAll();
+</script>
+</body>
+</html>
