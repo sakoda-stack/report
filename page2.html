@@ -412,7 +412,18 @@
       state.partners = Array.isArray(arc.partners) ? arc.partners : [defaultPartner()];
       state.planned  = Array.isArray(arc.planned)  ? arc.planned  : [defaultPlanned()];
     }else{
-      if(!Array.isArray(state.partners) || state.partners.length===0) state.partners=[defaultPartner()];
+      // 新しい月（archive未作成）の初期化：
+      // 企業名/PR/備考などは引き継ぎ、数値はゼロで開始する（B仕様）
+      const base = Array.isArray(state.partners) ? state.partners : [];
+      state.partners = base.map(p=>{
+        const row = defaultPartner();
+        row.name = p && p.name ? String(p.name) : "";
+        row.pr = p && p.pr ? String(p.pr) : "";
+        row.note = p && p.note ? String(p.note) : "";
+        row.property = p && p.property ? String(p.property) : "";
+        return row;
+      });
+      if(state.partners.length===0) state.partners=[defaultPartner()];
       if(!Array.isArray(state.planned)  || state.planned.length===0)  state.planned=[defaultPlanned()];
       persistMonth();
     }
@@ -424,7 +435,9 @@
   function persistMonth(){
     const clone = (obj) => (window.structuredClone ? structuredClone(obj) : JSON.parse(JSON.stringify(obj)));
     state.archive = state.archive || {};
+    const prevArc = state.archive[currentYM] || {};
     state.archive[currentYM] = {
+      ...prevArc,
       partners: clone(state.partners || []),
       planned:  clone(state.planned  || []),
       updatedAt: new Date().toISOString()
@@ -432,7 +445,66 @@
     saveState(state);
   }
 
-  function sumPartners(partners){
+  
+  // index側（抜粋提携先）の入力を、page2（現提携）の当月行へ自動反映
+  function normalizeName(s){
+    return String(s||"").trim().replace(/[\s　]+/g,"").toLowerCase();
+  }
+
+  function syncFromIndexReportPartners(){
+    const srcList = state.reportPartners;
+    if(!Array.isArray(srcList) || srcList.length===0) return false;
+
+    // index側が入力した月と、page2で表示中の月が違う場合は反映しない（過去月を壊さない）
+    const srcYM = String(state.reportPartnersYM||"").slice(0,7);
+    if(srcYM && srcYM !== currentYM) return false;
+
+    state.partners = Array.isArray(state.partners) ? state.partners : [defaultPartner()];
+
+    const idxMap = new Map();
+    state.partners.forEach((p,i)=>{
+      const k = normalizeName(p && p.name);
+      if(k && !idxMap.has(k)) idxMap.set(k,i);
+    });
+
+    let changed = false;
+
+    for(const rp of srcList){
+      const key = normalizeName(rp && rp.name);
+      if(!key) continue;
+
+      const v = clamp0(rp && rp.visit);
+      const c = clamp0(rp && rp.contract);
+      const f = clamp0(rp && rp.first);
+      const a = clamp0(rp && rp.apply);
+
+      if(idxMap.has(key)){
+        const p = state.partners[idxMap.get(key)];
+        if(clamp0(p.visit) !== v){ p.visit = v; changed = true; }
+        if(clamp0(p.contract) !== c){ p.contract = c; changed = true; }
+        if(clamp0(p.first) !== f){ p.first = f; changed = true; }
+        if(clamp0(p.apply) !== a){ p.apply = a; changed = true; }
+      }else{
+        const p = defaultPartner();
+        p.name = String(rp && rp.name || "");
+        p.visit = v;
+        p.contract = c;
+        p.first = f;
+        p.apply = a;
+        state.partners.push(p);
+        idxMap.set(key, state.partners.length-1);
+        changed = true;
+      }
+    }
+
+    if(changed){
+      persistMonth(); // archiveへ保存（他の月に影響しない）
+      setSaveStatus("保存済み");
+    }
+    return changed;
+  }
+
+function sumPartners(partners){
     const totalCost = (partners||[]).reduce((s,p)=> s + clamp0(p && p.cost), 0);
     const totalVisit = (partners||[]).reduce((s,p)=> s + clamp0(p && p.visit), 0);
     const totalContract = (partners||[]).reduce((s,p)=> s + clamp0(p && p.contract), 0);
@@ -634,7 +706,27 @@
   }
 
   window.addEventListener("load", ()=>{
+
+fetch('./datalatest.json?v=' + new Date().getTime())
+      .then(r => r.ok ? r.json() : null)
+      .then(obj => {
+        if(!obj) return;
+        // データを取り込んで保存
+        const imported = normalizeImportedState(obj);
+        saveState(imported);
+        
+        // 再読み込みして画面更新
+        state = loadState();
+        state.archive = state.archive || {};
+        ensureMonthData();
+        syncFromIndexReportPartners();
+        render();
+        setSaveStatus("データ読込完了");
+      })
+      .catch(e => console.log("読込スキップ:", e));
+    // ★★★ ここまで追加 ★★★
     ensureMonthData();
+    syncFromIndexReportPartners();
     render();
     setSaveStatus("保存済み");
 
@@ -664,6 +756,7 @@
       state = loadState();
       state.archive = state.archive || {};
       ensureMonthData();
+      syncFromIndexReportPartners();
       render();
       setSaveStatus("保存済み");
     });
@@ -677,6 +770,7 @@
       state = loadState();
       state.archive = state.archive || {};
       ensureMonthData();
+      syncFromIndexReportPartners();
       render();
       setSaveStatus("保存済み");
     });
@@ -708,6 +802,7 @@
         state = loadState();
         state.archive = state.archive || {};
         ensureMonthData();
+        syncFromIndexReportPartners();
         render();
         setSaveStatus("保存済み");
         alert("JSON取込が完了しました。");

@@ -1076,6 +1076,8 @@
       nextMonthPast: { totalVisit: 0, totalContract: 0, corpVisit: 0, corpContract: 0, referralCards: 0 },
       nextTarget: { totalVisit: 0, totalContract: 0, corpVisit: 0, corpContract: 0, referralCards: 0 },
       partners: [{ name: "", property: "", visit: 0, contract: 0, first: 0, apply: 0 }],
+      reportPartners: [{ name: "", property: "", visit: 0, contract: 0, first: 0, apply: 0 }],
+      reportPartnersYM: cur.start.slice(0,7),
       topics: ""
     };
   })();
@@ -1296,7 +1298,7 @@
     chartShare.data.datasets[0].data = [clamp0(c.corpVisit), nonCorp];
     chartShare.update();
 
-    const rows = (state.partners || [])
+    const rows = (state.reportPartners || [])
       .map(p=>({
         name: (p.name || "（未入力）").trim(),
         visit: clamp0(p.visit),
@@ -1369,7 +1371,7 @@
     const tbody = $("partnersBody");
     tbody.innerHTML = "";
 
-    (state.partners || []).forEach((p, idx)=>{
+    (state.reportPartners || []).forEach((p, idx)=>{
       const tr = document.createElement("tr");
 
       const tdName = document.createElement("td");
@@ -1452,9 +1454,9 @@
       b.setAttribute("aria-label","削除");
       b.innerHTML = trashSvg();
       b.addEventListener("click", ()=>{
-        state.partners.splice(idx, 1);
-        if(state.partners.length === 0){
-          state.partners.push({ name:"", property:"", visit:0, contract:0, first:0, apply:0 });
+        state.reportPartners.splice(idx, 1);
+        if(state.reportPartners.length === 0){
+          state.reportPartners.push({ name:"", property:"", visit:0, contract:0, first:0, apply:0 });
         }
         renderPartners();
         recalcAll();
@@ -1511,6 +1513,7 @@
   function readInputsToState(){
     state.meta.periodStart = $("periodStart").value;
     state.meta.periodEnd = $("periodEnd").value;
+    state.reportPartnersYM = String(state.meta.periodStart||"").slice(0,7);
 
     state.counts.partnerCompanies = clamp0($("companyCount").value);
     state.counts.targetCompanies = clamp0($("targetCount").value);
@@ -1568,10 +1571,10 @@
     setDelta("d_cy",  k_cy,  ly_cy);
 
     // Partners sums
-    const sumV = (state.partners||[]).reduce((s,p)=> s + clamp0(p.visit), 0);
-    const sumC = (state.partners||[]).reduce((s,p)=> s + clamp0(p.contract), 0);
-    const sumF = (state.partners||[]).reduce((s,p)=> s + clamp0(p.first), 0);
-    const sumA = (state.partners||[]).reduce((s,p)=> s + clamp0(p.apply), 0);
+    const sumV = (state.reportPartners||[]).reduce((s,p)=> s + clamp0(p.visit), 0);
+    const sumC = (state.reportPartners||[]).reduce((s,p)=> s + clamp0(p.contract), 0);
+    const sumF = (state.reportPartners||[]).reduce((s,p)=> s + clamp0(p.first), 0);
+    const sumA = (state.reportPartners||[]).reduce((s,p)=> s + clamp0(p.apply), 0);
     $("sumPartnerVisit").textContent = nfInt.format(sumV);
     $("sumPartnerContract").textContent = nfInt.format(sumC);
     $("sumPartnerFirst").textContent = nfInt.format(sumF);
@@ -1629,10 +1632,12 @@
           nextMonthPast: { ...s.nextMonthPast, ...(obj.nextMonthPast||{}) },
           nextTarget: { ...s.nextTarget, ...(obj.nextTarget||{}) },
           partners: Array.isArray(obj.partners) && obj.partners.length ? obj.partners : clone(s.partners),
+          reportPartners: Array.isArray(obj.reportPartners) && obj.reportPartners.length ? obj.reportPartners : clone(s.reportPartners),
+          reportPartnersYM: typeof obj.reportPartnersYM==="string" ? obj.reportPartnersYM : String((obj.meta||{}).periodStart||s.meta.periodStart||"").slice(0,7),
           topics: typeof obj.topics === "string" ? obj.topics : ""
         };
 
-        state.partners = state.partners.map(p => ({
+        state.reportPartners = state.reportPartners.map(p => ({
           name: p?.name ?? "",
           property: p?.property ?? "",
           visit: Number(p?.visit ?? 0) || 0,
@@ -1682,7 +1687,7 @@
     ].forEach(id => $(id).addEventListener("input", onAnyInput));
 
     $("btnAddRow").addEventListener("click", ()=>{
-      state.partners.push({ name:"", property:"", visit:0, contract:0, first:0, apply:0 });
+      state.reportPartners.push({ name:"", property:"", visit:0, contract:0, first:0, apply:0 });
       renderPartners();
       recalcAll();
       saveState();
@@ -1706,6 +1711,37 @@
   recalcAll();
   attachEventsOnce();
   setSaveStatus("保存済み");
+fetch('./datalatest.json?v=' + new Date().getTime())
+    .then(r => r.ok ? r.json() : null)
+    .then(obj => {
+      if(!obj) return;
+      console.log("GitHubデータを読み込みました");
+      
+      const s = clone(DEFAULT_STATE);
+      state = {
+        ...s, ...obj,
+        meta: { ...s.meta, ...(obj.meta||{}) },
+        counts: { ...s.counts, ...(obj.counts||{}) },
+        perf: { ...s.perf, ...(obj.perf||{}) },
+        lastYear: { ...s.lastYear, ...(obj.lastYear||{}) },
+        nextMonthPast: { ...s.nextMonthPast, ...(obj.nextMonthPast||{}) },
+        nextTarget: { ...s.nextTarget, ...(obj.nextTarget||{}) },
+        partners: Array.isArray(obj.partners) ? obj.partners : clone(s.partners),
+        reportPartners: Array.isArray(obj.reportPartners) ? obj.reportPartners : clone(s.reportPartners),
+        reportPartnersYM: obj.reportPartnersYM || s.reportPartnersYM,
+        topics: obj.topics || ""
+      };
+      
+      // 画面更新
+      setUIFromState();
+      renderPartners();
+      recalcAll();
+      saveState();
+      setSaveStatus("データ読込完了");
+    })
+    .catch(e => console.log("読込スキップ:", e));
+  // ★★★ ここまで追加 ★★★
+
 })();
 </script>
 </body>

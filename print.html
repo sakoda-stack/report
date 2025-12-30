@@ -144,14 +144,45 @@
 <script>
   const $ = (id)=>document.getElementById(id);
   const nf = new Intl.NumberFormat("ja-JP");
-  const state = loadState();
+  let state = null;
+
+  // 共有用：?src= があればJSONを読む（無ければ localStorage）
+  const qs = new URLSearchParams(location.search);
+  const defaultSrc = "./datalatest.json";
+  const src = qs.get("src") || "";
+
+  async function loadFromSrcOrLocal(){
+    if(!src) return loadState();
+    try{
+      const res = await fetch(src, { cache: "no-store" });
+      if(!res.ok) throw new Error(`HTTP ${res.status}`);
+      const raw = await res.json();
+      const base = deepMerge(DEFAULT_STATE, raw);
+      const localRaw = localStorage.getItem(STORAGE_KEY);
+      if(localRaw){
+        const localState = loadState();
+        const merged = deepMerge(base, localState);
+        merged.partners = (Array.isArray(localState.partners) && localState.partners.length) ? localState.partners : base.partners;
+        merged.planned  = (Array.isArray(localState.planned)  && localState.planned.length)  ? localState.planned  : base.planned;
+        return merged;
+      }
+      return base;
+    }catch(e){
+      return loadState();
+    }
+  }
+
 
   function computeCPA(cost, denom){
     cost = clamp0(cost); denom = clamp0(denom);
     return denom > 0 ? (cost/denom) : 0;
   }
 
-  // header
+
+  async function boot(){
+    state = await loadFromSrcOrLocal();
+
+    // header
   $("periodLabel").textContent = derivePeriodLabel(state.meta.periodStart);
   $("asof").textContent = fmtJPDate(state.meta.periodEnd);
 
@@ -229,6 +260,9 @@
     tr.appendChild(td(String(p.schedule||"").trim()));
     tp.appendChild(tr);
   });
+
+  }
+  boot();
 </script>
 </body>
 </html>
