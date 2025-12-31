@@ -31,8 +31,8 @@
   "nextTarget": {
     "totalVisit": 150,
     "totalContract": 30,
-    "corpVisit": 10,
-    "corpContract": 3,
+    "corpVisit": 12,
+    "corpContract": 2,
     "referralCards": 4
   },
   "partners": [
@@ -139,8 +139,8 @@
       "property": "LP浦和神明、LP新松戸",
       "visit": 2,
       "contract": 0,
-      "first": 0,
-      "apply": 1
+      "first": 1,
+      "apply": 0
     }
   ],
   "reportPartnersYM": "2025-12",
