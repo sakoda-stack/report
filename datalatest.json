@@ -29,10 +29,10 @@
     "referralCards": 0
   },
   "nextTarget": {
-    "totalVisit": 150,
-    "totalContract": 30,
+    "totalVisit": 0,
+    "totalContract": 0,
     "corpVisit": 12,
-    "corpContract": 2,
+    "corpContract": 3,
     "referralCards": 4
   },
   "partners": [
@@ -144,7 +144,7 @@
     }
   ],
   "reportPartnersYM": "2025-12",
-  "topics": "１２月コメント",
+  "topics": "12月は、法人施策の立ち上げ初期段階としての運用月となりました。\n11月に提携先各社との契約を完了し、12月より実運用を開始しています。\n実績は法人来場5件、法人契約1件となり、制度稼働初期ながら動きが見られました。\n提携先へのPRは社内イントラを中心に進め、メルマガやバナー掲載に向けたGIF素材の準備も行っています。\n1月はリロクラブ、都医師協連を含む3〜4社との新規締結を予定しており、PR手法と社内連携体制を固めながら来場数の拡大を図っていきます。",
   "planned": [
     {
       "name": "リロクラブ",
