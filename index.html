@@ -10,482 +10,447 @@
 
   <style>
     :root{
-      --bg:#0b1220;
-      --paper:#ffffff;
-      --ink:#0f172a;
-      --muted:#64748b;
-      --line:#cbd5e1;
+      /* ベースカラー */
+      --bg: #f1f5f9;
+      --ink: #0f172a;
+      --muted: #64748b;
+      --line: #cbd5e1;
+      --white: #ffffff;
+
+      /* セクション別テーマカラー（彩度を調整して視認性向上） */
+      /* A: 当月実績 (Teal/Emerald - 達成感) */
+      --c-cur-bg: #f0fdfa; --c-cur-bd: #99f6e4; --c-cur-tx: #0d9488;
       
-      /* === グループ定義色 === */
-      /* Group 1: 当月実績 & KPI (Blue/Cyan) */
-      --g1-bg: #eff6ff; --g1-bd: #bfdbfe; --g1-acc: #3b82f6; --g1-sub: #0ea5e9;
+      /* B: KPI (Blue - 分析) */
+      --c-kpi-bg: #eff6ff; --c-kpi-bd: #bfdbfe; --c-kpi-tx: #2563eb;
+
+      /* C: グラフ (Slate/Gray - ニュートラル) */
+      --c-grp-bg: #ffffff; --c-grp-bd: #e2e8f0; --c-grp-tx: #475569;
+
+      /* D: 提携 (Orange/Amber - 活気) */
+      --c-ptn-bg: #fff7ed; --c-ptn-bd: #fed7aa; --c-ptn-tx: #ea580c;
+
+      /* E: 次月 (Violet/Indigo - 未来) */
+      --c-nxt-bg: #f5f3ff; --c-nxt-bd: #ddd6fe; --c-nxt-tx: #7c3aed;
       
-      /* Group 2: 次月関連 (Purple/Indigo) */
-      --g2-bg: #f5f3ff; --g2-bd: #ddd6fe; --g2-acc: #8b5cf6; --g2-sub: #6366f1;
+      /* 入力項目の色分け（視覚的ガイダンス） */
+      --inp-visit-bg: #f0f9ff; --inp-visit-bd: #bae6fd; /* 来場: 水色系 */
+      --inp-contr-bg: #fff1f2; --inp-contr-bd: #fecdd3; /* 契約: 赤系 */
+      --inp-other-bg: #ffffff; --inp-other-bd: #cbd5e1; /* その他: 白 */
 
-      /* Group 3: 提携先 (Orange/Amber) */
-      --g3-bg: #fff7ed; --g3-bd: #fed7aa; --g3-acc: #f97316; --g3-sub: #f59e0b;
-
-      /* Topics (Neutral/Dark) */
-      --tp-bg: #f8fafc; --tp-bd: #e2e8f0; --tp-acc: #475569;
-
-      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-      --radius:14px;
+      --radius: 12px;
+      --shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03);
     }
-    *{box-sizing:border-box}
+
+    *{ box-sizing:border-box; }
     body{
-      margin:0;
-      font-family:'Noto Sans JP',system-ui,sans-serif;
-      background: radial-gradient(1200px 700px at 10% 10%, #1e293b, var(--bg));
-      color:var(--ink);
-      padding:20px;
-      display:flex; justify-content:center;
-      overflow-x:auto;
+      margin:0; padding:20px;
+      font-family:'Noto Sans JP', sans-serif;
+      background: var(--bg); color:var(--ink);
     }
 
     .app{
-      width:min(1320px, 100%);
-      background:#f1f5f9;
-      border-radius:var(--radius);
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-      border:1px solid rgba(255,255,255,0.05);
-      overflow-x:auto; overflow-y:visible;
+      max-width: 1400px; margin: 0 auto;
+      background: var(--bg);
     }
 
-    /* Top bar */
+    /* --- Topbar --- */
     .topbar{
-      display:flex; gap:14px; align-items:center; justify-content:space-between;
-      padding:16px 20px;
-      background:#0f172a;
-      color:#fff;
-      border-bottom:1px solid #1e293b;
+      display:flex; gap:16px; align-items:center; justify-content:space-between;
+      padding:16px 24px; margin-bottom:20px;
+      background:#1e293b; color:#fff;
+      border-radius: var(--radius);
+      box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
       flex-wrap:wrap;
     }
-    .nav{ display:flex; gap:8px; flex-wrap:wrap; align-items:center; justify-content:flex-end; }
+    .title h1{ margin:0; font-family:'Montserrat',sans-serif; font-size:20px; font-weight:800; letter-spacing:1px; }
+    .title .sub{ font-size:11px; opacity:.7; margin-top:2px; color:#94a3b8; }
+    
+    .nav{ display:flex; gap:8px; }
     .tab{
-      color:#94a3b8; text-decoration:none; font-weight:800; font-size:12px;
-      padding:8px 12px; border-radius:999px; transition:.2s;
+      color:#cbd5e1; text-decoration:none; font-weight:700; font-size:12px;
+      padding:8px 16px; border-radius:999px; transition:.2s; background:rgba(255,255,255,0.05);
     }
-    .tab:hover{ color:#fff; background:rgba(255,255,255,.1); }
-    .tab.active{ background:rgba(37,99,235,1); color:#fff; box-shadow: 0 0 10px rgba(37,99,235,0.5); }
+    .tab:hover{ background:rgba(255,255,255,0.15); color:#fff; }
+    .tab.active{ background:#3b82f6; color:#fff; box-shadow:0 0 12px rgba(59,130,246,0.5); }
+
+    .controls{ display:flex; gap:12px; align-items:center; flex-wrap:wrap; }
+    .status-chip{
+      display:flex; align-items:center; gap:8px; background:#0f172a; 
+      padding:6px 12px; border-radius:999px; border:1px solid #334155;
+    }
+    .status-chip span{ font-size:11px; font-weight:700; color:#cbd5e1; }
     
-    .title h1{ margin:0; font-family:'Montserrat',sans-serif; letter-spacing:1px; font-size:18px; font-weight:800; }
-    .title .sub{ font-size:11px; opacity:.7; margin-top:4px; }
+    .date-wrap{ display:flex; gap:6px; align-items:center; background:#334155; padding:4px 10px; border-radius:8px; }
+    .date-wrap input{ border:none; background:transparent; color:#fff; font-family:inherit; font-size:12px; font-weight:700; outline:none; }
+    .date-wrap input::-webkit-calendar-picker-indicator{ filter:invert(1); cursor:pointer; opacity:0.7; }
 
-    .top-controls{ display:flex; flex-wrap:wrap; gap:12px; align-items:center; justify-content:flex-end; flex:1 1 auto; min-width: 280px; }
-    .chip{ display:flex;align-items:center;gap:10px; background:#1e293b; padding:8px 14px; border-radius:999px; border:1px solid #334155; }
-    .chip .p{ font-family:'Montserrat',sans-serif; font-weight:800; color:#60a5fa; font-size:14px; }
-    .chip .status{ font-size:11px; opacity:.8; }
-
-    .date-range{ display:flex; gap:8px; align-items:center; padding:8px 12px; border-radius:999px; background:#1e293b; border:1px solid #334155; }
-    .date-range label{ font-size:11px; color:#cbd5e1; font-weight:700; }
-    .date-range input{ border:none; outline:none; padding:4px 8px; border-radius:6px; background:#334155; color:#fff; font-weight:700; font-size:12px; }
-    .date-range input::-webkit-calendar-picker-indicator{ filter: invert(1); opacity:.8; cursor:pointer; }
-
-    .actions{ display:flex; gap:8px; }
-    .btn{ cursor:pointer; padding:8px 12px; border-radius:8px; font-weight:700; font-size:12px; color:#fff; background:#334155; border:1px solid #475569; transition:.2s; }
-    .btn:hover{ background:#475569; }
-    .btn.primary{ background:#2563eb; border-color:#3b82f6; }
-
-    /* Layout */
-    .grid{
-      display:grid;
-      grid-template-columns: minmax(0, 1fr) clamp(360px, 34vw, 520px);
-      gap:20px; padding:20px;
-      background:#f8fafc;
+    .btn-group{ display:flex; gap:8px; }
+    .btn{
+      cursor:pointer; padding:8px 14px; border-radius:8px; font-weight:700; font-size:12px;
+      border:1px solid rgba(255,255,255,0.2); background:rgba(255,255,255,0.1); color:#fff; transition:.2s;
     }
-    @media (max-width: 1180px){ .grid{ grid-template-columns: 1fr; } }
+    .btn:hover{ background:rgba(255,255,255,0.2); }
+    .btn.primary{ background:#3b82f6; border-color:#3b82f6; color:#fff; }
+    .btn.primary:hover{ background:#2563eb; }
 
-    /* ========== Cards & Themes ========== */
+    /* --- Layout Grid Structure --- */
+    .main-grid{
+      display: flex; flex-direction: column; gap: 20px;
+    }
+
+    /* Row 1: 実績 & KPI */
+    .row-split{
+      display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
+    }
+    @media (max-width: 900px){ .row-split{ grid-template-columns: 1fr; } }
+
+    /* Row 2: Graphs (3 cols) */
+    .row-tri{
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
+    }
+    @media (max-width: 1000px){ .row-tri{ grid-template-columns: 1fr; } }
+
+    /* Row 3: Partners (Complex) */
+    .row-partners{
+      display: grid; grid-template-columns: 300px 1fr; gap: 20px;
+      /* 左:会社数, 右:グラフ+テーブル */
+    }
+    @media (max-width: 1000px){ .row-partners{ grid-template-columns: 1fr; } }
+
+    /* --- Cards Common --- */
     .card{
-      background:#fff;
-      border:1px solid var(--line);
-      border-radius:var(--radius);
-      padding:16px;
+      background: var(--white);
+      border-radius: var(--radius);
       box-shadow: var(--shadow);
-      display:flex; flex-direction:column; gap:10px;
+      padding: 20px;
+      border: 1px solid var(--line);
+      display: flex; flex-direction: column; gap: 16px;
+    }
+    .card-head{
+      display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid transparent; padding-bottom: 8px; margin-bottom: 4px;
+    }
+    .card-title{
+      font-size: 16px; font-weight: 800; display:flex; align-items:center; gap:8px; margin:0;
+    }
+    .card-sub{ font-size: 11px; font-weight: 600; color: var(--muted); }
+    
+    /* Theme Variations */
+    .theme-cur { border-top: 4px solid var(--c-cur-tx); background: linear-gradient(to bottom, var(--c-cur-bg), #fff 15%); }
+    .theme-cur .card-title { color: var(--c-cur-tx); }
+
+    .theme-kpi { border-top: 4px solid var(--c-kpi-tx); background: linear-gradient(to bottom, var(--c-kpi-bg), #fff 15%); }
+    .theme-kpi .card-title { color: var(--c-kpi-tx); }
+
+    .theme-grp { border-top: 4px solid var(--c-grp-tx); }
+    .theme-grp .card-title { color: var(--c-grp-tx); }
+
+    .theme-ptn { border-top: 4px solid var(--c-ptn-tx); background: linear-gradient(to bottom, var(--c-ptn-bg), #fff 15%); }
+    .theme-ptn .card-title { color: var(--c-ptn-tx); }
+
+    .theme-nxt { border-top: 4px solid var(--c-nxt-tx); background: linear-gradient(to bottom, var(--c-nxt-bg), #fff 15%); }
+    .theme-nxt .card-title { color: var(--c-nxt-tx); }
+
+    /* --- Metric Inputs --- */
+    .metric-group{
+      display: flex; flex-direction: column; gap: 12px;
+      background: rgba(255,255,255,0.6);
+      border: 1px solid rgba(0,0,0,0.05);
+      border-radius: 12px; padding: 12px;
+    }
+    .mg-header{ display:flex; justify-content:space-between; align-items:baseline; margin-bottom:4px; }
+    .mg-title{ font-size:13px; font-weight:800; color:var(--ink); }
+    .mg-period{ font-size:10px; font-weight:700; color:var(--muted); background:#fff; padding:2px 6px; border-radius:4px; border:1px solid #e2e8f0; }
+
+    .metric-grid{
+      display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+    }
+    .metric-item{
+      display:flex; flex-direction:column; gap:4px;
+    }
+    .mi-label{ font-size:10px; font-weight:700; color:var(--muted); }
+    
+    .mi-input-wrap{
+      position: relative; display: flex; align-items: center;
+    }
+    .mi-input-wrap input{
+      width: 100%; border: 1px solid var(--inp-other-bd); border-radius: 6px;
+      padding: 8px 24px 8px 8px; /* space for unit */
+      text-align: right; font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 16px;
+      background: var(--inp-other-bg); outline: none; transition: .2s; color: var(--ink);
+    }
+    .mi-input-wrap input:focus{ border-color: var(--c-kpi-tx); box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
+    .mi-input-wrap .unit{
+      position: absolute; right: 8px; font-size: 10px; font-weight: 700; color: #94a3b8; pointer-events: none;
     }
     
-    /* グループ配色 */
-    /* Group 1: Blue/Cyan */
-    .card.g1 { background: var(--g1-bg); border-color: var(--g1-bd); border-top: 5px solid var(--g1-acc); }
-    .card.g1 .h2 { color: var(--g1-acc); }
-    
-    /* Group 2: Purple */
-    .card.g2 { background: var(--g2-bg); border-color: var(--g2-bd); border-top: 5px solid var(--g2-acc); }
-    .card.g2 .h2 { color: var(--g2-acc); }
+    /* 色分け強化 */
+    .type-visit input { background: var(--inp-visit-bg); border-color: var(--inp-visit-bd); }
+    .type-contr input { background: var(--inp-contr-bg); border-color: var(--inp-contr-bd); }
 
-    /* Group 3: Orange */
-    .card.g3 { background: var(--g3-bg); border-color: var(--g3-bd); border-top: 5px solid var(--g3-acc); }
-    .card.g3 .h2 { color: var(--g3-acc); }
-
-    /* Topics: Full Width */
-    .card.topics { background: var(--tp-bg); border-color: var(--tp-bd); border-top: 5px solid var(--tp-acc); grid-column: 1 / -1; }
-    .card.topics .h2 { color: var(--tp-acc); }
-
-    .hrow{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:4px; }
-    .h2{ margin:0; font-size:16px; font-weight:800; display:flex; align-items:center; gap:8px; }
-    .subline{ font-size:11px; color:var(--muted); font-weight:600; }
-    .subline strong{ color:var(--ink); font-weight:800; }
-
-    /* Metric Box (Input Areas) */
-    .metric-box{
-      background:#fff; border:1px solid rgba(0,0,0,0.08); border-radius:12px; padding:12px; box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+    /* --- KPI Dashboard --- */
+    .kpi-grid{
+      display: grid; grid-template-columns: 1fr 1fr; gap: 12px; height: 100%;
     }
-    .metric-head{ display:flex; justify-content:space-between; align-items:baseline; margin-bottom:8px; }
-    .metric-title{ font-size:13px; font-weight:800; color:var(--ink); margin:0; }
-    .metric-period{ font-size:11px; color:var(--muted); font-weight:700; }
-    
-    .metric-grid{ display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap:10px; }
-    .metric{ padding:6px 0; }
-    .metric .mlabel{ font-size:11px; font-weight:700; color:var(--muted); margin-bottom:4px; }
-    .metric .mrow{ display:flex; gap:6px; align-items:baseline; }
-    
-    .metric input{
-      width:100%; border:1px solid #cbd5e1; outline:none; padding:8px 10px; border-radius:8px;
-      background:#fff; font-family:'Montserrat',sans-serif; font-weight:700; font-size:18px; text-align:right; transition: .15s;
+    .kpi-card{
+      background: #fff; border: 1px solid var(--c-kpi-bd); border-radius: 10px;
+      padding: 16px; text-align: center;
+      display: flex; flex-direction: column; justify-content: center; align-items: center;
+      box-shadow: 0 2px 4px rgba(37,99,235,0.05);
     }
-    .metric input:focus{ border-color:var(--g1-acc); box-shadow:0 0 0 3px rgba(59,130,246,0.15); }
-    .metric .unit{ font-size:11px; font-weight:700; color:#94a3b8; }
+    .kpi-label{ font-size: 11px; font-weight: 700; color: var(--muted); margin-bottom: 6px; }
+    .kpi-value{ font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 32px; color: var(--c-kpi-tx); line-height: 1; }
+    .kpi-unit{ font-size: 12px; font-weight: 700; color: #94a3b8; margin-left: 2px; }
+    .kpi-delta{ margin-top: 8px; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 99px; background: #f8fafc; }
+    .delta-good{ color: #16a34a; background: #dcfce7; }
+    .delta-bad { color: #dc2626; background: #fee2e2; }
 
-    /* KPI Cards */
-    .kpis{ display:grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap:10px; }
-    .kpi{ border:1px solid #fff; border-radius:12px; padding:12px; background:rgba(255,255,255,0.7); text-align:center; }
-    .kpi .label{ font-size:10px; font-weight:700; color:var(--muted); height:2.4em; display:flex; align-items:center; justify-content:center; }
-    .kpi .val{ margin-top:4px; }
-    .kpi .num{ font-family:'Montserrat',sans-serif; font-weight:800; font-size:26px; color:var(--ink); }
-    .delta{ margin-top:6px; font-size:10px; font-weight:700; display:flex; justify-content:center; gap:4px; }
-    .delta.good{ color:#16a34a; } .delta.bad{ color:#dc2626; } .delta.neutral{ color:var(--muted); }
+    /* --- Highlights (Partner Counts) --- */
+    .hl-box{
+      background: #fff; border: 1px solid var(--c-ptn-bd); border-radius: 10px;
+      padding: 12px; display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 10px;
+    }
+    .hl-left{ display:flex; flex-direction:column; }
+    .hl-label{ font-size:11px; font-weight:700; color:var(--muted); }
+    .hl-val-inp{
+      border:none; background:transparent; font-family:'Montserrat',sans-serif; font-weight:800; font-size:24px; color:var(--ink);
+      width: 100px; outline:none;
+    }
+    .hl-val-inp:focus{ background:#fff7ed; border-radius:4px; }
+    .hl-badge{ font-size:10px; font-weight:800; color:#fff; background:var(--c-ptn-tx); padding:2px 8px; border-radius:4px; }
 
-    /* Highlights (Counts) */
-    .highlights{ display:grid; grid-template-columns: 1fr 1fr; gap:12px; }
-    .highlight{ background:#fff; border:1px solid var(--line); border-radius:12px; padding:12px; display:flex; justify-content:space-between; align-items:center; }
-    .big-input{ width:120px; border:1px solid #cbd5e1; border-radius:8px; padding:4px 8px; font-family:'Montserrat',sans-serif; font-weight:800; font-size:24px; text-align:right; color:var(--ink); background:#fff; }
-    .big-input:focus{ outline:none; border-color:var(--g3-acc); box-shadow:0 0 0 3px rgba(249,115,22,0.2); }
-    .badge{ font-size:10px; font-weight:800; padding:4px 8px; border-radius:999px; background:#f1f5f9; color:#64748b; }
-
-    /* Charts */
-    .chart-wrap{ background:#fff; border:1px solid var(--line); border-radius:12px; padding:12px; }
-
-    /* Table */
-    table{ width:100%; border-collapse:collapse; table-layout:fixed; }
-    th{ text-align:left; font-size:11px; color:#fff; background:var(--g3-acc); padding:8px; white-space:nowrap; }
-    th.center, td.center{ text-align:center; }
-    td{ border:1px solid #e2e8f0; padding:4px; background:#fff; vertical-align:middle; }
-    td input{ width:100%; border:none; outline:none; padding:6px; font-size:13px; background:transparent; }
-    td input:focus{ background:#fff7ed; }
+    /* --- Table --- */
+    .tbl-wrap{ overflow-x: auto; border: 1px solid var(--line); border-radius: 8px; }
+    table{ width: 100%; border-collapse: collapse; min-width: 600px; }
+    th{
+      background: var(--c-ptn-tx); color: #fff; font-size: 11px; padding: 10px; text-align: left; white-space: nowrap;
+    }
+    td{ border-bottom: 1px solid var(--line); padding: 6px; font-size: 13px; background: #fff; }
+    td input{ width: 100%; border: 1px solid transparent; padding: 4px; border-radius: 4px; font-size: 13px; }
+    td input:focus{ border-color: var(--c-ptn-tx); background: #fff7ed; outline:none; }
+    td.num-cell input{ text-align: center; font-family: 'Montserrat',sans-serif; font-weight: 700; }
     
-    /* Table Footer for Totals */
-    tfoot td {
-      background: #fff7ed; border-top: 2px solid var(--g3-acc);
-      font-weight: 800; font-family: 'Montserrat', sans-serif;
-      text-align: center; padding: 8px 4px;
-      font-size: 13px; color: var(--g3-acc);
+    tfoot td{ background: #fff7ed; font-weight: 800; color: var(--c-ptn-tx); border-top: 2px solid var(--c-ptn-bd); text-align: center; }
+    tfoot td.label{ text-align: right; color: var(--muted); padding-right: 12px; }
+
+    .del-btn{
+      border: none; background: #f1f5f9; color: #64748b; width: 24px; height: 24px; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center;
     }
-    tfoot td.label { text-align: right; color: var(--muted); font-family: sans-serif; padding-right: 10px; }
+    .del-btn:hover{ background: #fee2e2; color: #ef4444; }
 
-    .icon-btn{ cursor:pointer; border:1px solid #e2e8f0; background:#fff; width:28px; height:28px; border-radius:6px; display:inline-flex; align-items:center; justify-content:center; }
-    .icon-btn:hover{ background:#fee2e2; border-color:#fecaca; }
-
-    /* Topics */
-    textarea#topics{
-      width:100%; min-height:160px; padding:16px; border-radius:12px;
-      border:1px solid var(--line); outline:none; resize:vertical;
-      font-size:14px; line-height:1.7; background:#fff;
+    /* --- Topics --- */
+    textarea.topic-area{
+      width: 100%; min-height: 120px; padding: 16px; border: 1px solid var(--line); border-radius: 10px;
+      font-size: 14px; line-height: 1.6; resize: vertical; outline: none; transition: .2s;
     }
-    textarea#topics:focus{ border-color:var(--tp-acc); box-shadow:0 0 0 3px rgba(71,85,105,0.15); }
+    textarea.topic-area:focus{ border-color: #7c3aed; box-shadow: 0 0 0 3px rgba(124,58,237,0.1); }
 
-    /* Print */
+    /* --- Utility --- */
+    .chart-box{ position: relative; height: 200px; width: 100%; }
+    .print-hide{ }
+
     @media print{
-      @page { size: A4 landscape; margin: 5mm; }
-      body{ background:#fff; padding:0; display:block; zoom:0.9; }
-      .app{ width:100%; border:none; box-shadow:none; background:#fff; }
-      .actions, .btn, .no-print{ display:none !important; }
-      .grid{ display:grid; grid-template-columns: 1fr 1fr; gap:15px; padding:0; background:#fff; }
-      .card{ break-inside:avoid; border:1px solid #ccc; box-shadow:none; padding:10px; }
-      .card.topics { break-before: always; }
-      .metric input, .big-input{ border:none; background:transparent; padding:0; text-align:right; }
-      .metric-box{ border:1px solid #eee; }
-      .card[class*="g"] { background: #fff !important; border-top-width: 2px; }
-      tfoot td { background: #fff; border-top: 2px solid #000; color: #000; }
+      body{ padding:0; background:#fff; -webkit-print-color-adjust: exact; }
+      .app{ max-width:none; border:none; box-shadow:none; }
+      .topbar, .btn, .print-hide{ display:none !important; }
+      .card{ break-inside: avoid; border: 1px solid #ccc; box-shadow: none; padding: 10px; margin-bottom: 10px; }
+      .row-split, .row-tri, .row-partners{ display: grid; gap: 10px; }
+      .metric-group{ border:1px solid #ddd; padding:5px; }
+      input{ border:none !important; background:transparent !important; padding:0 !important; }
+      .mi-input-wrap input{ text-align: right; }
+      .row-tri { grid-template-columns: 1fr 1fr 1fr !important; } /* Force 3 cols on print */
     }
   </style>
 </head>
-
 <body>
-  <div class="app">
-    <div class="topbar">
-      <div class="title">
-        <h1>BUSINESS MONTHLY REPORT</h1>
-        <div class="sub">入力 → 自動集計 → KPI可視化 → 目標明示 → 自動保存</div>
+
+<div class="app">
+  <div class="topbar">
+    <div class="title">
+      <h1>BUSINESS MONTHLY REPORT</h1>
+      <div class="sub">入力 → 自動集計 → KPI可視化</div>
+    </div>
+    
+    <div class="nav">
+      <a href="./index.html" class="tab active">月報</a>
+      <a href="./page2.html" class="tab">法人活動</a>
+      <a href="./view.html" class="tab">閲覧</a>
+    </div>
+
+    <div class="controls">
+      <div class="status-chip">
+        <span id="periodLabel">---</span>
+        <span id="saveStatus" style="border-left:1px solid #334155; padding-left:8px;">未保存</span>
+      </div>
+      <div class="date-wrap">
+        <input type="date" id="periodStart">
+        <span style="color:#cbd5e1;">-</span>
+        <input type="date" id="periodEnd">
+      </div>
+      <div class="btn-group">
+        <button class="btn" id="btnImport">取込</button>
+        <button class="btn" id="btnExport">出力</button>
+        <button class="btn" id="btnReset">初期化</button>
+        <button class="btn primary" id="btnPrint">印刷</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="main-grid">
+    
+    <div class="row-split">
+      <div class="card theme-cur">
+        <div class="card-head">
+          <h2 class="card-title">当月実績・過去実績</h2>
+          <span class="card-sub" id="lblRangeCur">-</span>
+        </div>
+        
+        <div class="row-split" style="gap:10px;">
+          <div class="metric-group">
+            <div class="mg-header">
+              <span class="mg-title">当月実績</span>
+              <span class="mg-period" id="lblPeriodCur">-</span>
+            </div>
+            <div class="metric-grid">
+              <div class="metric-item type-visit">
+                <span class="mi-label">総来場</span>
+                <div class="mi-input-wrap"><input type="number" id="v_totalVisit" min="0"><span class="unit">件</span></div>
+              </div>
+              <div class="metric-item type-contr">
+                <span class="mi-label">総契約</span>
+                <div class="mi-input-wrap"><input type="number" id="v_totalContract" min="0"><span class="unit">件</span></div>
+              </div>
+              <div class="metric-item type-visit">
+                <span class="mi-label">法人来場</span>
+                <div class="mi-input-wrap"><input type="number" id="v_corpVisit" min="0"><span class="unit">件</span></div>
+              </div>
+              <div class="metric-item type-contr">
+                <span class="mi-label">法人契約</span>
+                <div class="mi-input-wrap"><input type="number" id="v_corpContract" min="0"><span class="unit">件</span></div>
+              </div>
+              <div class="metric-item" style="grid-column:1/-1;">
+                <span class="mi-label">紹介カード</span>
+                <div class="mi-input-wrap"><input type="number" id="v_referralCards" min="0"><span class="unit">枚</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="metric-group">
+            <div class="mg-header">
+              <span class="mg-title">前年同月</span>
+              <span class="mg-period" id="lblPeriodLY">-</span>
+            </div>
+            <div class="metric-grid">
+              <div class="metric-item type-visit">
+                <span class="mi-label">総来場</span>
+                <div class="mi-input-wrap"><input type="number" id="ly_totalVisit" min="0"><span class="unit">件</span></div>
+              </div>
+              <div class="metric-item type-contr">
+                <span class="mi-label">総契約</span>
+                <div class="mi-input-wrap"><input type="number" id="ly_totalContract" min="0"><span class="unit">件</span></div>
+              </div>
+              <div class="metric-item type-visit">
+                <span class="mi-label">法人来場</span>
+                <div class="mi-input-wrap"><input type="number" id="ly_corpVisit" min="0"><span class="unit">件</span></div>
+              </div>
+              <div class="metric-item type-contr">
+                <span class="mi-label">法人契約</span>
+                <div class="mi-input-wrap"><input type="number" id="ly_corpContract" min="0"><span class="unit">件</span></div>
+              </div>
+              <div class="metric-item" style="grid-column:1/-1;">
+                <span class="mi-label">紹介カード</span>
+                <div class="mi-input-wrap"><input type="number" id="ly_referralCards" min="0"><span class="unit">枚</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div class="nav">
-        <a class="tab active" href="./index.html">月報</a>
-        <a class="tab" href="./page2.html">法人活動</a>
-        <a class="tab" href="./view.html">閲覧</a>
-        <a class="tab" href="./print.html" target="_blank" rel="noopener">PDF印刷</a>
-      </div>
-
-      <div class="top-controls">
-        <div class="chip">
-          <div class="p" id="periodLabel">—</div>
-          <div class="status" id="saveStatus">未保存</div>
+      <div class="card theme-kpi">
+        <div class="card-head">
+          <h2 class="card-title">主要KPIダッシュボード</h2>
+          <span class="card-sub">対前年比</span>
         </div>
-
-        <div class="date-range">
-          <label>当月期間</label>
-          <input type="date" id="periodStart">
-          <span style="opacity:.5; color:#fff;">–</span>
-          <input type="date" id="periodEnd">
-        </div>
-
-        <div class="actions">
-          <button class="btn" id="btnImport">JSON取込</button>
-          <button class="btn" id="btnExport">JSON出力</button>
-          <button class="btn" id="btnReset">初期値</button>
-          <button class="btn primary" id="btnPrint">PDF印刷</button>
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <span class="kpi-label">総歩留り (契約/来場)</span>
+            <div class="kpi-value"><span id="k_ty">0.0</span><span class="kpi-unit">%</span></div>
+            <div class="kpi-delta" id="d_ty">-</div>
+          </div>
+          <div class="kpi-card">
+            <span class="kpi-label">法人来場比 (法人/全体)</span>
+            <div class="kpi-value"><span id="k_cvr">0.0</span><span class="kpi-unit">%</span></div>
+            <div class="kpi-delta" id="d_cvr">-</div>
+          </div>
+          <div class="kpi-card">
+            <span class="kpi-label">法人契約比 (法人/総契)</span>
+            <div class="kpi-value"><span id="k_ccr">0.0</span><span class="kpi-unit">%</span></div>
+            <div class="kpi-delta" id="d_ccr">-</div>
+          </div>
+          <div class="kpi-card">
+            <span class="kpi-label">法人歩留り (法契/法来)</span>
+            <div class="kpi-value"><span id="k_cy">0.0</span><span class="kpi-unit">%</span></div>
+            <div class="kpi-delta" id="d_cy">-</div>
+          </div>
         </div>
       </div>
     </div>
 
-    <div class="grid">
-      <div style="display:flex;flex-direction:column;gap:20px;min-width:0;">
+    <div class="row-tri">
+      <div class="card theme-grp">
+        <div class="card-head"><h2 class="card-title">KPI比較 (当月vs前年)</h2></div>
+        <div class="chart-box"><canvas id="chartKPI"></canvas></div>
+      </div>
+      <div class="card theme-grp">
+        <div class="card-head"><h2 class="card-title">ファネル (歩留り)</h2></div>
+        <div class="chart-box"><canvas id="chartFunnel"></canvas></div>
+      </div>
+      <div class="card theme-grp">
+        <div class="card-head"><h2 class="card-title">法人比率 (来場)</h2></div>
+        <div class="chart-box"><canvas id="chartShare"></canvas></div>
+      </div>
+    </div>
 
-        <div class="card g1">
-          <div class="hrow">
-            <h2 class="h2">当月実績・過去実績</h2>
-            <div class="subline">期間：<strong id="lblRangeCur">-</strong></div>
-          </div>
+    <div class="card theme-ptn">
+      <div class="card-head">
+        <h2 class="card-title">提携会社情報</h2>
+        <span class="card-sub" id="badgeCoverage">-</span>
+      </div>
 
-          <div class="metric-wrap" style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
-            <div class="metric-box">
-              <div class="metric-head">
-                <p class="metric-title">当月実績</p>
-                <div class="metric-period" id="lblPeriodCur">-</div>
-              </div>
-              <div class="metric-grid">
-                <div class="metric">
-                  <div class="mlabel">総来場</div>
-                  <div class="mrow"><input type="number" id="v_totalVisit" min="0"><span class="unit">件</span></div>
-                </div>
-                <div class="metric">
-                  <div class="mlabel">総契約</div>
-                  <div class="mrow"><input type="number" id="v_totalContract" min="0"><span class="unit">件</span></div>
-                </div>
-                <div class="metric">
-                  <div class="mlabel">法人来場</div>
-                  <div class="mrow"><input type="number" id="v_corpVisit" min="0"><span class="unit">件</span></div>
-                </div>
-                <div class="metric">
-                  <div class="mlabel">法人契約</div>
-                  <div class="mrow"><input type="number" id="v_corpContract" min="0"><span class="unit">件</span></div>
-                </div>
-                <div class="metric" style="grid-column:1 / -1;">
-                  <div class="mlabel">紹介カード</div>
-                  <div class="mrow"><input type="number" id="v_referralCards" min="0"><span class="unit">枚</span></div>
-                </div>
-              </div>
-            </div>
-
-            <div class="metric-box">
-              <div class="metric-head">
-                <p class="metric-title">前年同月</p>
-                <div class="metric-period" id="lblPeriodLY">-</div>
-              </div>
-              <div class="metric-grid">
-                <div class="metric">
-                  <div class="mlabel">総来場</div>
-                  <div class="mrow"><input type="number" id="ly_totalVisit" min="0"><span class="unit">件</span></div>
-                </div>
-                <div class="metric">
-                  <div class="mlabel">総契約</div>
-                  <div class="mrow"><input type="number" id="ly_totalContract" min="0"><span class="unit">件</span></div>
-                </div>
-                <div class="metric">
-                  <div class="mlabel">法人来場</div>
-                  <div class="mrow"><input type="number" id="ly_corpVisit" min="0"><span class="unit">件</span></div>
-                </div>
-                <div class="metric">
-                  <div class="mlabel">法人契約</div>
-                  <div class="mrow"><input type="number" id="ly_corpContract" min="0"><span class="unit">件</span></div>
-                </div>
-                <div class="metric" style="grid-column:1 / -1;">
-                  <div class="mlabel">紹介カード</div>
-                  <div class="mrow"><input type="number" id="ly_referralCards" min="0"><span class="unit">枚</span></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="card g1">
-          <div class="hrow">
-            <h2 class="h2">主要KPIダッシュボード</h2>
-            <div class="subline">当月 <strong id="lblCurMonth">—</strong> vs 前年</div>
-          </div>
-
-          <div class="kpis">
-            <div class="kpi">
-              <div class="label">総歩留り<br>(契約/来場)</div>
-              <div class="val"><span class="num" id="k_ty">0.0</span><span class="unit">%</span></div>
-              <div class="delta neutral" id="d_ty"></div>
-            </div>
-            <div class="kpi">
-              <div class="label">法人来場比<br>(法人/全体)</div>
-              <div class="val"><span class="num" id="k_cvr">0.0</span><span class="unit">%</span></div>
-              <div class="delta neutral" id="d_cvr"></div>
-            </div>
-            <div class="kpi">
-              <div class="label">法人契約比<br>(法人/総契)</div>
-              <div class="val"><span class="num" id="k_ccr">0.0</span><span class="unit">%</span></div>
-              <div class="delta neutral" id="d_ccr"></div>
-            </div>
-            <div class="kpi">
-              <div class="label">法人歩留り<br>(法契/法来)</div>
-              <div class="val"><span class="num" id="k_cy">0.0</span><span class="unit">%</span></div>
-              <div class="delta neutral" id="d_cy"></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="card g2">
-          <div class="hrow">
-            <h2 class="h2">次月過去実績・次月目標</h2>
-            <div class="subline">Next Month Strategy</div>
-          </div>
-
-          <div class="metric-wrap" style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
-            <div class="metric-box">
-              <div class="metric-head">
-                <p class="metric-title">次月過去実績</p>
-                <div class="metric-period" id="lblPeriodNextPast">-</div>
-              </div>
-              <div class="metric-grid">
-                <div class="metric">
-                  <div class="mlabel">総来場</div>
-                  <div class="mrow"><input type="number" id="nm_totalVisit" min="0"><span class="unit">件</span></div>
-                </div>
-                <div class="metric">
-                  <div class="mlabel">総契約</div>
-                  <div class="mrow"><input type="number" id="nm_totalContract" min="0"><span class="unit">件</span></div>
-                </div>
-                <div class="metric">
-                  <div class="mlabel">法人来場</div>
-                  <div class="mrow"><input type="number" id="nm_corpVisit" min="0"><span class="unit">件</span></div>
-                </div>
-                <div class="metric">
-                  <div class="mlabel">法人契約</div>
-                  <div class="mrow"><input type="number" id="nm_corpContract" min="0"><span class="unit">件</span></div>
-                </div>
-                
-                <div class="metric" style="grid-column:1 / -1; margin-top:8px;">
-                   <div style="background:#f5f3ff; padding:8px; border-radius:8px; display:flex; justify-content:space-around;">
-                      <div style="text-align:center;">
-                        <div style="font-size:10px; color:#8b5cf6; font-weight:700;">法人来場割合</div>
-                        <div style="font-weight:800; font-size:16px;" id="nm_k_cvr">0.0%</div>
-                      </div>
-                      <div style="text-align:center;">
-                        <div style="font-size:10px; color:#8b5cf6; font-weight:700;">法人歩留り</div>
-                        <div style="font-weight:800; font-size:16px;" id="nm_k_cy">0.0%</div>
-                      </div>
-                   </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="metric-box">
-              <div class="metric-head">
-                <p class="metric-title">次月目標</p>
-                <div class="metric-period" id="lblPeriodNextTarget">-</div>
-              </div>
-              <div class="metric-grid">
-                <div class="metric">
-                  <div class="mlabel">総来場（目標）</div>
-                  <div class="mrow"><input type="number" id="tg_totalVisit" min="0"><span class="unit">件</span></div>
-                </div>
-                <div class="metric">
-                  <div class="mlabel">総契約（目標）</div>
-                  <div class="mrow"><input type="number" id="tg_totalContract" min="0"><span class="unit">件</span></div>
-                </div>
-                <div class="metric">
-                  <div class="mlabel">法人来場（目標）</div>
-                  <div class="mrow"><input type="number" id="tg_corpVisit" min="0"><span class="unit">件</span></div>
-                </div>
-                <div class="metric">
-                  <div class="mlabel">法人契約（目標）</div>
-                  <div class="mrow"><input type="number" id="tg_corpContract" min="0"><span class="unit">件</span></div>
-                </div>
-
-                <div class="metric" style="grid-column:1 / -1; margin-top:8px;">
-                   <div style="background:#fff; border:1px solid #ddd6fe; padding:8px; border-radius:8px; display:flex; justify-content:space-around;">
-                      <div style="text-align:center;">
-                        <div style="font-size:10px; color:#6366f1; font-weight:700;">目標: 法人割合</div>
-                        <div style="font-weight:800; font-size:16px; color:#6366f1;" id="tg_k_cvr">0.0%</div>
-                      </div>
-                      <div style="text-align:center;">
-                        <div style="font-size:10px; color:#6366f1; font-weight:700;">目標: 法人歩留り</div>
-                        <div style="font-weight:800; font-size:16px; color:#6366f1;" id="tg_k_cy">0.0%</div>
-                      </div>
-                   </div>
-                   <div id="tg_hint_cy" style="display:none;"></div>
-                </div>
-              </div>
-            </div>
-            
-             <div class="metric-box" style="grid-column:1/-1; display:flex; gap:20px; align-items:center;">
-               <div style="flex:1;">
-                 <div class="mlabel">次月過去: 紹介カード</div>
-                 <div class="mrow"><input type="number" id="nm_referralCards" min="0"><span class="unit">枚</span></div>
-               </div>
-               <div style="flex:1;">
-                 <div class="mlabel">次月目標: 紹介カード</div>
-                 <div class="mrow"><input type="number" id="tg_referralCards" min="0"><span class="unit">枚</span></div>
-               </div>
+      <div class="row-partners">
+        <div style="display:flex; flex-direction:column; gap:12px;">
+           <div class="hl-box">
+             <div class="hl-left"><span class="hl-label">提携会社数</span><span class="hl-badge">PARTNERS</span></div>
+             <input type="number" id="companyCount" class="hl-val-inp" value="0">
+           </div>
+           <div class="hl-box">
+             <div class="hl-left"><span class="hl-label">対象企業数</span><span class="hl-badge">TARGETS</span></div>
+             <input type="number" id="targetCount" class="hl-val-inp" value="0">
+           </div>
+           <div style="flex:1; border:1px solid var(--line); border-radius:10px; padding:10px; background:#fff;">
+             <span class="hl-label">提携先上位 (活動状況)</span>
+             <div style="height:180px; position:relative; width:100%;">
+               <canvas id="chartPartners"></canvas>
              </div>
-          </div>
+           </div>
         </div>
 
-        <div class="card g3">
-          <div class="hrow">
-            <h2 class="h2">提携会社数・対象企業数</h2>
-            <div class="subline"><strong id="badgeCoverage">—</strong></div>
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+             <span class="hl-label">提携先実績入力</span>
+             <button class="btn primary" id="btnAddRow" style="padding:4px 10px; font-size:11px;">+ 行追加</button>
           </div>
-
-          <div class="highlights">
-            <div class="highlight">
-              <div class="left">
-                <div class="subline">提携会社数</div>
-                <input class="big-input" type="number" id="companyCount" min="0">
-              </div>
-              <div class="badge">PARTNERS</div>
-            </div>
-
-            <div class="highlight">
-              <div class="left">
-                <div class="subline">対象企業総数</div>
-                <input class="big-input" type="number" id="targetCount" min="0">
-              </div>
-              <div class="badge">TARGETS</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="card g3">
-          <div class="hrow">
-            <h2 class="h2">提携先（簡易入力・集計）</h2>
-          </div>
-
-          <div class="print-hide" style="overflow:hidden;">
+          <div class="tbl-wrap">
             <table>
               <colgroup>
-                <col style="width:20%;">
-                <col style="width:46%;">
-                <col style="width:7%;">
-                <col style="width:7%;">
-                <col style="width:7%;">
-                <col style="width:7%;">
-                <col style="width:6%;">
+                <col style="width:25%;">
+                <col style="width:25%;">
+                <col style="width:10%;">
+                <col style="width:10%;">
+                <col style="width:10%;">
+                <col style="width:10%;">
+                <col style="width:10%;">
               </colgroup>
               <thead>
                 <tr>
@@ -511,64 +476,105 @@
               </tfoot>
             </table>
           </div>
-
-          <div class="tbl-actions print-hide" style="margin-top:10px; display:flex; justify-content:space-between; align-items:center;">
-            <button class="btn primary" id="btnAddRow" style="background:#f97316; border-color:#ea580c;">+ 行追加</button>
-            <span class="subline">※初回・申込は「紹介カード」の件数</span>
-          </div>
         </div>
       </div>
-
-      <div class="right-col" style="display:flex;flex-direction:column;gap:20px;min-width:0;">
-
-        <div class="card g1">
-          <div class="hrow">
-            <h2 class="h2">KPI（%） 当月 vs 前年</h2>
-          </div>
-          <div class="chart-wrap">
-            <canvas id="chartKPI" height="200"></canvas>
-          </div>
-        </div>
-
-        <div class="card g1">
-          <div class="hrow">
-            <h2 class="h2">ファネル（歩留り）</h2>
-            <div class="subline">目安 30%</div>
-          </div>
-          <div class="chart-wrap">
-            <canvas id="chartFunnel" height="210"></canvas>
-          </div>
-        </div>
-
-        <div class="card g1">
-          <div class="hrow">
-            <h2 class="h2">法人比率（来場）</h2>
-            <div class="subline">目標 8～10%</div>
-          </div>
-          <div class="chart-wrap">
-            <canvas id="chartShare" height="180"></canvas>
-          </div>
-        </div>
-
-        <div class="card g3">
-          <div class="hrow">
-            <h2 class="h2">提携先 上位（活動状況）</h2>
-          </div>
-          <div class="chart-wrap">
-            <canvas id="chartPartners" height="240"></canvas>
-          </div>
-        </div>
-      </div>
-
-      <div class="card topics">
-         <div class="hrow">
-           <h2 class="h2">Topics / Memo</h2>
-         </div>
-         <textarea id="topics" placeholder="・今月の特筆事項&#10;・新規提携企業の反応&#10;・次月へのアクション"></textarea>
-      </div>
-
     </div>
+
+    <div class="card theme-nxt">
+      <div class="card-head">
+        <h2 class="card-title">次月戦略 (過去実績・目標)</h2>
+        <span class="card-sub">Next Month Strategy</span>
+      </div>
+
+      <div class="row-split">
+        <div class="metric-group">
+          <div class="mg-header">
+            <span class="mg-title">次月過去実績</span>
+            <span class="mg-period" id="lblPeriodNextPast">-</span>
+          </div>
+          <div class="metric-grid">
+            <div class="metric-item type-visit">
+              <span class="mi-label">総来場</span>
+              <div class="mi-input-wrap"><input type="number" id="nm_totalVisit" min="0"><span class="unit">件</span></div>
+            </div>
+            <div class="metric-item type-contr">
+              <span class="mi-label">総契約</span>
+              <div class="mi-input-wrap"><input type="number" id="nm_totalContract" min="0"><span class="unit">件</span></div>
+            </div>
+            <div class="metric-item type-visit">
+              <span class="mi-label">法人来場</span>
+              <div class="mi-input-wrap"><input type="number" id="nm_corpVisit" min="0"><span class="unit">件</span></div>
+            </div>
+            <div class="metric-item type-contr">
+              <span class="mi-label">法人契約</span>
+              <div class="mi-input-wrap"><input type="number" id="nm_corpContract" min="0"><span class="unit">件</span></div>
+            </div>
+            <div class="metric-item" style="grid-column:1/-1;">
+              <span class="mi-label">紹介カード</span>
+              <div class="mi-input-wrap"><input type="number" id="nm_referralCards" min="0"><span class="unit">枚</span></div>
+            </div>
+          </div>
+          <div style="margin-top:10px; padding:8px; background:#f5f3ff; border-radius:8px; display:flex; justify-content:space-around;">
+             <div style="text-align:center;">
+               <div style="font-size:10px; color:#7c3aed; font-weight:700;">法人来場割合</div>
+               <div style="font-weight:800; font-size:15px; color:#7c3aed;" id="nm_k_cvr">0.0%</div>
+             </div>
+             <div style="text-align:center;">
+               <div style="font-size:10px; color:#7c3aed; font-weight:700;">法人歩留り</div>
+               <div style="font-weight:800; font-size:15px; color:#7c3aed;" id="nm_k_cy">0.0%</div>
+             </div>
+          </div>
+        </div>
+
+        <div class="metric-group">
+          <div class="mg-header">
+            <span class="mg-title">次月目標</span>
+            <span class="mg-period" id="lblPeriodNextTarget">-</span>
+          </div>
+          <div class="metric-grid">
+            <div class="metric-item type-visit">
+              <span class="mi-label">総来場 (目標)</span>
+              <div class="mi-input-wrap"><input type="number" id="tg_totalVisit" min="0"><span class="unit">件</span></div>
+            </div>
+            <div class="metric-item type-contr">
+              <span class="mi-label">総契約 (目標)</span>
+              <div class="mi-input-wrap"><input type="number" id="tg_totalContract" min="0"><span class="unit">件</span></div>
+            </div>
+            <div class="metric-item type-visit">
+              <span class="mi-label">法人来場 (目標)</span>
+              <div class="mi-input-wrap"><input type="number" id="tg_corpVisit" min="0"><span class="unit">件</span></div>
+            </div>
+            <div class="metric-item type-contr">
+              <span class="mi-label">法人契約 (目標)</span>
+              <div class="mi-input-wrap"><input type="number" id="tg_corpContract" min="0"><span class="unit">件</span></div>
+            </div>
+            <div class="metric-item" style="grid-column:1/-1;">
+              <span class="mi-label">紹介カード (目標)</span>
+              <div class="mi-input-wrap"><input type="number" id="tg_referralCards" min="0"><span class="unit">枚</span></div>
+            </div>
+          </div>
+          <div style="margin-top:10px; padding:8px; background:#fff; border:1px solid #ddd6fe; border-radius:8px; display:flex; justify-content:space-around;">
+             <div style="text-align:center;">
+               <div style="font-size:10px; color:#7c3aed; font-weight:700;">目標: 法人割合</div>
+               <div style="font-weight:800; font-size:15px; color:#7c3aed;" id="tg_k_cvr">0.0%</div>
+             </div>
+             <div style="text-align:center;">
+               <div style="font-size:10px; color:#7c3aed; font-weight:700;">目標: 法人歩留り</div>
+               <div style="font-weight:800; font-size:15px; color:#7c3aed;" id="tg_k_cy">0.0%</div>
+             </div>
+          </div>
+          <div id="tg_hint_cy" style="display:none;"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card theme-grp">
+      <div class="card-head"><h2 class="card-title">Topics / Memo</h2></div>
+      <textarea id="topics" class="topic-area" placeholder="・今月の特筆事項&#10;・新規提携企業の反応&#10;・次月へのアクション"></textarea>
+    </div>
+
   </div>
+</div>
 
 <script>
 (function(){
@@ -606,7 +612,6 @@
   }
 
   const STORAGE_KEY = "hb_monthly_report_state_v3";
-
   const DEFAULT_STATE = (() => {
     const now = new Date();
     const cur = monthStartEnd(now.getFullYear(), now.getMonth()+1);
@@ -630,85 +635,84 @@
     try{
       const parsed = JSON.parse(raw);
       const s = clone(DEFAULT_STATE);
+      // Merge
       const out = {
-        ...s,
-        ...parsed,
+        ...s, ...parsed,
         meta: { ...s.meta, ...(parsed.meta||{}) },
         counts: { ...s.counts, ...(parsed.counts||{}) },
         perf: { ...s.perf, ...(parsed.perf||{}) },
         lastYear: { ...s.lastYear, ...(parsed.lastYear||{}) },
         nextMonthPast: { ...s.nextMonthPast, ...(parsed.nextMonthPast||{}) },
         nextTarget: { ...s.nextTarget, ...(parsed.nextTarget||{}) },
-        partners: Array.isArray(parsed.partners) && parsed.partners.length ? parsed.partners : clone(s.partners),
+        partners: Array.isArray(parsed.partners) ? parsed.partners : clone(s.partners),
         topics: typeof parsed.topics === "string" ? parsed.topics : ""
       };
-      out.partners = out.partners.map(p => ({
-        name: p?.name ?? "", property: p?.property ?? "",
-        visit: Number(p?.visit ?? 0) || 0, contract: Number(p?.contract ?? 0) || 0,
-        first: Number(p?.first ?? 0) || 0, apply: Number(p?.apply ?? 0) || 0
-      }));
+      out.reportPartners = Array.isArray(parsed.reportPartners) ? parsed.reportPartners : clone(s.reportPartners);
+      
+      // Sanitise partners
+      const fixP = p => ({
+        name: p?.name??"", property: p?.property??"",
+        visit: Number(p?.visit)||0, contract: Number(p?.contract)||0,
+        first: Number(p?.first)||0, apply: Number(p?.apply)||0
+      });
+      out.partners = out.partners.map(fixP);
+      out.reportPartners = out.reportPartners.map(fixP);
       return out;
     }catch{ return clone(DEFAULT_STATE); }
   }
 
   let state = loadState();
-
   const $ = (id) => document.getElementById(id);
   const nfInt = new Intl.NumberFormat("ja-JP");
 
   function clamp0(n){ n = Number(n); return Number.isFinite(n) && n>0 ? n : 0; }
   function pct(a,b){ return (b>0) ? (a/b)*100 : 0; }
   function fmt1(n){ return (Number.isFinite(n) ? n : 0).toFixed(1); }
-
   function setSaveStatus(text){ $("saveStatus").textContent = text; }
-  function saveState(){
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-    setSaveStatus("保存済み");
-  }
+  function saveState(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); setSaveStatus("保存済み"); }
 
   function setDelta(elId, now, base){
     const el = $(elId);
     const diff = now - base;
     const sign = diff > 0 ? "+" : "";
-    const cls = (Math.abs(diff) < 0.05) ? "neutral" : (diff > 0 ? "good" : "bad");
-    el.className = "delta " + cls;
-    el.innerHTML = `<span style="font-size:12px;">前年差 ${sign}${fmt1(diff)}pt</span>`;
+    const cls = (Math.abs(diff) < 0.05) ? "neutral" : (diff > 0 ? "delta-good" : "delta-bad");
+    el.className = "kpi-delta " + cls;
+    el.textContent = `前年差 ${sign}${fmt1(diff)}pt`;
   }
 
+  /* Charts */
   const HAS_CHART = (typeof window.Chart !== "undefined");
   let chartKPI, chartFunnel, chartShare, chartPartners;
-
   const centerLabelPlugin = {
     id: "centerLabel",
     afterDraw(chart){
       if(chart.config.type !== "doughnut") return;
-      const {ctx, chartArea} = chart;
-      if(!chartArea) return;
+      const {ctx, chartArea} = chart; if(!chartArea) return;
       const data = chart.data.datasets?.[0]?.data || [];
       const corp = Number(data[0] || 0);
       const total = data.reduce((a,b)=>a+Number(b||0), 0);
       const p = total ? (corp/total*100) : 0;
       const cx = (chartArea.left + chartArea.right) / 2;
       const cy = (chartArea.top + chartArea.bottom) / 2;
-      ctx.save();
-      ctx.textAlign = "center"; ctx.textBaseline = "middle";
-      ctx.fillStyle = "#0f172a"; ctx.font = "800 24px Montserrat, sans-serif";
+      ctx.save(); ctx.textAlign = "center"; ctx.textBaseline = "middle";
+      ctx.fillStyle = "#0f172a"; ctx.font = "800 20px Montserrat, sans-serif";
       ctx.fillText(p.toFixed(1) + "%", cx, cy - 4);
-      ctx.fillStyle = "#64748b"; ctx.font = "700 10px Noto Sans JP, sans-serif";
-      ctx.fillText("法人比率", cx, cy + 16);
+      ctx.fillStyle = "#64748b"; ctx.font = "700 10px Noto Sans JP";
+      ctx.fillText("法人比率", cx, cy + 14);
       ctx.restore();
     }
   };
 
   function initCharts(){
-    if(!HAS_CHART){ console.warn("Chart.js missing."); return; }
+    if(!HAS_CHART) return;
     Chart.register(centerLabelPlugin);
+    Chart.defaults.font.family = "'Noto Sans JP', sans-serif";
 
     const C = {
-      blueBg:"rgba(59,130,246,0.7)", blueBd:"#3b82f6",
-      grayBg:"rgba(203,213,225,0.6)", grayBd:"#94a3b8",
-      tealBg:"rgba(14,165,233,0.7)", tealBd:"#0ea5e9",
-      orgBg: "rgba(249,115,22,0.7)", orgBd: "#f97316",
+      blue: "#3b82f6", blueBg: "rgba(59,130,246,0.7)",
+      gray: "#94a3b8", grayBg: "rgba(148,163,184,0.5)",
+      teal: "#0ea5e9", tealBg: "rgba(14,165,233,0.7)",
+      org:  "#f97316", orgBg:  "rgba(249,115,22,0.7)",
     };
 
     chartKPI = new Chart($("chartKPI"), {
@@ -716,28 +720,27 @@
       data: {
         labels: ["総歩留り","法人来場比","法人契約比","法人歩留り"],
         datasets: [
-          { label: "当月", data: [0,0,0,0], backgroundColor:C.blueBg, borderColor:C.blueBd, borderWidth:1 },
-          { label: "前年", data: [0,0,0,0], backgroundColor:C.grayBg, borderColor:C.grayBd, borderWidth:1 }
+          { label: "当月", data: [], backgroundColor:C.blueBg, borderColor:C.blue, borderWidth:1 },
+          { label: "前年", data: [], backgroundColor:C.grayBg, borderColor:C.gray, borderWidth:1 }
         ]
       },
       options: {
         responsive:true, maintainAspectRatio:false,
-        plugins:{ legend:{ position:"top", labels:{boxWidth:12} } },
-        scales:{ y:{ beginAtZero:true, suggestedMax: 30, ticks:{ callback:(v)=> v + "%" } } }
+        plugins:{ legend:{ position:"bottom", labels:{boxWidth:10} } },
+        scales:{ y:{ beginAtZero:true, suggestedMax:30, ticks:{callback:v=>v+"%"} } }
       }
     });
 
     chartFunnel = new Chart($("chartFunnel"), {
       type: "bar",
       data: {
-        labels: ["来場 → 契約", "法人来場 → 法人契約"],
-        datasets: [{ label: "歩留り(%)", data: [0,0], backgroundColor:C.tealBg, borderColor:C.tealBd, borderWidth:1 }]
+        labels: ["全体(来→契)", "法人(来→契)"],
+        datasets: [{ label: "歩留り", data: [], backgroundColor:[C.tealBg, C.blueBg], borderWidth:0 }]
       },
       options: {
-        indexAxis: "y",
-        responsive:true, maintainAspectRatio:false,
+        indexAxis: "y", responsive:true, maintainAspectRatio:false,
         plugins:{ legend:{ display:false } },
-        scales:{ x:{ beginAtZero:true, suggestedMax: 30, ticks:{ callback:(v)=> v + "%" } } }
+        scales:{ x:{ beginAtZero:true, suggestedMax:30, ticks:{callback:v=>v+"%"} } }
       }
     });
 
@@ -745,12 +748,7 @@
       type: "doughnut",
       data: {
         labels: ["法人","非法人"],
-        datasets: [{
-          data: [0,0],
-          backgroundColor:[ "#3b82f6", "#e2e8f0" ],
-          borderWidth:0,
-          cutout:"70%"
-        }]
+        datasets: [{ data: [], backgroundColor:[C.blue, "#e2e8f0"], borderWidth:0, cutout:"70%" }]
       },
       options: { responsive:true, maintainAspectRatio:false, plugins:{ legend:{ display:false } } }
     });
@@ -761,175 +759,176 @@
         labels: [],
         datasets: [
           { label:"来場", data: [], backgroundColor:"#3b82f6" },
-          { label:"契約", data: [], backgroundColor:"#ef4444" },
-          { label:"初回", data: [], backgroundColor:"#10b981" },
-          { label:"申込", data: [], backgroundColor:"#f59e0b" }
+          { label:"契約", data: [], backgroundColor:"#ef4444" }
         ]
       },
       options: {
-        indexAxis: "y",
-        responsive:true, maintainAspectRatio:false,
-        plugins:{ legend:{ position:"top", labels:{boxWidth:10} } },
+        indexAxis: "y", responsive:true, maintainAspectRatio:false,
+        plugins:{ legend:{ position:"bottom", labels:{boxWidth:10} } },
         scales:{ x:{ beginAtZero:true, ticks:{ precision:0 } } }
       }
     });
 
     window.addEventListener("beforeprint", ()=>{
-      [chartKPI, chartFunnel, chartShare, chartPartners].forEach(c=>{
-        try{ c && c.resize(); c && c.update(); }catch(e){}
-      });
+      [chartKPI, chartFunnel, chartShare, chartPartners].forEach(c=>{ if(c){ c.resize(); c.update(); } });
     });
   }
 
   function updateCharts(){
     if(!HAS_CHART || !chartKPI) return;
-    const c = state.perf;
-    const ly = state.lastYear;
+    const c = state.perf, ly = state.lastYear;
     const k_ty = pct(c.totalContract, c.totalVisit);
     const k_cvr= pct(c.corpVisit, c.totalVisit);
     const k_ccr= pct(c.corpContract, c.totalContract);
     const k_cy = pct(c.corpContract, c.corpVisit);
-    const ly_ty= pct(ly.totalContract, ly.totalVisit);
-    const ly_cvr= pct(ly.corpVisit, ly.totalVisit);
-    const ly_ccr= pct(ly.corpContract, ly.totalContract);
-    const ly_cy= pct(ly.corpContract, ly.corpVisit);
+    
+    const l_ty = pct(ly.totalContract, ly.totalVisit);
+    const l_cvr= pct(ly.corpVisit, ly.totalVisit);
+    const l_ccr= pct(ly.corpContract, ly.totalContract);
+    const l_cy = pct(ly.corpContract, ly.corpVisit);
 
-    chartKPI.data.datasets[0].data = [Number(fmt1(k_ty)), Number(fmt1(k_cvr)), Number(fmt1(k_ccr)), Number(fmt1(k_cy))];
-    chartKPI.data.datasets[1].data = [Number(fmt1(ly_ty)), Number(fmt1(ly_cvr)), Number(fmt1(ly_ccr)), Number(fmt1(ly_cy))];
+    chartKPI.data.datasets[0].data = [k_ty, k_cvr, k_ccr, k_cy].map(fmt1);
+    chartKPI.data.datasets[1].data = [l_ty, l_cvr, l_ccr, l_cy].map(fmt1);
     chartKPI.update();
 
-    chartFunnel.data.datasets[0].data = [Number(fmt1(k_ty)), Number(fmt1(k_cy))];
+    chartFunnel.data.datasets[0].data = [k_ty, k_cy].map(fmt1);
     chartFunnel.update();
 
     const nonCorp = Math.max(0, clamp0(c.totalVisit) - clamp0(c.corpVisit));
     chartShare.data.datasets[0].data = [clamp0(c.corpVisit), nonCorp];
     chartShare.update();
 
-    const rows = (state.reportPartners || [])
-      .map(p=>({
-        name: (p.name || "（未入力）").trim(),
-        visit: clamp0(p.visit), contract: clamp0(p.contract),
-        first: clamp0(p.first), apply: clamp0(p.apply)
-      }))
-      .filter(x => x.visit>0 || x.contract>0 || x.first>0 || x.apply>0);
-    rows.sort((a,b)=> (b.visit+b.contract+b.first+b.apply) - (a.visit+a.contract+a.first+a.apply));
-    const top = rows.slice(0, 8);
-
+    const rows = (state.reportPartners||[]).map(p=>({
+      name: (p.name||"").trim(), visit: clamp0(p.visit), contract: clamp0(p.contract)
+    })).filter(x=> x.visit>0 || x.contract>0);
+    rows.sort((a,b)=> b.visit - a.visit);
+    const top = rows.slice(0, 5);
+    
     chartPartners.data.labels = top.map(x=>x.name);
     chartPartners.data.datasets[0].data = top.map(x=>x.visit);
     chartPartners.data.datasets[1].data = top.map(x=>x.contract);
-    chartPartners.data.datasets[2].data = top.map(x=>x.first);
-    chartPartners.data.datasets[3].data = top.map(x=>x.apply);
     chartPartners.update();
   }
 
-  function recalcPeriodsUI(){
-    const curStart = state.meta.periodStart;
-    const curEnd = state.meta.periodEnd;
-    const period = derivePeriodLabelFromStart(curStart);
-    $("periodLabel").textContent = period;
-    $("lblCurMonth").textContent = period;
-    $("lblRangeCur").textContent = `${fmtJP(curStart)} – ${fmtJP(curEnd)}`;
-    $("lblPeriodCur").textContent = `${fmtJP(curStart)} – ${fmtJP(curEnd)}`;
-    const [yStr, mStr] = String(curStart || "").split("-");
-    const year = Number(yStr);
-    const month = Number(mStr);
-    if(year && month){
-      const lyRange = monthStartEnd(year - 1, month);
-      $("lblPeriodLY").textContent = `${fmtJP(lyRange.start)} – ${fmtJP(lyRange.end)}`;
-      const next = addMonths(year, month, 1);
-      const nextRange = monthStartEnd(next.year, next.month);
-      $("lblPeriodNextTarget").textContent = `${next.year}.${pad2(next.month)}（${fmtJP(nextRange.start)} – ${fmtJP(nextRange.end)}）`;
-      const nextPast = monthStartEnd(next.year - 1, next.month);
-      $("lblPeriodNextPast").textContent = `${(next.year-1)}.${pad2(next.month)}（${fmtJP(nextPast.start)} – ${fmtJP(nextPast.end)}）`;
-    }else{
-      $("lblPeriodLY").textContent = "-"; $("lblPeriodNextTarget").textContent = "-"; $("lblPeriodNextPast").textContent = "-";
-    }
-    $("badgeCoverage").textContent = monthNowLabel(curStart);
+  function recalcAll(){
+    const c = state.perf, ly = state.lastYear;
+    const k_ty = pct(c.totalContract, c.totalVisit);
+    const k_cvr= pct(c.corpVisit, c.totalVisit);
+    const k_ccr= pct(c.corpContract, c.totalContract);
+    const k_cy = pct(c.corpContract, c.corpVisit);
+    
+    $("k_ty").textContent = fmt1(k_ty);
+    $("k_cvr").textContent = fmt1(k_cvr);
+    $("k_ccr").textContent = fmt1(k_ccr);
+    $("k_cy").textContent = fmt1(k_cy);
+    
+    setDelta("d_ty", k_ty, pct(ly.totalContract, ly.totalVisit));
+    setDelta("d_cvr", k_cvr, pct(ly.corpVisit, ly.totalVisit));
+    setDelta("d_ccr", k_ccr, pct(ly.corpContract, ly.totalContract));
+    setDelta("d_cy", k_cy, pct(ly.corpContract, ly.corpVisit));
+
+    // Partners Table Sum
+    const sumV = (state.reportPartners||[]).reduce((s,p)=>s+clamp0(p.visit),0);
+    const sumC = (state.reportPartners||[]).reduce((s,p)=>s+clamp0(p.contract),0);
+    const sumF = (state.reportPartners||[]).reduce((s,p)=>s+clamp0(p.first),0);
+    const sumA = (state.reportPartners||[]).reduce((s,p)=>s+clamp0(p.apply),0);
+    $("t_visit").textContent = nfInt.format(sumV);
+    $("t_contract").textContent = nfInt.format(sumC);
+    $("t_first").textContent = nfInt.format(sumF);
+    $("t_apply").textContent = nfInt.format(sumA);
+
+    // Next Month Ratios
+    const nm = state.nextMonthPast;
+    $("nm_k_cvr").textContent = fmt1(pct(nm.corpVisit, nm.totalVisit))+"%";
+    $("nm_k_cy").textContent = fmt1(pct(nm.corpContract, nm.corpVisit))+"%";
+    
+    const tg = state.nextTarget;
+    $("tg_k_cvr").textContent = fmt1(pct(tg.corpVisit, tg.totalVisit))+"%";
+    $("tg_k_cy").textContent = fmt1(pct(tg.corpContract, tg.corpVisit))+"%";
+    
+    updateCharts();
   }
 
   function trashSvg(){
-    return `<svg viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><path d="M3 6h18"></path><path d="M8 6V4h8v2"></path><path d="M19 6l-1 14H6L5 6"></path></svg>`;
+    return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>`;
   }
 
   function renderPartners(){
-    const tbody = $("partnersBody");
-    tbody.innerHTML = "";
-    (state.reportPartners || []).forEach((p, idx)=>{
+    const tbody = $("partnersBody"); tbody.innerHTML = "";
+    (state.reportPartners||[]).forEach((p,i)=>{
       const tr = document.createElement("tr");
-      const tdName = document.createElement("td");
-      const iName = document.createElement("input");
-      iName.value = p.name || ""; iName.placeholder = "例：ベルス";
-      iName.addEventListener("input", ()=>{ p.name = iName.value; setSaveStatus("編集中…"); recalcAll(); saveState(); });
-      tdName.appendChild(iName);
       
-      const tdProp = document.createElement("td");
-      const iProp = document.createElement("input");
-      iProp.value = p.property || ""; iProp.placeholder = "例：LP浦和神明";
-      iProp.addEventListener("input", ()=>{ p.property = iProp.value; setSaveStatus("編集中…"); recalcAll(); saveState(); });
-      tdProp.appendChild(iProp);
+      const tdNm = document.createElement("td");
+      const iNm = document.createElement("input");
+      iNm.value = p.name; iNm.placeholder="提携企業名";
+      iNm.oninput = e => { p.name=e.target.value; setSaveStatus("編集中…"); recalcAll(); saveState(); };
+      tdNm.appendChild(iNm);
 
-      const mkNum = (k)=>{
-        const td = document.createElement("td"); td.className="center";
-        const inp = document.createElement("input");
-        inp.type = "number"; inp.min="0"; inp.value = clamp0(p[k]);
-        inp.addEventListener("input", ()=>{ p[k]=clamp0(inp.value); setSaveStatus("編集中…"); recalcAll(); saveState(); });
+      const tdPr = document.createElement("td");
+      const iPr = document.createElement("input");
+      iPr.value = p.property; iPr.placeholder="物件名";
+      iPr.oninput = e => { p.property=e.target.value; setSaveStatus("編集中…"); recalcAll(); saveState(); };
+      tdPr.appendChild(iPr);
+
+      const mkNum = (k) => {
+        const td = document.createElement("td"); td.className="num-cell";
+        const inp = document.createElement("input"); inp.type="number"; inp.min="0";
+        inp.value = clamp0(p[k]);
+        inp.oninput = e => { p[k]=clamp0(e.target.value); setSaveStatus("編集中…"); recalcAll(); saveState(); };
         td.appendChild(inp); return td;
       };
 
-      const tdDel = document.createElement("td"); tdDel.className = "center";
-      const b = document.createElement("button"); b.className = "icon-btn"; b.type = "button";
-      b.innerHTML = trashSvg();
-      b.addEventListener("click", ()=>{
-        state.reportPartners.splice(idx, 1);
+      const tdDel = document.createElement("td"); tdDel.className="center";
+      const btn = document.createElement("button"); btn.className="del-btn";
+      btn.innerHTML = trashSvg();
+      btn.onclick = () => {
+        state.reportPartners.splice(i,1);
         if(state.reportPartners.length===0) state.reportPartners.push({name:"",property:"",visit:0,contract:0,first:0,apply:0});
         renderPartners(); recalcAll(); saveState();
-      });
-      tdDel.appendChild(b);
+      };
+      tdDel.appendChild(btn);
 
-      tr.appendChild(tdName); tr.appendChild(tdProp);
-      tr.appendChild(mkNum("visit")); tr.appendChild(mkNum("contract"));
-      tr.appendChild(mkNum("first")); tr.appendChild(mkNum("apply"));
-      tr.appendChild(tdDel);
+      tr.append(tdNm, tdPr, mkNum("visit"), mkNum("contract"), mkNum("first"), mkNum("apply"), tdDel);
       tbody.appendChild(tr);
     });
   }
 
-  function setUIFromState(){
-    $("periodStart").value = state.meta.periodStart || "";
-    $("periodEnd").value = state.meta.periodEnd || "";
+  /* UI Sync */
+  function setUI(){
+    $("periodStart").value = state.meta.periodStart||"";
+    $("periodEnd").value = state.meta.periodEnd||"";
     $("companyCount").value = clamp0(state.counts.partnerCompanies);
     $("targetCount").value = clamp0(state.counts.targetCompanies);
-    
+    $("topics").value = state.topics||"";
+
     const setv = (id, v) => $(id).value = clamp0(v);
     const c = state.perf;
-    setv("v_totalVisit",c.totalVisit); setv("v_totalContract",c.totalContract);
-    setv("v_corpVisit",c.corpVisit); setv("v_corpContract",c.corpContract); setv("v_referralCards",c.referralCards);
+    setv("v_totalVisit", c.totalVisit); setv("v_totalContract", c.totalContract);
+    setv("v_corpVisit", c.corpVisit); setv("v_corpContract", c.corpContract); setv("v_referralCards", c.referralCards);
     
     const ly = state.lastYear;
-    setv("ly_totalVisit",ly.totalVisit); setv("ly_totalContract",ly.totalContract);
-    setv("ly_corpVisit",ly.corpVisit); setv("ly_corpContract",ly.corpContract); setv("ly_referralCards",ly.referralCards);
+    setv("ly_totalVisit", ly.totalVisit); setv("ly_totalContract", ly.totalContract);
+    setv("ly_corpVisit", ly.corpVisit); setv("ly_corpContract", ly.corpContract); setv("ly_referralCards", ly.referralCards);
     
     const nm = state.nextMonthPast;
-    setv("nm_totalVisit",nm.totalVisit); setv("nm_totalContract",nm.totalContract);
-    setv("nm_corpVisit",nm.corpVisit); setv("nm_corpContract",nm.corpContract); setv("nm_referralCards",nm.referralCards);
+    setv("nm_totalVisit", nm.totalVisit); setv("nm_totalContract", nm.totalContract);
+    setv("nm_corpVisit", nm.corpVisit); setv("nm_corpContract", nm.corpContract); setv("nm_referralCards", nm.referralCards);
     
     const tg = state.nextTarget;
-    setv("tg_totalVisit",tg.totalVisit); setv("tg_totalContract",tg.totalContract);
-    setv("tg_corpVisit",tg.corpVisit); setv("tg_corpContract",tg.corpContract); setv("tg_referralCards",tg.referralCards);
-    
-    $("topics").value = state.topics || "";
-    recalcPeriodsUI();
+    setv("tg_totalVisit", tg.totalVisit); setv("tg_totalContract", tg.totalContract);
+    setv("tg_corpVisit", tg.corpVisit); setv("tg_corpContract", tg.corpContract); setv("tg_referralCards", tg.referralCards);
+
+    updateLabels();
   }
 
-  function readInputsToState(){
+  function readUI(){
     state.meta.periodStart = $("periodStart").value;
     state.meta.periodEnd = $("periodEnd").value;
-    state.reportPartnersYM = String(state.meta.periodStart||"").slice(0,7);
     state.counts.partnerCompanies = clamp0($("companyCount").value);
     state.counts.targetCompanies = clamp0($("targetCount").value);
-    
-    const getv = (id) => clamp0($(id).value);
+    state.topics = $("topics").value;
+
+    const getv = id => clamp0($(id).value);
     const c = state.perf;
     c.totalVisit=getv("v_totalVisit"); c.totalContract=getv("v_totalContract");
     c.corpVisit=getv("v_corpVisit"); c.corpContract=getv("v_corpContract"); c.referralCards=getv("v_referralCards");
@@ -945,155 +944,104 @@
     const tg = state.nextTarget;
     tg.totalVisit=getv("tg_totalVisit"); tg.totalContract=getv("tg_totalContract");
     tg.corpVisit=getv("tg_corpVisit"); tg.corpContract=getv("tg_corpContract"); tg.referralCards=getv("tg_referralCards");
-    
-    state.topics = $("topics").value;
   }
 
-  function recalcAll(){
-    const c = state.perf;
-    const ly = state.lastYear;
-    const k_ty = pct(c.totalContract, c.totalVisit);
-    const k_cvr= pct(c.corpVisit, c.totalVisit);
-    const k_ccr= pct(c.corpContract, c.totalContract);
-    const k_cy = pct(c.corpContract, c.corpVisit);
-    $("k_ty").textContent = fmt1(k_ty); $("k_cvr").textContent = fmt1(k_cvr);
-    $("k_ccr").textContent = fmt1(k_ccr); $("k_cy").textContent = fmt1(k_cy);
+  function updateLabels(){
+    const s = state.meta.periodStart, e = state.meta.periodEnd;
+    const lbl = derivePeriodLabelFromStart(s);
+    $("periodLabel").textContent = lbl;
+    $("lblRangeCur").textContent = `${fmtJP(s)} - ${fmtJP(e)}`;
+    $("lblPeriodCur").textContent = `${fmtJP(s)} - ${fmtJP(e)}`;
+    $("badgeCoverage").textContent = monthNowLabel(s);
 
-    const ly_ty= pct(ly.totalContract, ly.totalVisit);
-    const ly_cvr= pct(ly.corpVisit, ly.totalVisit);
-    const ly_ccr= pct(ly.corpContract, ly.totalContract);
-    const ly_cy= pct(ly.corpContract, ly.corpVisit);
-    setDelta("d_ty",k_ty,ly_ty); setDelta("d_cvr",k_cvr,ly_cvr);
-    setDelta("d_ccr",k_ccr,ly_ccr); setDelta("d_cy",k_cy,ly_cy);
-
-    const sumV = (state.reportPartners||[]).reduce((s,p)=> s + clamp0(p.visit), 0);
-    const sumC = (state.reportPartners||[]).reduce((s,p)=> s + clamp0(p.contract), 0);
-    const sumF = (state.reportPartners||[]).reduce((s,p)=> s + clamp0(p.first), 0);
-    const sumA = (state.reportPartners||[]).reduce((s,p)=> s + clamp0(p.apply), 0);
-    
-    // フッターの合計値を更新
-    $("t_visit").textContent = nfInt.format(sumV);
-    $("t_contract").textContent = nfInt.format(sumC);
-    $("t_first").textContent = nfInt.format(sumF);
-    $("t_apply").textContent = nfInt.format(sumA);
-
-    const nm = state.nextMonthPast;
-    const nm_cvr = pct(nm.corpVisit, nm.totalVisit);
-    const nm_cy  = pct(nm.corpContract, nm.corpVisit);
-    $("nm_k_cvr").textContent = `${fmt1(nm_cvr)}%`; $("nm_k_cy").textContent = `${fmt1(nm_cy)}%`;
-    
-    const tg = state.nextTarget;
-    const tg_cvr = pct(tg.corpVisit, tg.totalVisit);
-    const tg_cy  = pct(tg.corpContract, tg.corpVisit);
-    $("tg_k_cvr").textContent = `${fmt1(tg_cvr)}%`; $("tg_k_cy").textContent = `${fmt1(tg_cy)}%`;
-    
-    updateCharts();
+    const [y,m] = (s||"").split("-").map(Number);
+    if(y&&m){
+      const ly = monthStartEnd(y-1,m);
+      $("lblPeriodLY").textContent = `${fmtJP(ly.start)} - ${fmtJP(ly.end)}`;
+      const nx = addMonths(y,m,1);
+      const nxR = monthStartEnd(nx.year, nx.month);
+      $("lblPeriodNextTarget").textContent = `${nx.year}.${pad2(nx.month)}`;
+      const nxP = monthStartEnd(nx.year-1, nx.month);
+      $("lblPeriodNextPast").textContent = `${nx.year-1}.${pad2(nx.month)}`;
+    }
   }
 
-  function exportJSON(){
-    const period = derivePeriodLabelFromStart(state.meta.periodStart).replace(".","-");
-    const blob = new Blob([JSON.stringify(state, null, 2)], {type:"application/json"});
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url; a.download = `hb_monthly_report_${period || "data"}.json`;
-    a.click(); URL.revokeObjectURL(url);
-  }
-
-  function importJSON(){
-    const inp = document.createElement("input");
-    inp.type = "file"; inp.accept = "application/json";
-    inp.onchange = async () => {
-      const file = inp.files?.[0]; if(!file) return;
-      try{
-        const text = await file.text();
-        const obj = JSON.parse(text);
-        const s = clone(DEFAULT_STATE);
-        state = {
-          ...s, ...obj,
-          meta: { ...s.meta, ...(obj.meta||{}) },
-          counts: { ...s.counts, ...(obj.counts||{}) },
-          perf: { ...s.perf, ...(obj.perf||{}) },
-          lastYear: { ...s.lastYear, ...(obj.lastYear||{}) },
-          nextMonthPast: { ...s.nextMonthPast, ...(obj.nextMonthPast||{}) },
-          nextTarget: { ...s.nextTarget, ...(obj.nextTarget||{}) },
-          partners: Array.isArray(obj.partners) ? obj.partners : clone(s.partners),
-          reportPartners: Array.isArray(obj.reportPartners) ? obj.reportPartners : clone(s.reportPartners),
-          reportPartnersYM: obj.reportPartnersYM || s.reportPartnersYM,
-          topics: obj.topics || ""
-        };
-        state.reportPartners = state.reportPartners.map(p => ({
-          name: p?.name ?? "", property: p?.property ?? "",
-          visit: Number(p?.visit ?? 0) || 0, contract: Number(p?.contract ?? 0) || 0,
-          first: Number(p?.first ?? 0) || 0, apply: Number(p?.apply ?? 0) || 0
-        }));
-        setUIFromState(); renderPartners(); recalcAll(); saveState();
-      }catch(e){ alert("JSON読込失敗: "+e); }
-    };
-    inp.click();
-  }
-
-  function resetAll(){
-    if(!confirm("全てのデータを初期化しますか？")) return;
-    state = clone(DEFAULT_STATE);
-    localStorage.removeItem(STORAGE_KEY);
-    setUIFromState(); renderPartners(); recalcAll(); saveState();
-  }
-
-  function attachEventsOnce(){
-    const onAnyInput = () => {
-      setSaveStatus("編集中…");
-      readInputsToState(); recalcPeriodsUI(); recalcAll(); saveState();
-    };
-    [
-      "periodStart","periodEnd","companyCount","targetCount",
+  /* Events */
+  function attachEvents(){
+    const inputs = [
+      "periodStart","periodEnd","companyCount","targetCount","topics",
       "v_totalVisit","v_totalContract","v_corpVisit","v_corpContract","v_referralCards",
       "ly_totalVisit","ly_totalContract","ly_corpVisit","ly_corpContract","ly_referralCards",
       "nm_totalVisit","nm_totalContract","nm_corpVisit","nm_corpContract","nm_referralCards",
-      "tg_totalVisit","tg_totalContract","tg_corpVisit","tg_corpContract","tg_referralCards",
-      "topics"
-    ].forEach(id => { const el=$(id); if(el) el.addEventListener("input", onAnyInput); });
+      "tg_totalVisit","tg_totalContract","tg_corpVisit","tg_corpContract","tg_referralCards"
+    ];
+    inputs.forEach(id=>{
+      const el=$(id); if(el) el.oninput = () => { setSaveStatus("編集中…"); readUI(); updateLabels(); recalcAll(); saveState(); };
+    });
 
-    $("btnAddRow").addEventListener("click", ()=>{
-      state.reportPartners.push({ name:"", property:"", visit:0, contract:0, first:0, apply:0 });
+    $("btnAddRow").onclick = () => {
+      state.reportPartners.push({name:"",property:"",visit:0,contract:0,first:0,apply:0});
       renderPartners(); recalcAll(); saveState();
-    });
-    $("btnExport").addEventListener("click", exportJSON);
-    $("btnImport").addEventListener("click", importJSON);
-    $("btnReset").addEventListener("click", resetAll);
-    $("btnPrint").addEventListener("click", ()=>{
-      const w = window.open("./print.html", "_blank"); if(w) w.opener = null;
-    });
+    };
+
+    $("btnExport").onclick = () => {
+      const b = new Blob([JSON.stringify(state,null,2)],{type:"application/json"});
+      const a = document.createElement("a"); a.href=URL.createObjectURL(b);
+      a.download=`hb_report_${derivePeriodLabelFromStart(state.meta.periodStart)}.json`;
+      a.click();
+    };
+    $("btnImport").onclick = () => {
+      const i = document.createElement("input"); i.type="file"; i.accept=".json";
+      i.onchange = async e => {
+        if(!e.target.files[0]) return;
+        try{
+          const t = await e.target.files[0].text();
+          const o = JSON.parse(t);
+          const s = clone(DEFAULT_STATE);
+          state = { ...s, ...o, 
+            meta:{...s.meta, ...(o.meta||{})}, counts:{...s.counts, ...(o.counts||{})},
+            perf:{...s.perf, ...(o.perf||{})}, lastYear:{...s.lastYear, ...(o.lastYear||{})},
+            nextMonthPast:{...s.nextMonthPast, ...(o.nextMonthPast||{})}, nextTarget:{...s.nextTarget, ...(o.nextTarget||{})},
+            partners:Array.isArray(o.partners)?o.partners:s.partners,
+            topics:o.topics||""
+          };
+          state.reportPartners = Array.isArray(o.reportPartners)?o.reportPartners:s.reportPartners;
+          setUI(); renderPartners(); recalcAll(); saveState();
+        }catch(err){ alert("Error: "+err); }
+      };
+      i.click();
+    };
+    $("btnReset").onclick = () => {
+      if(confirm("リセットしますか？")) { state=clone(DEFAULT_STATE); setUI(); renderPartners(); recalcAll(); saveState(); }
+    };
+    $("btnPrint").onclick = () => {
+      const w = window.open("./print.html", "_blank"); if(w) w.opener=null;
+    };
   }
 
+  // Init
   initCharts();
-  setUIFromState();
+  setUI();
   renderPartners();
   recalcAll();
-  attachEventsOnce();
+  attachEvents();
   setSaveStatus("保存済み");
-  
-  fetch('./datalatest.json?v=' + new Date().getTime())
-    .then(r => r.ok ? r.json() : null)
-    .then(obj => {
-      if(!obj) return;
+
+  // Load external
+  fetch('./datalatest.json?v='+Date.now()).then(r=>r.ok?r.json():null).then(d=>{
+    if(d){
       const s = clone(DEFAULT_STATE);
-      state = {
-        ...s, ...obj,
-        meta: { ...s.meta, ...(obj.meta||{}) },
-        counts: { ...s.counts, ...(obj.counts||{}) },
-        perf: { ...s.perf, ...(obj.perf||{}) },
-        lastYear: { ...s.lastYear, ...(obj.lastYear||{}) },
-        nextMonthPast: { ...s.nextMonthPast, ...(obj.nextMonthPast||{}) },
-        nextTarget: { ...s.nextTarget, ...(obj.nextTarget||{}) },
-        partners: Array.isArray(obj.partners) ? obj.partners : clone(s.partners),
-        reportPartners: Array.isArray(obj.reportPartners) ? obj.reportPartners : clone(s.reportPartners),
-        reportPartnersYM: obj.reportPartnersYM || s.reportPartnersYM,
-        topics: obj.topics || ""
+      state = { ...s, ...d,
+        meta:{...s.meta, ...(d.meta||{})}, counts:{...s.counts, ...(d.counts||{})},
+        perf:{...s.perf, ...(d.perf||{})}, lastYear:{...s.lastYear, ...(d.lastYear||{})},
+        nextMonthPast:{...s.nextMonthPast, ...(d.nextMonthPast||{})}, nextTarget:{...s.nextTarget, ...(d.nextTarget||{})},
+        partners:Array.isArray(d.partners)?d.partners:s.partners,
+        topics:d.topics||""
       };
-      setUIFromState(); renderPartners(); recalcAll(); saveState();
-      setSaveStatus("データ読込完了");
-    })
-    .catch(e => console.log("読込スキップ:", e));
+      state.reportPartners = Array.isArray(d.reportPartners)?d.reportPartners:s.reportPartners;
+      setUI(); renderPartners(); recalcAll(); saveState(); setSaveStatus("読込完了");
+    }
+  }).catch(()=>{});
 
 })();
 </script>
